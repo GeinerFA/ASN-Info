@@ -75,7 +75,7 @@ scripts/create-admin.js
 
 Tipografías: **Mona Sans** (todo, títulos en peso 500) y **Playfair Display** cursiva para una palabra
 destacada por título: `<span class="cursiva">palabra</span>`. Radios: 10 (botones) / 12 / 16 / 20 px y pill.
-Etiquetas "eyebrow" (pastilla con punto) en MAYÚSCULAS sobre cada H2. Dentro de un fondo oscuro, añadir la
+Etiquetas "eyebrow" (pastilla sin punto) en MAYÚSCULAS sobre cada H2. Dentro de un fondo oscuro, añadir la
 clase `oscuro` al contenedor (ajusta eyebrow y `.cursiva`).
 
 Botones: `<a class="boton boton--primario" href="…"><%- textoBoton('Texto') %><span class="boton__icono"><%- icono('arrow') %></span></a>`.

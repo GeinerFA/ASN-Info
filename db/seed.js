@@ -47,7 +47,7 @@ const contenido = {
   faq: [
     {
       p: '¿Cómo saco una cita en mi EBAIS?',
-      r: 'Puede solicitarla desde la App EDUS, en la ventanilla de REDES de su EBAIS o por teléfono en el horario de atención. Tenga a mano su número de cédula.',
+      r: 'Puede solicitarla desde la App EDUS o en la ventanilla de REDES de su EBAIS. Tenga a mano su número de cédula.',
     },
     {
       p: '¿Qué documentos debo presentar?',

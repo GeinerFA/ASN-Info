@@ -105,9 +105,7 @@ table { border-collapse: collapse; width: 100%; }
   border-radius: var(--radius-pill);
   margin-bottom: 1.25rem;
 }
-.eyebrow::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--primary); flex-shrink: 0; }
 .oscuro .eyebrow { color: var(--white); background: rgba(255, 255, 255, 0.08); border-color: rgba(255, 255, 255, 0.18); }
-.oscuro .eyebrow::before { background: var(--primary-claro); }
 
 /* Botón: texto que "rueda" al pasar el mouse + cuadro con flecha */
 .boton {
@@ -440,7 +438,7 @@ table { border-collapse: collapse; width: 100%; }
 .sobre__texto > p:not(.eyebrow) { color: var(--muted); font-size: 1.08rem; }
 
 .estadisticas { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.75rem 1.5rem; margin: 2.25rem 0 2.5rem; padding-top: 2rem; border-top: 1px solid var(--line); }
-.estadistica { display: flex; flex-direction: column-reverse; }
+.estadistica { display: flex; flex-direction: column-reverse; justify-content: flex-end; }
 .estadistica dd { margin: 0; font: 500 clamp(2.25rem, 4.5vw, 3.25rem)/1.1 var(--font-body); letter-spacing: -0.04em; color: var(--primary); white-space: nowrap; }
 .estadistica dt { color: var(--muted); font-size: 0.95rem; margin-top: 0.35rem; }
 
@@ -859,4 +857,27 @@ a.ivr__nombre:hover { text-decoration: underline; color: var(--ink); }
   .marquesina__pista { animation: none; width: auto; }
   .marquesina__lista { flex-wrap: wrap; justify-content: center; gap: 1rem 2rem; padding: 0; }
   .marquesina__lista[aria-hidden="true"] { display: none; }
+}
+
+/* ---------- Ajustes responsive ---------- */
+/* Los hijos de grid no deben ensancharse más que su columna (texto nowrap, números grandes) */
+.sobre > *, .ivr > *, .pie__grid > *, .visita > *, .faq > * { min-width: 0; }
+.nav__tel { white-space: nowrap; }
+
+/* Entre 1024 y 1279 px el menú de escritorio no cabe completo: se oculta el teléfono
+   (sigue en la barra superior y en el hero) y se compactan los enlaces. */
+@media (min-width: 1024px) and (max-width: 1279px) {
+  .nav { gap: 1rem; }
+  .nav__lista a { padding-inline: 0.6rem; }
+  .nav__lista a::after { left: 0.6rem; right: 0.6rem; }
+  .nav__tel { display: none; }
+}
+
+/* Teléfonos pequeños (≤ 400 px) */
+@media (max-width: 400px) {
+  .estadisticas { gap: 1.5rem 1rem; }
+  .estadistica dd { font-size: 1.85rem; }
+  .pie__enlaces { gap: 0.65rem 1.5rem; }
+  .pie__marca .marca__lugar { font-size: 1.4rem; }
+  .ivr__nombre { overflow-wrap: anywhere; }
 }
