@@ -5,42 +5,108 @@
   <section class="encabezado-pagina">
     <div class="contenedor">
       <%- include('partials/migas', { migas: [{ nombre: 'Directorio telefónico', ruta: '/directorio' }] }) %>
-      <p class="eyebrow">Directorio</p>
+      <p class="eyebrow">Directorio · U.P. <%= site.unidadProgramatica %></p>
       <h1>Directorio telefónico</h1>
-      <p class="encabezado-pagina__lead">Teléfonos y extensiones de los servicios y EBAIS del Área de Salud Naranjo. Ante una emergencia llame al <a href="tel:<%= site.emergencias %>"><strong><%= site.emergencias %></strong></a>.</p>
+      <p class="encabezado-pagina__lead">Llame a la central del Área de Salud Naranjo y marque la opción del servicio que necesita. Ante una emergencia llame al <a href="tel:<%= site.emergencias %>"><strong><%= site.emergencias %></strong></a>.</p>
     </div>
   </section>
 
-  <section class="seccion seccion--compacta" aria-label="Contactos">
+  <section class="seccion seccion--compacta" aria-label="Menú telefónico">
     <div class="contenedor">
+      <div class="ivr-central">
+        <div class="ivr-central__numero">
+          <span class="ivr-central__icono"><%- icono('phone') %></span>
+          <div>
+            <small>Central telefónica</small>
+            <a href="tel:<%= telHref(site.telefono) %>"><%= site.telefono %></a>
+          </div>
+        </div>
+        <ol class="ivr-central__pasos">
+          <li><strong>Llame</strong> al <%= site.telefono %>.</li>
+          <li><strong>Escuche</strong> el directorio interno.</li>
+          <li><strong>Marque</strong> la opción del servicio. Si conoce la extensión, puede digitarla.</li>
+        </ol>
+      </div>
+
       <div class="buscador" hidden>
         <label for="buscar-directorio"><%- icono('search') %><span class="sr-only">Buscar en el directorio</span></label>
-        <input id="buscar-directorio" type="search" placeholder="Buscar servicio, EBAIS o número…" autocomplete="off">
+        <input id="buscar-directorio" type="search" placeholder="Buscar servicio, EBAIS o extensión…" autocomplete="off">
       </div>
       <p class="buscador__vacio" id="directorio-vacio" role="status" hidden>No se encontraron contactos con ese criterio.</p>
 
-      <% grupos.forEach(function (g, gi) { %>
-        <div class="directorio__grupo" data-grupo>
-          <h2 class="directorio__titulo" id="grupo-<%= gi %>"><%= g.departamento %></h2>
-          <div class="tabla-envoltura">
-            <table class="tabla-directorio" aria-labelledby="grupo-<%= gi %>">
-              <thead>
-                <tr><th scope="col">Servicio</th><th scope="col">Teléfono</th><th scope="col">Extensión</th><th scope="col">Horario</th></tr>
-              </thead>
-              <tbody>
-                <% g.contactos.forEach(function (c) { %>
-                  <tr data-fila>
-                    <th scope="row" data-etiqueta="Servicio"><%= c.servicio %></th>
-                    <td data-etiqueta="Teléfono"><a class="tel" href="tel:<%= telHref(c.telefono) %><% if (c.extension) { %>,<%= c.extension %><% } %>"><%- icono('phone') %><%= c.telefono %></a></td>
-                    <td data-etiqueta="Extensión"><%= c.extension || '—' %></td>
-                    <td data-etiqueta="Horario"><%= c.horario || '—' %></td>
-                  </tr>
-                <% }) %>
-              </tbody>
-            </table>
-          </div>
+      <div class="ivr">
+        <!-- Menú principal -->
+        <div class="ivr__menu ivr__menu--celeste" data-grupo>
+          <header class="ivr__cabecera">
+            <span class="ivr__tecla ivr__tecla--grande" aria-hidden="true"><%- icono('phone') %></span>
+            <div>
+              <h2>Directorio interno</h2>
+              <small>Menú principal · <%= site.telefono %></small>
+            </div>
+          </header>
+          <ul class="ivr__lista">
+            <% menu.filter(function (m) { return !m.externo; }).forEach(function (m) { %>
+              <li class="ivr__opcion<% if (m.hijos.length) { %> ivr__opcion--submenu ivr__opcion--<%= m.color %><% } %>" data-fila>
+                <span class="ivr__tecla" aria-label="Opción <%= m.opcion %>"><%= m.opcion %></span>
+                <% if (m.hijos.length) { %>
+                  <a class="ivr__nombre" href="#submenu-<%= m.opcion %>"><%= m.nombre %></a>
+                  <span class="ivr__ext"><%= m.hijos.length %> opciones <%- icono('arrow') %></span>
+                <% } else { %>
+                  <span class="ivr__nombre"><%= m.nombre %></span>
+                  <span class="ivr__ext"><% if (m.extension) { %>Ext. <%= m.extension %><% } %></span>
+                  <a class="ivr__llamar" href="tel:<%= marcar(m, m.ruta) %>"><%- icono('phone') %><span class="sr-only">Llamar a <%= m.nombre %></span></a>
+                <% } %>
+              </li>
+            <% }) %>
+          </ul>
         </div>
-      <% }) %>
+
+        <!-- Submenús -->
+        <% menu.filter(function (m) { return !m.externo && m.hijos.length; }).forEach(function (m) { %>
+          <div class="ivr__menu ivr__menu--<%= m.color %>" id="submenu-<%= m.opcion %>" data-grupo>
+            <header class="ivr__cabecera">
+              <span class="ivr__tecla ivr__tecla--grande"><%= m.opcion %></span>
+              <div>
+                <h2><%= m.nombre %></h2>
+                <small>Marque <%= m.opcion %> en el menú principal</small>
+              </div>
+            </header>
+            <ul class="ivr__lista">
+              <% m.hijos.forEach(function (h) { %>
+                <li class="ivr__opcion" data-fila>
+                  <span class="ivr__tecla" aria-label="Opción <%= h.opcion %>"><%= h.opcion %></span>
+                  <span class="ivr__nombre"><%= h.nombre %><small class="ivr__ruta">Marque <%= m.opcion %> y luego <%= h.opcion %></small></span>
+                  <span class="ivr__ext"><% if (h.extension) { %>Ext. <%= h.extension %><% } %></span>
+                  <a class="ivr__llamar" href="tel:<%= marcar(h, [m.opcion, h.opcion]) %>"><%- icono('phone') %><span class="sr-only">Llamar a <%= h.nombre %></span></a>
+                </li>
+              <% }) %>
+            </ul>
+          </div>
+        <% }) %>
+
+        <!-- Ubicaciones externas (fuera del menú telefónico) -->
+        <% menu.filter(function (m) { return m.externo && m.hijos.length; }).forEach(function (m) { %>
+          <div class="ivr__menu ivr__menu--<%= m.color %>" id="externos-<%= m.id %>" data-grupo>
+            <header class="ivr__cabecera">
+              <span class="ivr__tecla ivr__tecla--grande" aria-hidden="true"><%- icono('pin') %></span>
+              <div>
+                <h2><%= m.nombre %></h2>
+                <small>Fuera del menú telefónico · llame directamente</small>
+              </div>
+            </header>
+            <ul class="ivr__lista">
+              <% m.hijos.forEach(function (h) { %>
+                <li class="ivr__opcion ivr__opcion--externa" data-fila>
+                  <span class="ivr__tecla" aria-hidden="true"><%- icono('home') %></span>
+                  <span class="ivr__nombre"><%= h.nombre %><% if (h.horario) { %><small class="ivr__ruta"><%= h.horario %></small><% } %></span>
+                  <span class="ivr__ext"><%= h.telefono || site.telefono %><% if (h.extension) { %> · Ext. <%= h.extension %><% } %></span>
+                  <a class="ivr__llamar" href="tel:<%= marcar(h, [], true) %>"><%- icono('phone') %><span class="sr-only">Llamar a <%= h.nombre %></span></a>
+                </li>
+              <% }) %>
+            </ul>
+          </div>
+        <% }) %>
+      </div>
     </div>
   </section>
 </main>

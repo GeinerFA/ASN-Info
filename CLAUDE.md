@@ -34,7 +34,9 @@ npm start              # producción
 server.js              Express: helmet/CSP, compresión, estáticos, sesión, rutas, 404/500
 db/database.js         Conexión SQLite + creación de tablas (idempotente)
 db/seed.js             Datos de ejemplo (marcados con // TODO: dato real)
+db/directorio-ivr.js   Datos del directorio según el diagrama del IVR (central 2103-1700, U.P. 2235)
 db/session-store.js    Store de express-session sobre SQLite
+lib/directorio.js      Árbol del menú IVR (parent_id/opcion, 2 niveles) y enlaces tel: con la ruta de opciones
 lib/site.js            Datos globales del sitio (nombre, dirección, teléfonos, horarios) + JSON-LD
 lib/util.js            slugify, formateo de fechas es-CR
 middleware/auth.js     requireAuth, CSRF, rate limit de login
@@ -89,6 +91,6 @@ Etiquetas "eyebrow" en MAYÚSCULAS sobre cada H2. No usar `#0e9f8e` para texto p
 - `.env` y `data/` fuera del control de versiones.
 
 ## Datos
-Los datos de ejemplo (teléfonos, misión, visión, FODA, servicios, horarios, estadísticas) están en
+Los datos de ejemplo (teléfonos, misión, visión, valores, servicios, horarios, estadísticas) están en
 `db/seed.js` y `lib/site.js`, marcados con `// TODO: dato real`. Reemplazarlos por la información oficial.
-Anuncios, directorio y servicios se administran desde `/admin`.
+Anuncios, directorio (menú IVR: opciones y submenús) y servicios se administran desde `/admin`.

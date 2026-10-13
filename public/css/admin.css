@@ -128,3 +128,25 @@ img { max-width: 100%; height: auto; }
 .login__sub { color: var(--muted); margin: 0 0 1.5rem; }
 .login .formulario { text-align: left; }
 .login__volver { display: inline-block; margin-top: 1.25rem; font-size: 0.9rem; color: var(--muted); }
+
+/* Árbol del directorio (menú IVR) */
+.arbol { display: grid; gap: 0.75rem; }
+.arbol__grupo { --acento: #2b8cc4; --tinte: #e3f2fb; background: var(--white); border: 1px solid var(--line); border-left: 4px solid var(--acento); border-radius: var(--radius); overflow: hidden; }
+.arbol__grupo--naranja { --acento: #d9682a; --tinte: #fdeee4; }
+.arbol__grupo--verde { --acento: #3f9b3a; --tinte: #e8f6e4; }
+.arbol__fila { display: grid; grid-template-columns: auto 1fr auto auto; align-items: center; gap: 0.75rem; padding: 0.6rem 1rem; }
+.arbol__fila--principal { background: var(--tinte); }
+.arbol__fila--hija { padding-left: 3rem; border-top: 1px solid var(--line); }
+.arbol__nombre small { color: var(--muted); font-weight: 400; margin-left: 0.3rem; }
+.arbol__ext { color: var(--muted); font-size: 0.88rem; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.tecla { display: grid; place-items: center; width: 30px; height: 30px; border: 2px solid var(--ink); border-radius: 8px; background: var(--white); font-weight: 800; font-size: 0.9rem; }
+@media (max-width: 760px) {
+  .arbol__fila { grid-template-columns: auto 1fr; }
+  .arbol__fila--hija { padding-left: 1.75rem; }
+  .arbol__ext { grid-column: 2; }
+  .arbol__fila .acciones { grid-column: 1 / -1; justify-content: flex-start; }
+}
+
+/* Logo CCSS (negro) sobre la barra oscura: sello sobre círculo blanco */
+.admin-marca__logo { width: 40px; height: 40px; padding: 2px; background: var(--white); border-radius: 50%; }
+.arbol__grupo--menta { --acento: var(--primary-dark); --tinte: var(--mint); }

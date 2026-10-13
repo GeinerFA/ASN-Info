@@ -9,6 +9,7 @@ const multer = require('multer');
 const { db, getContenido, setContenido } = require('../db/database');
 const { slugify, hoyISO } = require('../lib/util');
 const { ICONOS } = require('../lib/iconos');
+const { arbol } = require('../lib/directorio');
 const {
   requireAuth, csrfToken, verificarCsrf, limiteLogin, registrarFallo, limpiarFallos,
 } = require('../middleware/auth');
@@ -195,49 +196,76 @@ router.post('/anuncios/:id/eliminar', (req, res) => {
   res.redirect('/admin');
 });
 
-// ---------- Directorio telefónico ----------
-router.get('/directorio', (req, res) => {
-  const contactos = db.prepare('SELECT * FROM directorio ORDER BY orden, id').all();
-  res.render('admin/directorio', { contactos, editar: null, seccion: 'directorio' });
-});
+// ---------- Directorio telefónico (menú IVR) ----------
+function vistaDirectorio(res, editar, padrePorDefecto = '') {
+  const menu = arbol();
+  res.render('admin/directorio', {
+    menu,
+    editar,
+    padrePorDefecto: String(editar ? editar.parent_id || '' : padrePorDefecto),
+    seccion: 'directorio',
+  });
+}
+
+router.get('/directorio', (req, res) => vistaDirectorio(res, null, req.query.menu || ''));
 
 router.get('/directorio/:id/editar', (req, res, next) => {
   const editar = db.prepare('SELECT * FROM directorio WHERE id = ?').get(req.params.id);
   if (!editar) return next();
-  const contactos = db.prepare('SELECT * FROM directorio ORDER BY orden, id').all();
-  res.render('admin/directorio', { contactos, editar, seccion: 'directorio' });
+  vistaDirectorio(res, editar);
 });
 
-function leerContacto(b) {
-  return [
-    String(b.departamento || '').trim().slice(0, 80),
-    String(b.servicio || '').trim().slice(0, 120),
-    String(b.telefono || '').trim().slice(0, 30),
-    String(b.extension || '').trim().slice(0, 10) || null,
-    String(b.horario || '').trim().slice(0, 80) || null,
-    parseInt(b.orden, 10) || 0,
-  ];
-}
-
 router.post('/directorio', (req, res) => {
-  const c = leerContacto(req.body);
-  if (!c[0] || !c[1] || !c[2]) {
-    flash(req, 'Departamento, servicio y teléfono son obligatorios.', 'error');
+  const b = req.body;
+  const id = parseInt(b.id, 10) || null;
+  const opcion = parseInt(b.opcion, 10);
+  const nombre = String(b.nombre || '').trim().slice(0, 120);
+  const extension = String(b.extension || '').trim().slice(0, 10) || null;
+  const telefono = String(b.telefono || '').trim().slice(0, 30) || null;
+  const horario = String(b.horario || '').trim().slice(0, 80) || null;
+  let parentId = parseInt(b.parent_id, 10) || null;
+  let padre = null;
+  const volver = '/admin/directorio' + (parentId ? `?menu=${parentId}` : '');
+
+  if (!nombre || !(opcion >= 0 && opcion <= 99)) {
+    flash(req, 'El nombre y la opción (número) son obligatorios.', 'error');
+    return res.redirect(volver);
+  }
+  // Solo dos niveles: el menú padre debe ser una opción del menú principal y no la misma opción.
+  if (parentId) {
+    padre = db.prepare('SELECT * FROM directorio WHERE id = ?').get(parentId);
+    if (!padre || padre.parent_id !== null || padre.id === id) { parentId = null; padre = null; }
+  }
+  if (id && parentId && db.prepare('SELECT 1 FROM directorio WHERE parent_id = ?').get(id)) {
+    flash(req, 'Esta opción tiene un submenú; no se puede mover dentro de otro submenú.', 'error');
     return res.redirect('/admin/directorio');
   }
-  if (req.body.id) {
-    db.prepare('UPDATE directorio SET departamento = ?, servicio = ?, telefono = ?, extension = ?, horario = ?, orden = ? WHERE id = ?').run(...c, req.body.id);
-    flash(req, 'Contacto actualizado.');
-  } else {
-    db.prepare('INSERT INTO directorio (departamento, servicio, telefono, extension, horario, orden) VALUES (?, ?, ?, ?, ?, ?)').run(...c);
-    flash(req, 'Contacto agregado.');
+  // Ubicación externa (fuera del IVR): solo aplica en el primer nivel.
+  const externo = !parentId && b.externo ? 1 : 0;
+  // La tecla debe ser única en su menú (las ubicaciones externas no comparten teclas con el IVR).
+  const repetida = parentId
+    ? db.prepare('SELECT nombre FROM directorio WHERE parent_id = ? AND opcion = ? AND id != ?').get(parentId, opcion, id || 0)
+    : db.prepare('SELECT nombre FROM directorio WHERE parent_id IS NULL AND externo = ? AND opcion = ? AND id != ?').get(externo, opcion, id || 0);
+  if (repetida && !(padre && padre.externo)) {
+    flash(req, `La opción ${opcion} ya está asignada a «${repetida.nombre}» en ese menú.`, 'error');
+    return res.redirect(volver);
   }
-  res.redirect('/admin/directorio');
+
+  if (id) {
+    db.prepare('UPDATE directorio SET parent_id = ?, opcion = ?, nombre = ?, extension = ?, telefono = ?, horario = ?, externo = ? WHERE id = ?')
+      .run(parentId, opcion, nombre, extension, telefono, horario, externo, id);
+    flash(req, 'Opción actualizada.');
+  } else {
+    db.prepare('INSERT INTO directorio (parent_id, opcion, nombre, extension, telefono, horario, externo) VALUES (?, ?, ?, ?, ?, ?, ?)')
+      .run(parentId, opcion, nombre, extension, telefono, horario, externo);
+    flash(req, 'Opción agregada.');
+  }
+  res.redirect(volver);
 });
 
 router.post('/directorio/:id/eliminar', (req, res) => {
-  db.prepare('DELETE FROM directorio WHERE id = ?').run(req.params.id);
-  flash(req, 'Contacto eliminado.');
+  db.prepare('DELETE FROM directorio WHERE id = ?').run(req.params.id); // ON DELETE CASCADE borra su submenú
+  flash(req, 'Opción eliminada.');
   res.redirect('/admin/directorio');
 });
 
@@ -284,7 +312,7 @@ router.post('/servicios/:id/eliminar', (req, res) => {
   res.redirect('/admin/servicios');
 });
 
-// ---------- Misión, visión, valores y FODA ----------
+// ---------- Misión, visión y valores ----------
 const lineas = (txt) => String(txt || '').split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
 
 router.get('/contenido', (req, res) => {
@@ -292,7 +320,6 @@ router.get('/contenido', (req, res) => {
     mision: getContenido('mision', ''),
     vision: getContenido('vision', ''),
     valores: getContenido('valores', []),
-    foda: getContenido('foda', { fortalezas: [], oportunidades: [], debilidades: [], amenazas: [] }),
     seccion: 'contenido',
   });
 });
@@ -309,12 +336,6 @@ router.post('/contenido', (req, res) => {
       return i > 0 ? { titulo: l.slice(0, i).trim(), texto: l.slice(i + 1).trim() } : { titulo: l, texto: '' };
     })
   );
-  setContenido('foda', {
-    fortalezas: lineas(b.fortalezas),
-    oportunidades: lineas(b.oportunidades),
-    debilidades: lineas(b.debilidades),
-    amenazas: lineas(b.amenazas),
-  });
   flash(req, 'Contenido institucional guardado.');
   res.redirect('/admin/contenido');
 });

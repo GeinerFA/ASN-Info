@@ -11,7 +11,7 @@
 <header class="cabecera">
   <div class="contenedor cabecera__fila">
     <a class="marca" href="/" aria-label="<%= site.nombre %>, página de inicio">
-      <img src="/img/logo.svg" alt="" width="40" height="40">
+      <img class="marca__logo" src="/img/logo-ccss-negro-128.png" srcset="/img/logo-ccss-negro-128.png 1x, /img/logo-ccss-negro-256.png 2x" alt="" width="60" height="60">
       <span class="marca__texto"><span class="marca__nombre">Área de Salud</span><span class="marca__lugar">Naranjo</span></span>
     </a>
 
@@ -27,9 +27,9 @@
         <% }) %>
       </ul>
       <div class="nav__acciones">
-        <a class="nav__admin" href="/admin" rel="nofollow" title="Panel administrativo"><%- icono('lock') %><span class="nav__admin-texto">Panel administrativo</span></a>
         <a class="nav__tel" href="tel:<%= telHref(site.telefono) %>"><%- icono('phone') %><%= site.telefono %></a>
         <a class="boton boton--primario" href="/directorio">Directorio</a>
+        <a class="nav__admin" href="/admin" rel="nofollow" title="Panel administrativo"><%- icono('lock') %><span class="nav__admin-texto">Panel administrativo</span></a>
       </div>
     </nav>
   </div>

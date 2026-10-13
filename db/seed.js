@@ -3,10 +3,11 @@
 // TODO: dato real — reemplazar todo este contenido por la información oficial del Área de Salud.
 const { db, setContenido } = require('./database');
 const { slugify, hoyISO } = require('../lib/util');
+const { cargarDirectorioIvr } = require('./directorio-ivr');
 
 const servicios = [
   ['Medicina general', 'Consulta externa para la atención integral de personas de todas las edades en su EBAIS.', 'stethoscope', 'Lun–Vie 7:00–16:00', 1],
-  ['Servicio de urgencias', 'Atención inmediata de situaciones que ponen en riesgo la salud, las 24 horas.', 'siren', '24 horas, todos los días', 1],
+  ['Servicio de urgencias', 'Atención inmediata de situaciones que ponen en riesgo la salud, de lunes a viernes de 7:00 a 22:00.', 'siren', 'Lun–Vie 7:00–22:00', 1],
   ['Odontología', 'Prevención, limpiezas, extracciones y restauraciones para niños, embarazadas y adultos.', 'tooth', 'Lun–Vie 7:00–16:00', 1],
   ['Farmacia', 'Despacho de medicamentos con receta, incluidas las recetas de control crónico.', 'pill', 'Lun–Vie 7:00–19:00', 1],
   ['Laboratorio clínico', 'Toma de muestras y análisis de sangre, orina y otros exámenes indicados por su médico.', 'flask', 'Lun–Vie 6:00–14:00', 1],
@@ -17,28 +18,6 @@ const servicios = [
   ['Nutrición', 'Orientación alimentaria para el control del peso, la diabetes, la hipertensión y otras condiciones.', 'apple', 'Lun–Vie 7:00–16:00', 0],
   ['Trabajo Social', 'Apoyo a personas y familias en situación de vulnerabilidad, y coordinación con otras instituciones.', 'users', 'Lun–Vie 7:00–16:00', 0],
   ['Atención domiciliar', 'Visitas de los ATAP y del equipo de salud a hogares, adultos mayores y personas encamadas.', 'home', 'Según programación del EBAIS', 0],
-];
-
-// [departamento, servicio, teléfono, extensión, horario]
-const directorio = [
-  ['Central telefónica', 'Información general', '2103-1700', null, 'Lun–Vie 7:00–16:00'],
-  ['Urgencias', 'Servicio de urgencias', '2103-1700', null, '24 horas'],
-  ['Dirección médica', 'Dirección del Área de Salud', '2103-1700', '101', 'Lun–Vie 7:00–16:00'],
-  ['Dirección médica', 'Administración', '2103-1700', '102', 'Lun–Vie 7:00–16:00'],
-  ['Servicios de apoyo', 'Farmacia', '2103-1700', '120', 'Lun–Vie 7:00–19:00'],
-  ['Servicios de apoyo', 'Laboratorio clínico', '2103-1700', '130', 'Lun–Vie 6:00–14:00'],
-  ['Servicios de apoyo', 'Registros de Salud (REDES)', '2103-1700', '140', 'Lun–Vie 7:00–16:00'],
-  ['Servicios de apoyo', 'Odontología', '2103-1700', '150', 'Lun–Vie 7:00–16:00'],
-  ['Servicios de apoyo', 'Trabajo Social', '2103-1700', '160', 'Lun–Vie 7:00–16:00'],
-  ['Servicios de apoyo', 'Contraloría de Servicios', '2103-1700', '170', 'Lun–Vie 7:00–16:00'],
-  ['EBAIS', 'EBAIS Naranjo Centro', '2103-1700', null, 'Lun–Vie 7:00–16:00'],
-  ['EBAIS', 'EBAIS San Juan', '2103-1700', null, 'Lun–Vie 7:00–16:00'],
-  ['EBAIS', 'EBAIS San Miguel', '2103-1700', null, 'Lun–Vie 7:00–16:00'],
-  ['EBAIS', 'EBAIS Cirrí', '2103-1700', null, 'Lun–Vie 7:00–16:00'],
-  ['EBAIS', 'EBAIS San Jerónimo', '2103-1700', null, 'Lun–Vie 7:00–16:00'],
-  ['EBAIS', 'EBAIS El Rosario', '2103-1700', null, 'Lun–Vie 7:00–16:00'],
-  ['Emergencias nacionales', 'Sistema de Emergencias 9-1-1', '911', null, '24 horas'],
-  ['Emergencias nacionales', 'Línea de la CCSS (consultas y citas)', '905-2272-622', null, 'Lun–Vie 7:00–19:00'],
 ];
 
 const contenido = {
@@ -52,31 +31,6 @@ const contenido = {
     { titulo: 'Compromiso', texto: 'Damos lo mejor de nosotros por la salud de cada persona usuaria.' },
     { titulo: 'Transparencia', texto: 'Actuamos con ética y rendimos cuentas a la población.' },
   ],
-  foda: {
-    fortalezas: [
-      'Personal comprometido y con experiencia en atención primaria.',
-      'Red de EBAIS distribuida en todo el cantón.',
-      'Expediente Digital Único en Salud (EDUS) implementado.',
-      'Servicio de urgencias disponible las 24 horas.',
-    ],
-    oportunidades: [
-      'Alianzas con la Municipalidad, escuelas y asociaciones comunales.',
-      'Uso creciente de la App EDUS para citas y consultas.',
-      'Programas nacionales de promoción de la salud.',
-      'Participación activa de la Junta de Salud.',
-    ],
-    debilidades: [
-      'Infraestructura que requiere ampliación y mantenimiento.',
-      'Tiempos de espera para algunas especialidades.',
-      'Recurso humano limitado ante el crecimiento de la población.',
-    ],
-    amenazas: [
-      'Aumento de enfermedades crónicas no transmisibles.',
-      'Envejecimiento de la población.',
-      'Brotes de enfermedades emergentes (dengue, virus respiratorios).',
-      'Restricciones presupuestarias institucionales.',
-    ],
-  },
   faq: [
     {
       p: '¿Cómo saco una cita en mi EBAIS?',
@@ -88,7 +42,7 @@ const contenido = {
     },
     {
       p: '¿Cuál es el horario del servicio de urgencias?',
-      r: 'El servicio de urgencias atiende las 24 horas, todos los días del año. Ante una emergencia que ponga en riesgo la vida, llame al 9-1-1.',
+      r: 'El servicio de urgencias atiende de lunes a viernes de 7:00 a.m. a 10:00 p.m. Fuera de ese horario, o ante una emergencia que ponga en riesgo la vida, llame al 9-1-1.',
     },
     {
       p: '¿Cómo retiro mis medicamentos de control crónico?',
@@ -133,17 +87,14 @@ const anuncios = [
   },
 ];
 
-db.exec('DELETE FROM anuncios; DELETE FROM directorio; DELETE FROM servicios; DELETE FROM contenido;');
+db.exec('DELETE FROM anuncios; DELETE FROM servicios; DELETE FROM contenido;');
+cargarDirectorioIvr(db);
 
 const insServicio = db.prepare(
   'INSERT INTO servicios (nombre, descripcion, icono, horario, destacado, orden) VALUES (?, ?, ?, ?, ?, ?)'
 );
 servicios.forEach((s, i) => insServicio.run(...s, i));
 
-const insDir = db.prepare(
-  'INSERT INTO directorio (departamento, servicio, telefono, extension, horario, orden) VALUES (?, ?, ?, ?, ?, ?)'
-);
-directorio.forEach((d, i) => insDir.run(...d, i));
 
 for (const [clave, valor] of Object.entries(contenido)) setContenido(clave, valor);
 
@@ -155,5 +106,5 @@ anuncios.forEach((a) =>
 );
 
 console.log(
-  `Datos de ejemplo cargados: ${servicios.length} servicios, ${directorio.length} contactos, ${anuncios.length} anuncios.`
+  `Datos de ejemplo cargados: ${servicios.length} servicios, directorio del IVR, ${anuncios.length} anuncios.`
 );

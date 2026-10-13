@@ -15,12 +15,12 @@
 <body class="admin">
 <% if (locals.usuarioAdmin) { %>
 <header class="admin-barra">
-  <a class="admin-marca" href="/admin"><img src="/img/logo.svg" alt="" width="32" height="32"> Panel AS Naranjo</a>
+  <a class="admin-marca" href="/admin"><img class="admin-marca__logo" src="/img/logo-ccss-negro-128.png" srcset="/img/logo-ccss-negro-128.png 1x, /img/logo-ccss-negro-256.png 2x" alt="" width="40" height="40"> Panel AS Naranjo</a>
   <nav aria-label="Panel">
     <a href="/admin"<% if (seccion === 'anuncios') { %> aria-current="page"<% } %>>Anuncios</a>
     <a href="/admin/directorio"<% if (seccion === 'directorio') { %> aria-current="page"<% } %>>Directorio</a>
     <a href="/admin/servicios"<% if (seccion === 'servicios') { %> aria-current="page"<% } %>>Servicios</a>
-    <a href="/admin/contenido"<% if (seccion === 'contenido') { %> aria-current="page"<% } %>>Misión y FODA</a>
+    <a href="/admin/contenido"<% if (seccion === 'contenido') { %> aria-current="page"<% } %>>Misión y visión</a>
     <a href="/" target="_blank" rel="noopener">Ver sitio ↗</a>
   </nav>
   <form method="post" action="/admin/logout">

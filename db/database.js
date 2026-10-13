@@ -26,15 +26,6 @@ db.exec(`
     actualizado TEXT NOT NULL DEFAULT (datetime('now', 'localtime'))
   );
 
-  CREATE TABLE IF NOT EXISTS directorio (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    departamento TEXT NOT NULL,
-    servicio TEXT NOT NULL,
-    telefono TEXT NOT NULL,
-    extension TEXT,
-    horario TEXT,
-    orden INTEGER NOT NULL DEFAULT 0
-  );
 
   CREATE TABLE IF NOT EXISTS servicios (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -66,7 +57,35 @@ db.exec(`
   CREATE INDEX IF NOT EXISTS idx_anuncios_pub ON anuncios (publicado, fecha_publicacion);
 `);
 
-// Contenido institucional (misión, visión, FODA...) guardado como JSON por clave.
+// Directorio = menú del IVR: opciones del menú principal (parent_id NULL) y sus submenús.
+// Si existe la tabla con el esquema anterior (departamento/servicio), se reemplaza y se carga el IVR.
+const columnasDir = db.prepare('PRAGMA table_info(directorio)').all().map((c) => c.name);
+const esquemaViejo = columnasDir.includes('departamento');
+if (esquemaViejo) db.exec('DROP TABLE directorio');
+
+db.exec(`
+  CREATE TABLE IF NOT EXISTS directorio (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    parent_id INTEGER REFERENCES directorio(id) ON DELETE CASCADE,
+    opcion INTEGER NOT NULL,
+    nombre TEXT NOT NULL,
+    extension TEXT,
+    telefono TEXT,
+    horario TEXT,
+    externo INTEGER NOT NULL DEFAULT 0
+  );
+  CREATE INDEX IF NOT EXISTS idx_directorio_menu ON directorio (parent_id, opcion);
+`);
+
+if (esquemaViejo) require('./directorio-ivr').cargarDirectorioIvr(db);
+
+// Ubicaciones externas (no forman parte del menú del IVR; sus contactos usan teléfono directo).
+if (!db.prepare('PRAGMA table_info(directorio)').all().some((c) => c.name === 'externo')) {
+  db.exec('ALTER TABLE directorio ADD COLUMN externo INTEGER NOT NULL DEFAULT 0');
+  db.prepare("INSERT INTO directorio (parent_id, opcion, nombre, externo) VALUES (NULL, 1, 'EBAIS externos', 1)").run();
+}
+
+// Contenido institucional (misión, visión, valores...) guardado como JSON por clave.
 function getContenido(clave, porDefecto = null) {
   const fila = db.prepare('SELECT valor FROM contenido WHERE clave = ?').get(clave);
   return fila ? JSON.parse(fila.valor) : porDefecto;

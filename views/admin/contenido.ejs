@@ -1,7 +1,7 @@
-<%- include('_inicio', { titulo: 'Misión, visión y FODA' }) %>
+<%- include('_inicio', { titulo: 'Misión, visión y valores' }) %>
 <div class="admin-cabecera">
   <div>
-    <h1>Misión, visión y FODA</h1>
+    <h1>Misión, visión y valores</h1>
     <p>Este contenido se muestra en la página <a href="/nosotros" target="_blank" rel="noopener">Nosotros</a>.</p>
   </div>
 </div>
@@ -14,15 +14,6 @@
     <textarea name="valores" rows="5"><%= valores.map(function (v) { return v.texto ? v.titulo + ': ' + v.texto : v.titulo; }).join('\n') %></textarea>
     <small>Un valor por línea, con el formato <code>Título: descripción</code>.</small>
   </label>
-
-  <h2>Análisis FODA</h2>
-  <p class="ayuda">Escriba un punto por línea.</p>
-  <div class="formulario__fila formulario__fila--2">
-    <label>Fortalezas<textarea name="fortalezas" rows="6"><%= foda.fortalezas.join('\n') %></textarea></label>
-    <label>Oportunidades<textarea name="oportunidades" rows="6"><%= foda.oportunidades.join('\n') %></textarea></label>
-    <label>Debilidades<textarea name="debilidades" rows="6"><%= foda.debilidades.join('\n') %></textarea></label>
-    <label>Amenazas<textarea name="amenazas" rows="6"><%= foda.amenazas.join('\n') %></textarea></label>
-  </div>
 
   <div class="formulario__acciones">
     <button class="btn btn--primario" type="submit">Guardar</button>

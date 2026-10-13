@@ -3,20 +3,14 @@ const express = require('express');
 const { db, getContenido } = require('../db/database');
 const { site, urlAbs, migasLd } = require('../lib/site');
 const { listarVisibles, contarVisibles, buscarVisible } = require('../lib/anuncios');
+const { arbol, marcar } = require('../lib/directorio');
+const { telHref } = require('../lib/util');
 
 const router = express.Router();
 const POR_PAGINA = 9;
 
 const listarServicios = () => db.prepare('SELECT * FROM servicios ORDER BY orden, id').all();
 
-function agruparDirectorio() {
-  const grupos = new Map();
-  for (const fila of db.prepare('SELECT * FROM directorio ORDER BY orden, id').all()) {
-    if (!grupos.has(fila.departamento)) grupos.set(fila.departamento, []);
-    grupos.get(fila.departamento).push(fila);
-  }
-  return [...grupos].map(([departamento, contactos]) => ({ departamento, contactos }));
-}
 
 router.get('/', (req, res) => {
   const faq = getContenido('faq', []);
@@ -54,7 +48,7 @@ router.get('/servicios', (req, res) => {
   res.render('servicios', {
     title: `Servicios de salud | ${site.nombre}`,
     description:
-      'Medicina general, urgencias 24 horas, odontología, farmacia, laboratorio, vacunación y más servicios del Área de Salud Naranjo.',
+      'Medicina general, urgencias de lunes a viernes de 7 a 22 h, odontología, farmacia, laboratorio, vacunación y más servicios del Área de Salud Naranjo.',
     path: '/servicios',
     servicios,
     jsonLdExtra: [
@@ -79,27 +73,41 @@ router.get('/servicios', (req, res) => {
 
 router.get('/nosotros', (req, res) => {
   res.render('nosotros', {
-    title: `Misión, visión y FODA | ${site.nombre}`,
+    title: `Misión, visión y valores | ${site.nombre}`,
     description:
-      'Conozca la misión, la visión, los valores y el análisis FODA del Área de Salud Naranjo de la CCSS.',
+      'Conozca la misión, la visión y los valores del Área de Salud Naranjo de la Caja Costarricense de Seguro Social.',
     path: '/nosotros',
     mision: getContenido('mision', ''),
     vision: getContenido('vision', ''),
     valores: getContenido('valores', []),
-    foda: getContenido('foda', { fortalezas: [], oportunidades: [], debilidades: [], amenazas: [] }),
     jsonLdExtra: [migasLd([{ nombre: 'Nosotros', ruta: '/nosotros' }])],
   });
 });
 
 router.get('/directorio', (req, res) => {
-  const grupos = agruparDirectorio();
+  const menu = arbol();
   res.render('directorio', {
     title: `Directorio telefónico | ${site.nombre}`,
     description:
-      'Teléfonos y extensiones del Área de Salud Naranjo: urgencias, farmacia, laboratorio, EBAIS y oficinas administrativas.',
+      `Llame al ${site.telefono} y marque la opción: Dirección Médica, Farmacia, Laboratorio, EBAIS, servicios médicos y administrativos del Área de Salud Naranjo.`,
     path: '/directorio',
-    grupos,
-    jsonLdExtra: [migasLd([{ nombre: 'Directorio telefónico', ruta: '/directorio' }])],
+    menu,
+    marcar,
+    jsonLdExtra: [
+      migasLd([{ nombre: 'Directorio telefónico', ruta: '/directorio' }]),
+      {
+        '@context': 'https://schema.org',
+        '@type': 'MedicalOrganization',
+        '@id': urlAbs('/#organizacion'),
+        contactPoint: menu.flatMap((m) => (m.hijos.length ? m.hijos : m.externo ? [] : [m])).map((c) => ({
+          '@type': 'ContactPoint',
+          contactType: c.nombre,
+          telephone: telHref(c.telefono || site.telefono),
+          areaServed: 'CR',
+          availableLanguage: 'es',
+        })),
+      },
+    ],
   });
 });
 
