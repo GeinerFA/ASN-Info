@@ -73,6 +73,71 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // Carrusel de fotos del hero. Sin JS solo se ve la primera foto.
+  // Con movimiento reducido no avanza solo, pero los botones siguen funcionando.
+  const carrusel = document.querySelector('[data-carrusel]');
+  if (carrusel) {
+    const fotos = [...carrusel.querySelectorAll('.hero__slide')];
+    const controles = document.querySelector('[data-carrusel-controles]');
+    const puntos = [...document.querySelectorAll('[data-carrusel-punto]')];
+    const pausa = document.querySelector('[data-carrusel-pausa]');
+    const credito = document.querySelector('[data-carrusel-credito]');
+    const INTERVALO = 6500;
+    let actual = 0;
+    let temporizador = null;
+    let pausado = !animar;
+
+    fotos.forEach((f) => {
+      const img = f.querySelector('img');
+      if (img && img.dataset.posicion) img.style.objectPosition = img.dataset.posicion;
+    });
+
+    const mostrarCredito = () => {
+      const f = fotos[actual];
+      credito.textContent = '';
+      if (!f.dataset.credito) return;
+      const a = document.createElement('a');
+      a.href = f.dataset.creditoUrl;
+      a.rel = 'noopener';
+      a.target = '_blank';
+      a.textContent = f.dataset.credito;
+      credito.append(a);
+    };
+    const mostrar = (n) => {
+      fotos[actual].classList.remove('activo');
+      actual = (n + fotos.length) % fotos.length;
+      fotos[actual].classList.add('activo');
+      puntos.forEach((p, i) => p.setAttribute('aria-current', String(i === actual)));
+      mostrarCredito();
+    };
+    const programar = () => {
+      clearInterval(temporizador);
+      controles.classList.toggle('hero__controles--auto', !pausado);
+      if (!pausado) temporizador = setInterval(() => mostrar(actual + 1), INTERVALO);
+    };
+
+    if (fotos.length > 1) {
+      controles.hidden = false;
+      controles.style.setProperty('--hero-intervalo', `${INTERVALO}ms`);
+      puntos.forEach((p, i) => p.addEventListener('click', () => { mostrar(i); programar(); }));
+      pausa.setAttribute('aria-pressed', String(pausado));
+      pausa.setAttribute('aria-label', pausado ? 'Reanudar fotos' : 'Pausar fotos');
+      pausa.addEventListener('click', () => {
+        pausado = !pausado;
+        pausa.setAttribute('aria-pressed', String(pausado));
+        pausa.setAttribute('aria-label', pausado ? 'Reanudar fotos' : 'Pausar fotos');
+        programar();
+      });
+      // No avanzar mientras la pestaña está oculta.
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) clearInterval(temporizador);
+        else programar();
+      });
+      programar();
+    }
+    mostrarCredito();
+  }
+
   // Todo lo que sigue es movimiento: se omite con prefers-reduced-motion.
   if (!animar) return;
 

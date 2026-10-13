@@ -83,6 +83,8 @@ Botones: `<a class="boton boton--primario" href="…"><%- textoBoton('Texto') %>
 
 Fotos: `partials/foto.ejs` (`src`, `alt`, `clase`, `figura`, `ancho`, `alto`, `prioridad`). Sin `src` muestra un
 relleno con degradado. Las rutas están en `site.fotos` (lib/site.js).
+Hero: carrusel de fondo con `site.heroFotos` (fundido cada 6,5 s, botón de pausa, no avanza solo con movimiento reducido).
+Toda foto con licencia CC lleva `credito` y `creditoUrl`; no usar fotos de medios de prensa sin permiso.
 
 ## Animaciones (public/js/main.js + public/js/temprano.js, sin librerías)
 - `temprano.js` (sin defer, en `<head>`) pone `.js` y `.animar` en `<html>`; `.animar` solo si no hay
@@ -117,6 +119,7 @@ relleno con degradado. Las rutas están en `site.fotos` (lib/site.js).
 - En EJS usar `<%= %>` (escapa). `<%-` solo para partials o JSON-LD ya serializado con `jsonLd()`.
 - SQL siempre con parámetros (`?`), nunca concatenando strings.
 - Subidas: solo jpg/png/webp ≤ 2 MB, nombre aleatorio.
+- CSP (`server.js`): `frame-src` solo permite Google Maps (mapa de Visítenos). No agregar otros orígenes sin necesidad.
 - `.env` y `data/` fuera del control de versiones.
 
 ## Datos
