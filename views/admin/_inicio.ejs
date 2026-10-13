@@ -19,17 +19,17 @@
 <body class="admin">
 <% if (locals.usuarioAdmin) { %>
 <header class="admin-barra">
-  <a class="admin-marca" href="/admin"><img class="admin-marca__logo" src="/img/logo-ccss-negro-128.png" srcset="/img/logo-ccss-negro-128.png 1x, /img/logo-ccss-negro-256.png 2x" alt="" width="40" height="40"> ASN</a>
+  <a class="admin-marca" href="<%= secciones.length ? secciones[0].ruta : '/admin/cuenta' %>"><img class="admin-marca__logo" src="/img/logo-ccss-negro-128.png" srcset="/img/logo-ccss-negro-128.png 1x, /img/logo-ccss-negro-256.png 2x" alt="" width="40" height="40"> ASN</a>
   <nav aria-label="Panel">
-    <a href="/admin"<% if (seccion === 'anuncios') { %> aria-current="page"<% } %>>Anuncios</a>
-    <a href="/admin/directorio"<% if (seccion === 'directorio') { %> aria-current="page"<% } %>>Directorio</a>
-    <a href="/admin/servicios"<% if (seccion === 'servicios') { %> aria-current="page"<% } %>>Servicios</a>
-    <a href="/admin/contenido"<% if (seccion === 'contenido') { %> aria-current="page"<% } %>>Misión y visión</a>
-    <a href="/" target="_blank" rel="noopener">Ver sitio ↗</a>
+    <% secciones.forEach(function (s) { %>
+      <a href="<%= s.ruta %>"<% if (seccion === s.clave) { %> aria-current="page"<% } %>><%= s.texto %></a>
+    <% }) %>
+    <a href="/">Ver sitio</a>
   </nav>
+  <a class="admin-cuenta" href="/admin/cuenta" title="<%= usuarioAdmin %> · <%= usuarioActual.rol_nombre %>"<% if (seccion === 'cuenta') { %> aria-current="page"<% } %>><%- icono('users') %>Mi cuenta</a>
   <form method="post" action="/admin/logout">
     <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-    <button class="admin-salir" type="submit">Salir (<%= usuarioAdmin %>)</button>
+    <button class="admin-salir" type="submit"><%- icono('salir') %>Salir</button>
   </form>
 </header>
 <% } %>

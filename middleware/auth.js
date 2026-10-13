@@ -1,10 +1,52 @@
-// Autenticación del panel, protección CSRF y límite de intentos de login.
+// Autenticación y permisos del panel, protección CSRF y límite de intentos de login.
 const crypto = require('node:crypto');
+const { buscarUsuario, contexto } = require('../lib/permisos');
 
+// Carga el usuario desde la BD en cada petición: si lo desactivaron, lo borraron o cambiaron su
+// contraseña, la sesión se cierra. Expone req.usuario, req.puede() y res.locals para las vistas.
 function requireAuth(req, res, next) {
-  if (req.session && req.session.usuario) return next();
-  req.session.volverA = req.originalUrl;
-  res.redirect('/admin/login');
+  const id = req.session && req.session.usuarioId;
+  const usuario = id && buscarUsuario(id);
+  const vigente = usuario && usuario.activo && usuario.version_sesion === req.session.versionSesion;
+  if (!vigente) {
+    const volverA = req.method === 'GET' ? req.originalUrl : '/admin';
+    return req.session.regenerate(() => {
+      req.session.volverA = volverA;
+      res.redirect('/admin/login');
+    });
+  }
+  const ctx = contexto(usuario);
+  req.usuario = usuario;
+  req.puede = ctx.puede;
+  Object.assign(res.locals, {
+    usuarioAdmin: usuario.usuario,
+    usuarioActual: usuario,
+    esSuper: ctx.esSuper,
+    puede: ctx.puede,
+    secciones: ctx.secciones,
+  });
+  next();
+}
+
+// Primera sección del panel que el usuario puede ver.
+function inicioPermitido(res) {
+  const s = res.locals.secciones && res.locals.secciones[0];
+  return s ? s.ruta : '/admin/cuenta';
+}
+
+function negar(req, res) {
+  req.session.flash = { texto: 'No tiene permiso para realizar esa acción.', tipo: 'error' };
+  res.redirect(inicioPermitido(res));
+}
+
+// Exige uno de los permisos indicados.
+function permiso(...claves) {
+  return (req, res, next) => (claves.some((c) => req.puede(c)) ? next() : negar(req, res));
+}
+
+// Solo el rol Superadmin.
+function soloSuper(req, res, next) {
+  return res.locals.esSuper ? next() : negar(req, res);
 }
 
 // Genera un token por sesión y lo expone a las vistas como `csrfToken`.
@@ -55,4 +97,6 @@ function limpiarFallos(ip) {
   intentos.delete(ip);
 }
 
-module.exports = { requireAuth, csrfToken, verificarCsrf, limiteLogin, registrarFallo, limpiarFallos };
+module.exports = {
+  requireAuth, permiso, soloSuper, inicioPermitido, csrfToken, verificarCsrf, limiteLogin, registrarFallo, limpiarFallos,
+};

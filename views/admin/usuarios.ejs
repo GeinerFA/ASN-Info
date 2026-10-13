@@ -1,0 +1,138 @@
+<%- include('_inicio', { titulo: 'Usuarios' }) %>
+<div class="admin-cabecera">
+  <div>
+    <h1>Usuarios</h1>
+    <p>Cree las cuentas del panel con su rol y defina abajo lo que puede hacer cada rol.</p>
+  </div>
+</div>
+
+<% if (editar) { %>
+  <% const esYo = editar.id === usuarioActual.id; %>
+  <form class="formulario tarjeta" method="post" action="/admin/usuarios/<%= editar.id %>" id="formulario">
+    <h2>Editar «<%= editar.usuario %>»</h2>
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <input type="text" name="usuario" value="<%= editar.usuario %>" autocomplete="username" hidden>
+    <div class="formulario__fila formulario__fila--3 formulario__fila--iguales">
+      <label>Usuario<input value="<%= editar.usuario %>" disabled></label>
+      <label><span>Nueva contraseña <span class="opcional">(opcional)</span></span><input name="password" type="password" minlength="10" maxlength="72" autocomplete="new-password" placeholder="Dejar en blanco para no cambiarla"></label>
+      <label>Rol
+        <select name="rol_id"<% if (esYo) { %> disabled<% } %>>
+          <% roles.forEach(function (r) { %><option value="<%= r.id %>"<% if (r.id === editar.rol_id) { %> selected<% } %>><%= r.nombre %></option><% }) %>
+        </select>
+      </label>
+    </div>
+    <% if (esYo) { %>
+      <input type="hidden" name="rol_id" value="<%= editar.rol_id %>"><input type="hidden" name="activo" value="1">
+      <small class="ayuda">No puede cambiar su propio rol ni desactivarse.</small>
+    <% } else { %>
+      <label class="check"><input type="checkbox" name="activo" value="1"<% if (editar.activo) { %> checked<% } %>> Cuenta activa (puede iniciar sesión)</label>
+      <small class="ayuda">Al cambiar la contraseña o desactivar la cuenta se cierran las sesiones abiertas de ese usuario.</small>
+    <% } %>
+    <div class="formulario__acciones">
+      <button class="btn btn--primario" type="submit">Guardar cambios</button>
+      <a class="btn" href="/admin/usuarios">Cancelar</a>
+    </div>
+  </form>
+<% } else { %>
+  <form class="formulario tarjeta" method="post" action="/admin/usuarios" id="formulario">
+    <h2>Nuevo usuario</h2>
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <div class="formulario__fila formulario__fila--3 formulario__fila--iguales">
+      <label>Usuario *<input name="usuario" required minlength="3" maxlength="30" pattern="[A-Za-z0-9._\-]{3,30}" autocomplete="off" placeholder="jperez"></label>
+      <label>Contraseña *<input name="password" type="password" required minlength="10" maxlength="72" autocomplete="new-password"></label>
+      <label>Rol *
+        <select name="rol_id" required>
+          <% roles.slice().reverse().forEach(function (r) { %><option value="<%= r.id %>"><%= r.nombre %></option><% }) %>
+        </select>
+      </label>
+    </div>
+    <small class="ayuda">Usuario: letras, números, punto, guion o guion bajo (se guarda en minúsculas). Contraseña: mínimo 10 caracteres; se guarda cifrada (bcrypt), nadie puede verla.</small>
+    <div class="formulario__acciones">
+      <button class="btn btn--primario" type="submit">Crear usuario</button>
+    </div>
+  </form>
+<% } %>
+
+<div class="tabla-envoltura">
+  <table class="tabla">
+    <thead><tr><th scope="col">Usuario</th><th scope="col">Rol</th><th scope="col">Estado</th><th scope="col">Último acceso</th><th scope="col"><span class="sr-only">Acciones</span></th></tr></thead>
+    <tbody>
+      <% usuarios.forEach(function (u) { const esYo = u.id === usuarioActual.id; %>
+      <tr<% if (editar && editar.id === u.id) { %> class="fila-activa"<% } %>>
+        <td data-etiqueta="Usuario"><strong><%= u.usuario %></strong><% if (esYo) { %> <span class="etiqueta etiqueta--gris">Usted</span><% } %></td>
+        <td data-etiqueta="Rol"><span class="etiqueta <%= u.es_super ? 'etiqueta--amarillo' : 'etiqueta--verde' %>"><%= u.rol_nombre || '—' %></span></td>
+        <td data-etiqueta="Estado"><span class="etiqueta <%= u.activo ? 'etiqueta--verde' : 'etiqueta--rojo' %>"><%= u.activo ? 'Activo' : 'Inactivo' %></span></td>
+        <td data-etiqueta="Último acceso"><%= u.ultimo_acceso ? fechaLarga(u.ultimo_acceso) + ' · ' + u.ultimo_acceso.slice(11, 16) : 'Nunca' %></td>
+        <td class="acciones">
+          <a class="btn btn--chico" href="/admin/usuarios/<%= u.id %>/editar#formulario">Editar</a>
+          <% if (!esYo) { %>
+          <form method="post" action="/admin/usuarios/<%= u.id %>/eliminar" data-confirmar="¿Eliminar el usuario «<%= u.usuario %>»? Esta acción no se puede deshacer.">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <button class="btn btn--chico btn--peligro" type="submit">Eliminar</button>
+          </form>
+          <% } %>
+        </td>
+      </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>
+
+<section class="seccion-permisos" id="permisos" aria-labelledby="titulo-permisos">
+  <div class="admin-cabecera">
+    <div>
+      <h2 id="titulo-permisos">Permisos por rol</h2>
+      <p>Marque lo que puede hacer cada rol. Los cambios se aplican de inmediato a todos los usuarios de ese rol.</p>
+    </div>
+  </div>
+
+  <form method="post" action="/admin/permisos" class="tarjeta matriz-form">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <div class="tabla-envoltura tabla-envoltura--plana">
+      <table class="matriz">
+        <caption class="sr-only">Matriz de permisos: filas = permisos, columnas = roles</caption>
+        <thead>
+          <tr>
+            <th scope="col">Permiso</th>
+            <% roles.forEach(function (r) { %>
+              <th scope="col" class="matriz__rol"><%= r.nombre %><% if (r.es_super) { %><small>Todos los permisos</small><% } %></th>
+            <% }) %>
+          </tr>
+        </thead>
+        <% modulos.forEach(function (m) { %>
+          <tbody>
+            <tr class="matriz__modulo"><th scope="rowgroup" colspan="<%= roles.length + 1 %>"><%= m.nombre %></th></tr>
+            <% m.permisos.forEach(function (p) { %>
+              <tr>
+                <th scope="row"><%= p[1] %></th>
+                <% roles.forEach(function (r) { %>
+                  <td class="matriz__celda">
+                    <% if (r.es_super) { %>
+                      <input type="checkbox" checked disabled aria-label="<%= r.nombre %>: <%= m.nombre %> — <%= p[1] %> (siempre)">
+                    <% } else { %>
+                      <input type="checkbox" name="p" value="<%= r.id %>:<%= p[0] %>"<% if (r.permisos.has(p[0])) { %> checked<% } %> aria-label="<%= r.nombre %>: <%= m.nombre %> — <%= p[1] %>">
+                    <% } %>
+                  </td>
+                <% }) %>
+              </tr>
+            <% }) %>
+          </tbody>
+        <% }) %>
+        <tbody>
+          <tr class="matriz__modulo"><th scope="rowgroup" colspan="<%= roles.length + 1 %>">Administración</th></tr>
+          <tr>
+            <th scope="row">Usuarios<small class="opcional">(exclusivo del superadmin)</small></th>
+            <% roles.forEach(function (r) { %>
+              <td class="matriz__celda"><input type="checkbox" disabled<% if (r.es_super) { %> checked<% } %> aria-label="<%= r.nombre %>: usuarios"></td>
+            <% }) %>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="ayuda">Para que una sección aparezca en el menú, el rol necesita su permiso «Ver». Sin «Publicar y despublicar», los anuncios nuevos quedan como borrador.</p>
+    <div class="formulario__acciones">
+      <button class="btn btn--primario" type="submit">Guardar permisos</button>
+    </div>
+  </form>
+</section>
+<%- include('_fin') %>

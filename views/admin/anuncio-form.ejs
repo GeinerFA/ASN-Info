@@ -51,7 +51,11 @@
   </fieldset>
 
   <div class="formulario__checks">
-    <label class="check"><input type="checkbox" name="publicado" value="1"<% if (anuncio.publicado) { %> checked<% } %>> Publicado (visible en el sitio)</label>
+    <% if (puede('anuncios.publicar')) { %>
+      <label class="check"><input type="checkbox" name="publicado" value="1"<% if (anuncio.publicado) { %> checked<% } %>> Publicado (visible en el sitio)</label>
+    <% } else { %>
+      <p class="ayuda">Estado: <strong><%= anuncio.publicado ? 'Publicado' : 'Borrador' %></strong>. Un usuario con permiso de publicar decide cuándo se muestra en el sitio.</p>
+    <% } %>
     <label class="check"><input type="checkbox" name="destacado" value="1"<% if (anuncio.destacado) { %> checked<% } %>> Destacado (aparece primero)</label>
   </div>
 

@@ -1,4 +1,4 @@
-{"id":1,"parent_id":null,"opcion":1,"nombre":"Dirección Médica","extension":"1001","telefono":null,"horario":null,"externo":0}
+{"id":1,"parent_id":null,"opcion":1,"nombre":"Dirección Médica","extension":"1001","telefono":null,"horario":"Lun–Jue 7:00 – 16:00\nVie 07:00 - 15:00","externo":0}
 {"id":2,"parent_id":null,"opcion":2,"nombre":"Enfermería","extension":"1020","telefono":null,"horario":null,"externo":0}
 {"id":3,"parent_id":null,"opcion":3,"nombre":"Laboratorio","extension":"1071","telefono":null,"horario":null,"externo":0}
 {"id":4,"parent_id":null,"opcion":4,"nombre":"Farmacia","extension":"1064","telefono":null,"horario":null,"externo":0}

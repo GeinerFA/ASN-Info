@@ -20,7 +20,7 @@ No se copian testimonios ni médicos de la plantilla (no hay datos reales).
 ## Comandos
 ```bash
 npm install            # además activa hooks de git y el driver de merge (scripts/configurar-git.js)
-npm run create-admin   # crea/actualiza usuario admin: npm run create-admin -- usuario contraseña
+npm run create-admin   # crea/restablece un SUPERADMIN: npm run create-admin -- usuario contraseña
 npm run dev            # node --watch, http://localhost:3000
 npm start              # producción
 npm run datos:exportar # BD -> datos/*.jsonl (normalmente lo hace el hook pre-commit)
@@ -111,7 +111,14 @@ relleno con degradado. Las rutas están en `site.fotos` (lib/site.js).
 5. Las páginas de admin llevan `noindex, nofollow` y están bloqueadas en `robots.txt`.
 
 ## Seguridad
-- Toda ruta bajo `/admin` (excepto login) usa `requireAuth`.
+- Toda ruta bajo `/admin` (excepto login) usa `requireAuth`, que carga el usuario desde la BD en cada petición
+  (si se desactiva o cambia su contraseña, `version_sesion` cambia y la sesión se cierra).
+- **Roles y permisos** (`lib/permisos.js`): `Superadmin` (`es_super = 1`) tiene todo y es el único que administra
+  usuarios y la matriz, ambos en la misma página `/admin/usuarios` (`soloSuper`; `POST /admin/permisos` guarda la matriz).
+  Un usuario solo tiene usuario, contraseña y rol. Los demás roles usan la matriz `rol_permisos`.
+  Toda ruta nueva del panel lleva `permiso('modulo.accion')`; en las vistas, mostrar botones con `puede('modulo.accion')`.
+  Un permiso nuevo se agrega en `MODULOS` y aparece solo en la matriz. No se puede eliminar/degradar al último superadmin ni a uno mismo.
+- `npm run create-admin -- usuario contraseña` crea o restablece un **superadmin** (recuperación de acceso).
 - Contraseñas con bcrypt; cookie de sesión `httpOnly`, `sameSite=lax`, `secure` en producción.
 - Todos los formularios POST llevan `_csrf` (ver `middleware/auth.js`). En formularios multipart el token va en la query (`?_csrf=`).
 - En EJS usar `<%= %>` (escapa). `<%-` solo para partials o JSON-LD ya serializado con `jsonLd()`.

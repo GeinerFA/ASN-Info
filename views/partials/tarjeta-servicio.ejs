@@ -2,5 +2,5 @@
   <span class="tarjeta-servicio__icono"><%- icono(s.icono) %></span>
   <h3><%= s.nombre %></h3>
   <p><%= s.descripcion %></p>
-  <% if (s.horario) { %><p class="tarjeta-servicio__horario"><%- icono('clock') %><%= s.horario %></p><% } %>
+  <% horarios(s.horario).forEach(function (h) { %><p class="tarjeta-servicio__horario"><%- icono('clock') %><%= h %></p><% }) %>
 </article>
