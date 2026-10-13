@@ -76,9 +76,6 @@ function cargarDirectorioIvr(db) {
       ins.run(lastInsertRowid, hijo.opcion, hijo.nombre, hijo.extension || null, hijo.telefono || null, hijo.horario || null, 0);
     }
   }
-  db.prepare(
-    "INSERT INTO contenido (clave, valor) VALUES ('directorio_cargado', 'true') ON CONFLICT(clave) DO NOTHING"
-  ).run();
 }
 
 module.exports = { MENU, cargarDirectorioIvr };

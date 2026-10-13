@@ -85,16 +85,6 @@ if (!db.prepare('PRAGMA table_info(directorio)').all().some((c) => c.name === 'e
   db.prepare("INSERT INTO directorio (parent_id, opcion, nombre, externo) VALUES (NULL, 1, 'EBAIS externos', 1)").run();
 }
 
-// Primera ejecución (BD nueva): si el directorio nunca se ha cargado, se carga el menú del IVR.
-// La marca evita recargarlo si luego un administrador lo vacía a propósito.
-if (!db.prepare("SELECT 1 FROM contenido WHERE clave = 'directorio_cargado'").get()) {
-  if (db.prepare('SELECT 1 FROM directorio LIMIT 1').get()) {
-    db.prepare("INSERT INTO contenido (clave, valor) VALUES ('directorio_cargado', 'true')").run();
-  } else {
-    require('./directorio-ivr').cargarDirectorioIvr(db);
-  }
-}
-
 // Contenido institucional (misión, visión, valores...) guardado como JSON por clave.
 function getContenido(clave, porDefecto = null) {
   const fila = db.prepare('SELECT valor FROM contenido WHERE clave = ?').get(clave);

@@ -8,18 +8,28 @@ Las reglas de código, de SEO y de seguridad están en [CLAUDE.md](CLAUDE.md). L
 ```bash
 npm install            # en la red de la CCSS: NODE_OPTIONS=--use-system-ca npm install
 cp .env.example .env
-npm run seed           # crea la BD con datos de ejemplo (BORRA anuncios, servicios y directorio)
 npm run create-admin -- <usuario> <contraseña>
 npm run dev            # http://localhost:3000  ·  panel: /admin
 ```
 
-El directorio telefónico se carga solo la primera vez que arranca el servidor con una BD nueva.
-Para restablecerlo sin tocar anuncios ni servicios: `npm run cargar-directorio` (reemplaza el directorio actual).
+`npm install` también activa los hooks de git que sincronizan los datos. Hay que correrlo **una vez** después de clonar.
+No use `npm run seed`: reemplaza los datos reales por datos de ejemplo.
 
 Stack: Node 24 + Express + EJS (render en servidor) + SQLite nativo (`node:sqlite`). Sin frameworks de CSS ni de JS.
 
-> La base de datos (`data/asn.db`) **no está en git**. Al clonar, usted tendrá los datos de ejemplo del seed,
-> no el contenido que se editó desde el panel en la máquina original.
+## Datos compartidos por git (automático)
+
+Lo que se crea en el panel (anuncios, directorio, servicios, misión y visión) viaja con git:
+
+- **Al hacer commit**, se exporta la base de datos a `datos/*.jsonl` y se incluye en el commit.
+- **Al hacer pull** (y al arrancar el servidor), se carga en la base de datos lo que llegó en `datos/`.
+- Si ambos editan a la vez, se combina **registro por registro**. Si los dos cambiaron el mismo registro,
+  gana la versión del repositorio y se muestra un aviso.
+- Las imágenes de los anuncios (`public/uploads/`) también van en el commit.
+- **No se comparten** usuarios, contraseñas ni sesiones: cada persona crea su propio usuario admin.
+
+Recomendación: haga **commit antes de pull** cuando haya editado datos en el panel.
+Comandos manuales, por si hacen falta: `npm run datos:exportar` y `npm run datos:importar` (con `-- --forzar` para sobrescribir).
 
 ## Qué está hecho
 

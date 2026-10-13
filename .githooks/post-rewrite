@@ -1,0 +1,5 @@
+#!/bin/sh
+# Después de un pull con rebase: carga en la base de datos lo que llegó en datos/.
+[ "$1" = "rebase" ] || exit 0
+node scripts/datos.js importar || echo "[datos] Revise el mensaje anterior; la base de datos no se actualizó."
+exit 0

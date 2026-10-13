@@ -18,13 +18,21 @@ horarios → CTA final → footer completo.
 
 ## Comandos
 ```bash
-npm install
-npm run seed           # crea tablas y carga datos de ejemplo (borra los existentes)
+npm install            # además activa hooks de git y el driver de merge (scripts/configurar-git.js)
 npm run create-admin   # crea/actualiza usuario admin: npm run create-admin -- usuario contraseña
-npm run cargar-directorio  # restablece SOLO el directorio (menú IVR de db/directorio-ivr.js)
 npm run dev            # node --watch, http://localhost:3000
 npm start              # producción
+npm run datos:exportar # BD -> datos/*.jsonl (normalmente lo hace el hook pre-commit)
+npm run datos:importar # datos/*.jsonl -> BD (normalmente lo hacen post-merge y el arranque)
+npm run seed -- --forzar  # SOLO para empezar de cero con datos de ejemplo (reemplaza los datos reales)
 ```
+
+### Sincronización de datos por git
+El contenido del panel se versiona en `datos/*.jsonl` (una fila por línea). `lib/datos.js` exporta e importa,
+`lib/datos-formato.js` combina fila por fila (base = `data/sync/`, la última sincronización) y
+`scripts/merge-datos.js` es el driver de merge de git (`.gitattributes`: `merge=datos`).
+Hooks en `.githooks/`: `pre-commit` (exporta y hace `git add datos public/uploads`), `post-merge` y `post-rewrite` (importan).
+No se sincronizan `usuarios` ni `sesiones`. Si se agrega una tabla de contenido, sumarla a `TABLAS` en `lib/datos.js`.
 
 > **Red corporativa:** si `npm install` falla con `SELF_SIGNED_CERT_IN_CHAIN`, usar
 > `NODE_OPTIONS=--use-system-ca npm install` (confía en el almacén de certificados de Windows).
