@@ -1,6 +1,19 @@
 // Carga datos de EJEMPLO. Ejecutar: npm run seed
 // ATENCIÓN: borra anuncios, directorio, servicios y contenido existentes (no toca usuarios).
 // TODO: dato real — reemplazar todo este contenido por la información oficial del Área de Salud.
+const fs = require('node:fs');
+const path = require('node:path');
+
+// Con datos/ versionado, el seed reemplazaría el contenido real y el próximo commit lo subiría al repositorio.
+if (fs.existsSync(path.join(__dirname, '..', 'datos')) && !process.argv.includes('--forzar')) {
+  console.error(
+    'El proyecto ya tiene datos reales en datos/ (se cargan solos al arrancar el servidor).\n' +
+    'El seed los reemplazaría por datos de ejemplo y el próximo commit los subiría al repositorio.\n' +
+    'Si de verdad quiere eso: npm run seed -- --forzar'
+  );
+  process.exit(1);
+}
+
 const { db, setContenido } = require('./database');
 const { slugify, hoyISO } = require('../lib/util');
 const { cargarDirectorioIvr } = require('./directorio-ivr');

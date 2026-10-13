@@ -96,5 +96,8 @@ app.use((err, req, res, next) => {
   res.status(500).send('Ocurrió un error inesperado. Intente de nuevo más tarde.');
 });
 
+// Carga en la BD los datos que llegaron por git (datos/), si cambiaron. Ver lib/datos.js.
+console.log('[datos] ' + require('./lib/datos').importar().mensaje);
+
 const PORT = Number(process.env.PORT) || 3000;
 app.listen(PORT, () => console.log(`Área de Salud Naranjo en http://localhost:${PORT}`));
