@@ -1,0 +1,14 @@
+<%
+  // Bloque de imagen. Parámetros: src?, alt, clase?, figura?, ancho?, alto?, prioridad?
+  // Sin src muestra un relleno con degradado hasta tener la foto real (public/img/fotos/).
+  const fotoClase = 'foto' + (locals.clase ? ' ' + locals.clase : '');
+  const fotoAlt = locals.alt || '';
+%><% if (locals.src) { %>
+<figure class="<%= fotoClase %>">
+  <img src="<%= src %>" alt="<%= fotoAlt %>" width="<%= locals.ancho || 1200 %>" height="<%= locals.alto || 800 %>"<% if (!locals.prioridad) { %> loading="lazy"<% } %>>
+</figure>
+<% } else { %>
+<div class="<%= fotoClase %> foto--vacia"<% if (fotoAlt) { %> role="img" aria-label="<%= fotoAlt %>"<% } else { %> aria-hidden="true"<% } %>>
+  <%- icono(locals.figura || 'stethoscope', 'icono foto__icono') %>
+</div>
+<% } %>

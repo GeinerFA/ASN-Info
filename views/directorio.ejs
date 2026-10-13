@@ -3,17 +3,19 @@
 
 <main id="contenido">
   <section class="encabezado-pagina">
-    <div class="contenedor">
-      <%- include('partials/migas', { migas: [{ nombre: 'Directorio telefónico', ruta: '/directorio' }] }) %>
-      <p class="eyebrow">Directorio · U.P. <%= site.unidadProgramatica %></p>
-      <h1>Directorio telefónico</h1>
-      <p class="encabezado-pagina__lead">Llame a la central del Área de Salud Naranjo y marque la opción del servicio que necesita. Ante una emergencia llame al <a href="tel:<%= site.emergencias %>"><strong><%= site.emergencias %></strong></a>.</p>
+    <div class="encabezado-pagina__caja oscuro">
+      <div class="contenedor">
+        <%- include('partials/migas', { migas: [{ nombre: 'Directorio telefónico', ruta: '/directorio' }] }) %>
+        <p class="eyebrow" data-revelar>Directorio · U.P. <%= site.unidadProgramatica %></p>
+        <h1 data-palabras>Directorio <span class="cursiva">telefónico</span></h1>
+        <p class="encabezado-pagina__lead" data-revelar data-retardo="300">Llame a la central del Área de Salud Naranjo y marque la opción del servicio que necesita. Ante una emergencia llame al <a href="tel:<%= site.emergencias %>"><strong><%= site.emergencias %></strong></a>.</p>
+      </div>
     </div>
   </section>
 
   <section class="seccion seccion--compacta" aria-label="Menú telefónico">
     <div class="contenedor">
-      <div class="ivr-central">
+      <div class="ivr-central" data-revelar>
         <div class="ivr-central__numero">
           <span class="ivr-central__icono"><%- icono('phone') %></span>
           <div>
@@ -34,9 +36,9 @@
       </div>
       <p class="buscador__vacio" id="directorio-vacio" role="status" hidden>No se encontraron contactos con ese criterio.</p>
 
-      <div class="ivr">
+      <div class="ivr" data-revelar-grupo>
         <!-- Menú principal -->
-        <div class="ivr__menu ivr__menu--celeste" data-grupo>
+        <div class="ivr__menu ivr__menu--celeste" data-grupo data-revelar>
           <header class="ivr__cabecera">
             <span class="ivr__tecla ivr__tecla--grande" aria-hidden="true"><%- icono('phone') %></span>
             <div>
@@ -63,7 +65,7 @@
 
         <!-- Submenús -->
         <% menu.filter(function (m) { return !m.externo && m.hijos.length; }).forEach(function (m) { %>
-          <div class="ivr__menu ivr__menu--<%= m.color %>" id="submenu-<%= m.opcion %>" data-grupo>
+          <div class="ivr__menu ivr__menu--<%= m.color %>" id="submenu-<%= m.opcion %>" data-grupo data-revelar>
             <header class="ivr__cabecera">
               <span class="ivr__tecla ivr__tecla--grande"><%= m.opcion %></span>
               <div>
@@ -86,7 +88,7 @@
 
         <!-- Ubicaciones externas (fuera del menú telefónico) -->
         <% menu.filter(function (m) { return m.externo && m.hijos.length; }).forEach(function (m) { %>
-          <div class="ivr__menu ivr__menu--<%= m.color %>" id="externos-<%= m.id %>" data-grupo>
+          <div class="ivr__menu ivr__menu--<%= m.color %>" id="externos-<%= m.id %>" data-grupo data-revelar>
             <header class="ivr__cabecera">
               <span class="ivr__tecla ivr__tecla--grande" aria-hidden="true"><%- icono('pin') %></span>
               <div>

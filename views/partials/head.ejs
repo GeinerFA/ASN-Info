@@ -17,7 +17,7 @@
   <meta name="geo.placename" content="Naranjo, Alajuela">
   <meta name="geo.position" content="<%= site.geo.lat %>;<%= site.geo.lng %>">
   <meta name="ICBM" content="<%= site.geo.lat %>, <%= site.geo.lng %>">
-  <meta name="theme-color" content="#0b7f72">
+  <meta name="theme-color" content="#09735c">
 
   <!-- Open Graph / Twitter -->
   <meta property="og:type" content="<%= locals.ogType || 'website' %>">
@@ -40,8 +40,9 @@
   <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Manrope:wght@600;700;800&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mona+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@1,400;1,500&display=swap">
   <link rel="stylesheet" href="/css/styles.css">
+  <script src="/js/temprano.js"></script>
   <script src="/js/main.js" defer></script>
   <% ldLista.forEach(function (ld) { %>
   <script type="application/ld+json"><%- jsonLd(ld) %></script>

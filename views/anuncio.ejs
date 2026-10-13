@@ -4,14 +4,16 @@
 <main id="contenido">
   <article class="articulo">
     <header class="encabezado-pagina">
-      <div class="contenedor contenedor--estrecho">
-        <%- include('partials/migas', { migas: [{ nombre: 'Anuncios', ruta: '/anuncios' }, { nombre: anuncio.titulo, ruta: '/anuncios/' + anuncio.slug }] }) %>
-        <p class="tarjeta-anuncio__meta">
-          <span class="chip"><%= anuncio.categoria %></span>
-          <time datetime="<%= anuncio.fecha_publicacion %>"><%= fechaLarga(anuncio.fecha_publicacion) %></time>
-        </p>
-        <h1><%= anuncio.titulo %></h1>
-        <% if (anuncio.resumen) { %><p class="encabezado-pagina__lead"><%= anuncio.resumen %></p><% } %>
+      <div class="encabezado-pagina__caja oscuro">
+        <div class="contenedor contenedor--estrecho">
+          <%- include('partials/migas', { migas: [{ nombre: 'Anuncios', ruta: '/anuncios' }, { nombre: anuncio.titulo, ruta: '/anuncios/' + anuncio.slug }] }) %>
+          <p class="tarjeta-anuncio__meta" data-revelar>
+            <span class="chip"><%= anuncio.categoria %></span>
+            <time datetime="<%= anuncio.fecha_publicacion %>"><%= fechaLarga(anuncio.fecha_publicacion) %></time>
+          </p>
+          <h1 data-palabras><%= anuncio.titulo %></h1>
+          <% if (anuncio.resumen) { %><p class="encabezado-pagina__lead" data-revelar data-retardo="300"><%= anuncio.resumen %></p><% } %>
+        </div>
       </div>
     </header>
 
@@ -30,10 +32,10 @@
   </article>
 
   <% if (otros.length) { %>
-  <section class="seccion seccion--crema" aria-labelledby="otros-titulo">
+  <section class="seccion seccion--gris" aria-labelledby="otros-titulo">
     <div class="contenedor">
-      <header class="seccion__cabecera"><h2 id="otros-titulo">Otros anuncios</h2></header>
-      <div class="grid grid--3">
+      <header class="seccion__cabecera"><h2 id="otros-titulo" data-palabras>Otros <span class="cursiva">anuncios</span></h2></header>
+      <div class="grid grid--3" data-revelar-grupo>
         <% otros.forEach(function (a) { %><%- include('partials/tarjeta-anuncio', { a: a }) %><% }) %>
       </div>
     </div>

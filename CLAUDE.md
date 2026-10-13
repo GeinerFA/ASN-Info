@@ -3,10 +3,11 @@
 Sitio web informativo del **Área de Salud Naranjo** (CCSS, Naranjo, Alajuela, Costa Rica).
 Idioma del sitio: `es-CR`. Todo el contenido visible, URLs (slugs) y mensajes al usuario van en español.
 
-Referencia visual: https://convex-train-416759.framer.app/ (plantilla "Dentiva" de Framer).
-Se replica su estructura y estilo: top bar → nav con CTA → hero (eyebrow + H1 + 2 CTAs + badges) →
-estadísticas → tarjetas de servicios → bloques de valor → pasos numerados → FAQ → "Visítenos" con
-horarios → CTA final → footer completo.
+Referencia visual: https://medilea.webflow.io/ (plantilla "Medilea" de Webflow).
+Se replica su estilo y sus transiciones: top bar → nav con CTA → hero oscuro (eyebrow + H1 + 2 CTAs +
+badges + marquesina de servicios) → "Quiénes somos" con foto y contadores → tarjetas de servicios →
+compromiso → anuncios → pasos numerados → FAQ → "Visítenos" con horarios → CTA final oscuro → footer.
+No se copian testimonios ni médicos de la plantilla (no hay datos reales).
 
 ## Stack
 - **Node.js 24** + **Express 4**
@@ -53,18 +54,37 @@ scripts/create-admin.js
 ## Diseño (tokens de la referencia)
 | Token | Valor | Uso |
 |---|---|---|
-| `--primary` | `#0e9f8e` | acentos, iconos, decoración |
-| `--primary-dark` | `#0b7f72` | botones y texto en color (contraste AA) |
-| `--ink` | `#0f1f24` | texto principal |
-| `--muted` | `#5b6b70` | texto secundario |
-| `--line` | `#e3ecec` | bordes |
-| `--mint` | `#e6f6f3` | fondos suaves, chips |
-| `--cream` | `#f6f1ea` | secciones alternas |
-| `--surface` | `#fafcfc` | fondo de página |
-| `--star` / `--danger` | `#f5b301` / `#e5484d` | acentos |
+| `--primary` | `#09735c` | botones, texto en color, iconos (AA sobre blanco y menta) |
+| `--primary-dark` | `#065a48` | hover, chips |
+| `--primary-claro` | `#5fd0b0` | acentos sobre fondos oscuros (nunca sobre blanco) |
+| `--ink` | `#0f1e4c` | texto principal y títulos |
+| `--night` | `#07112f` | hero, encabezados de página, CTA final, footer |
+| `--muted` | `#575757` | texto secundario |
+| `--line` | `#e6e6e6` | bordes |
+| `--mint` | `#f1f7f3` | secciones alternas, fondos suaves |
+| `--gris` | `#f8fafc` | secciones alternas |
+| `--danger` | `#e5484d` | emergencias |
 
-Tipografías: **Manrope** (títulos) e **Inter** (texto). Radios: 12 / 16 / 20 px y pill (999px).
-Etiquetas "eyebrow" en MAYÚSCULAS sobre cada H2. No usar `#0e9f8e` para texto pequeño (falla AA).
+Tipografías: **Mona Sans** (todo, títulos en peso 500) y **Playfair Display** cursiva para una palabra
+destacada por título: `<span class="cursiva">palabra</span>`. Radios: 10 (botones) / 12 / 16 / 20 px y pill.
+Etiquetas "eyebrow" (pastilla con punto) en MAYÚSCULAS sobre cada H2. Dentro de un fondo oscuro, añadir la
+clase `oscuro` al contenedor (ajusta eyebrow y `.cursiva`).
+
+Botones: `<a class="boton boton--primario" href="…"><%- textoBoton('Texto') %><span class="boton__icono"><%- icono('arrow') %></span></a>`.
+`textoBoton()` (lib/util.js) genera el texto que "rueda" al pasar el mouse. Variantes: `primario`, `secundario`, `claro`, `contorno-claro`.
+
+Fotos: `partials/foto.ejs` (`src`, `alt`, `clase`, `figura`, `ancho`, `alto`, `prioridad`). Sin `src` muestra un
+relleno con degradado. Las rutas están en `site.fotos` (lib/site.js).
+
+## Animaciones (public/js/main.js + public/js/temprano.js, sin librerías)
+- `temprano.js` (sin defer, en `<head>`) pone `.js` y `.animar` en `<html>`; `.animar` solo si no hay
+  `prefers-reduced-motion`. Todo estado oculto en CSS va bajo `.animar`, así sin JS o con movimiento reducido
+  el contenido siempre se ve.
+- `data-revelar` (`""`, `izquierda`, `derecha`, `escala`, `foto`): entra al hacer scroll. `data-retardo="ms"`.
+- `data-revelar-grupo` en el contenedor: escalona los `data-revelar` hijos.
+- `data-palabras` en H1/H2: el título aparece palabra por palabra (respeta `.cursiva`).
+- `data-contador` en un número: contador tipo tragamonedas; al terminar se restaura el texto original.
+- Lo que está dentro de `.hero__grid` o `.encabezado-pagina` se anima al cargar, no al hacer scroll.
 
 ## Convenciones
 - HTML semántico: `header`, `nav`, `main`, `section` (con `aria-labelledby`), `article`, `footer`.

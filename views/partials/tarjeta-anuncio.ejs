@@ -1,9 +1,11 @@
-<article class="tarjeta-anuncio">
-  <% if (a.imagen) { %>
-    <img class="tarjeta-anuncio__img" src="/uploads/<%= a.imagen %>" alt="" width="640" height="360" loading="lazy">
-  <% } else { %>
-    <div class="tarjeta-anuncio__img tarjeta-anuncio__img--vacia" aria-hidden="true"><%- icono('megaphone') %></div>
-  <% } %>
+<article class="tarjeta-anuncio" data-revelar>
+  <div class="tarjeta-anuncio__media">
+    <% if (a.imagen) { %>
+      <img class="tarjeta-anuncio__img" src="/uploads/<%= a.imagen %>" alt="" width="640" height="360" loading="lazy">
+    <% } else { %>
+      <div class="tarjeta-anuncio__img tarjeta-anuncio__img--vacia" aria-hidden="true"><%- icono('megaphone') %></div>
+    <% } %>
+  </div>
   <div class="tarjeta-anuncio__cuerpo">
     <p class="tarjeta-anuncio__meta">
       <span class="chip"><%= a.categoria %></span>

@@ -3,13 +3,15 @@
 
 <main id="contenido">
   <section class="encabezado-pagina encabezado-pagina--centro">
-    <div class="contenedor">
-      <p class="eyebrow">Error 404</p>
-      <h1>No encontramos esta página</h1>
-      <p class="encabezado-pagina__lead">Puede que el enlace esté mal escrito o que el contenido ya no esté disponible.</p>
-      <div class="hero__ctas hero__ctas--centro">
-        <a class="boton boton--primario" href="/">Ir al inicio</a>
-        <a class="boton boton--secundario" href="/directorio">Directorio telefónico</a>
+    <div class="encabezado-pagina__caja oscuro">
+      <div class="contenedor">
+        <p class="eyebrow" data-revelar>Error 404</p>
+        <h1 data-palabras>No encontramos esta <span class="cursiva">página</span></h1>
+        <p class="encabezado-pagina__lead" data-revelar data-retardo="300">Puede que el enlace esté mal escrito o que el contenido ya no esté disponible.</p>
+        <div class="hero__ctas hero__ctas--centro" data-revelar data-retardo="450">
+          <a class="boton boton--claro" href="/"><%- textoBoton('Ir al inicio') %><span class="boton__icono"><%- icono('arrow') %></span></a>
+          <a class="boton boton--contorno-claro" href="/directorio"><%- textoBoton('Directorio telefónico') %></a>
+        </div>
       </div>
     </div>
   </section>

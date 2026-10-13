@@ -3,18 +3,20 @@
 
 <main id="contenido">
   <section class="encabezado-pagina">
-    <div class="contenedor">
-      <%- include('partials/migas', { migas: [{ nombre: 'Anuncios', ruta: '/anuncios' }] }) %>
-      <p class="eyebrow">Anuncios</p>
-      <h1>Anuncios y noticias</h1>
-      <p class="encabezado-pagina__lead">Campañas de salud, avisos importantes, cambios de horario y eventos del Área de Salud Naranjo.</p>
+    <div class="encabezado-pagina__caja oscuro">
+      <div class="contenedor">
+        <%- include('partials/migas', { migas: [{ nombre: 'Anuncios', ruta: '/anuncios' }] }) %>
+        <p class="eyebrow" data-revelar>Anuncios</p>
+        <h1 data-palabras>Anuncios y <span class="cursiva">noticias</span></h1>
+        <p class="encabezado-pagina__lead" data-revelar data-retardo="300">Campañas de salud, avisos importantes, cambios de horario y eventos del Área de Salud Naranjo.</p>
+      </div>
     </div>
   </section>
 
   <section class="seccion seccion--compacta" aria-label="Lista de anuncios">
     <div class="contenedor">
       <% if (anuncios.length) { %>
-        <div class="grid grid--3">
+        <div class="grid grid--3" data-revelar-grupo>
           <% anuncios.forEach(function (a) { %><%- include('partials/tarjeta-anuncio', { a: a }) %><% }) %>
         </div>
       <% } else { %>

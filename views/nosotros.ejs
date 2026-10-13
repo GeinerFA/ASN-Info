@@ -3,22 +3,24 @@
 
 <main id="contenido">
   <section class="encabezado-pagina">
-    <div class="contenedor">
-      <%- include('partials/migas', { migas: [{ nombre: 'Nosotros', ruta: '/nosotros' }] }) %>
-      <p class="eyebrow">Nosotros</p>
-      <h1>Misión, visión y valores</h1>
-      <p class="encabezado-pagina__lead">Somos el Área de Salud Naranjo, parte de la <%= site.institucion %>. Trabajamos todos los días por la salud de las personas del cantón.</p>
+    <div class="encabezado-pagina__caja oscuro">
+      <div class="contenedor">
+        <%- include('partials/migas', { migas: [{ nombre: 'Nosotros', ruta: '/nosotros' }] }) %>
+        <p class="eyebrow" data-revelar>Nosotros</p>
+        <h1 data-palabras>Misión, visión y <span class="cursiva">valores</span></h1>
+        <p class="encabezado-pagina__lead" data-revelar data-retardo="300">Somos el Área de Salud Naranjo, parte de la <%= site.institucion %>. Trabajamos todos los días por la salud de las personas del cantón.</p>
+      </div>
     </div>
   </section>
 
   <section class="seccion seccion--compacta" aria-label="Misión y visión">
-    <div class="contenedor grid grid--2">
-      <article class="tarjeta-mv">
+    <div class="contenedor grid grid--2" data-revelar-grupo>
+      <article class="tarjeta-mv" data-revelar>
         <span class="tarjeta-mv__icono"><%- icono('target') %></span>
         <h2>Misión</h2>
         <p><%= mision %></p>
       </article>
-      <article class="tarjeta-mv tarjeta-mv--oscura">
+      <article class="tarjeta-mv tarjeta-mv--oscura" data-revelar>
         <span class="tarjeta-mv__icono"><%- icono('eye') %></span>
         <h2>Visión</h2>
         <p><%= vision %></p>
@@ -27,15 +29,15 @@
   </section>
 
   <% if (valores.length) { %>
-  <section class="seccion seccion--crema" aria-labelledby="valores-titulo">
+  <section class="seccion seccion--menta" aria-labelledby="valores-titulo">
     <div class="contenedor">
       <header class="seccion__cabecera seccion__cabecera--centro">
-        <p class="eyebrow">Valores</p>
-        <h2 id="valores-titulo">Lo que guía nuestro trabajo</h2>
+        <p class="eyebrow" data-revelar>Valores</p>
+        <h2 id="valores-titulo" data-palabras>Lo que <span class="cursiva">guía</span> nuestro trabajo</h2>
       </header>
-      <div class="grid grid--4">
+      <div class="grid grid--4" data-revelar-grupo>
         <% valores.forEach(function (v) { %>
-          <div class="rasgo"><span class="rasgo__icono"><%- icono('heart') %></span><h3><%= v.titulo %></h3><% if (v.texto) { %><p><%= v.texto %></p><% } %></div>
+          <div class="rasgo" data-revelar><span class="rasgo__icono"><%- icono('heart') %></span><h3><%= v.titulo %></h3><% if (v.texto) { %><p><%= v.texto %></p><% } %></div>
         <% }) %>
       </div>
     </div>

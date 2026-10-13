@@ -30,7 +30,8 @@ Stack: Node 24 + Express + EJS (render en servidor) + SQLite nativo (`node:sqlit
 | Ubicación "EBAIS externos" (fuera del IVR, con teléfono directo) | ✅ creada, **sin EBAIS cargados** |
 | Panel `/admin`: anuncios (con imagen y vencimiento), directorio, servicios, misión/visión | ✅ |
 | SEO: meta tags, Open Graph, JSON-LD, `sitemap.xml`, `robots.txt` | ✅ |
-| Logo CCSS (negro) en el navbar, el panel y el favicon | ✅ |
+| Logo CCSS (negro) en el navbar, el footer, el panel y el favicon | ✅ |
+| Rediseño estilo [Medilea](https://medilea.webflow.io/): paleta verde/azul noche, Mona Sans + Playfair, animaciones al hacer scroll, contadores, marquesina | ✅ |
 | Se eliminó: análisis FODA, correo electrónico | — |
 
 ## Pendiente
@@ -38,7 +39,8 @@ Stack: Node 24 + Express + EJS (render en servidor) + SQLite nativo (`node:sqlit
 - **Datos reales:** dirección, coordenadas, enlace de Facebook y estadísticas del inicio (`lib/site.js`, marcados `TODO`).
 - **Verificar extensiones del IVR** que se transcribieron de una imagen borrosa: Farmacia (1064), EBAIS Barrio El Carmen (1035), Jefatura de Registros (1065), Recursos Humanos (1006), Servicios Generales (1009), Obstetricia (1127) y Odontología (1100).
 - **EBAIS externos:** cargar la lista con sus teléfonos desde Panel → Directorio.
-- **Logo anterior** (cruz verde, `public/img/logo.svg`) todavía en: el footer, la imagen para redes (`og-image.png`) y el logo del JSON-LD.
+- **Fotos reales:** el inicio tiene 3 espacios de foto con relleno provisional (hero, "Quiénes somos" y "Visítenos"). Copiarlas a `public/img/fotos/` y poner las rutas en `site.fotos` (`lib/site.js`).
+- **Logo anterior** (cruz verde, `public/img/logo.svg`) todavía en: la imagen para redes (`og-image.png`) y el logo del JSON-LD.
 - **Producción:** definir hosting, `SITE_URL` con el dominio real, `SESSION_SECRET` y `NODE_ENV=production` en `.env`.
 - **Calidad:** no se ha corrido Lighthouse ni se ha probado en un teléfono real.
 
