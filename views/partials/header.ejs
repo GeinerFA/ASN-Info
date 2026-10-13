@@ -27,6 +27,7 @@
         <% }) %>
       </ul>
       <div class="nav__acciones">
+        <a class="nav__admin" href="/admin" rel="nofollow" title="Panel administrativo"><%- icono('lock') %><span class="nav__admin-texto">Panel administrativo</span></a>
         <a class="nav__tel" href="tel:<%= telHref(site.telefono) %>"><%- icono('phone') %><%= site.telefono %></a>
         <a class="boton boton--primario" href="/directorio">Directorio</a>
       </div>

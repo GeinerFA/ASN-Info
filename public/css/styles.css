@@ -194,6 +194,15 @@ table { border-collapse: collapse; width: 100%; }
 .nav__acciones { display: flex; align-items: center; gap: 1rem; }
 .nav__tel { display: inline-flex; align-items: center; gap: 0.4rem; color: var(--ink); text-decoration: none; font-weight: 600; font-size: 0.95rem; }
 .nav__tel .icono { color: var(--primary-dark); }
+.nav__admin {
+  display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+  width: 44px; height: 44px; flex-shrink: 0;
+  border-radius: 50%; background: var(--primary-dark); color: var(--white);
+  text-decoration: none; transition: background-color 0.2s, transform 0.2s;
+}
+.nav__admin:hover { background: var(--primary-darker); color: var(--white); transform: translateY(-1px); }
+.nav__admin .icono { width: 20px; height: 20px; }
+.nav__admin-texto { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
 /* Menú móvil: solo se colapsa si hay JS (clase .js en <html>). */
 @media (max-width: 1023px) {
@@ -210,6 +219,8 @@ table { border-collapse: collapse; width: 100%; }
   .js .nav__lista { flex-direction: column; }
   .js .nav__lista a { padding: 0.8rem 1rem; border-radius: var(--radius-sm); }
   .js .nav__acciones { flex-direction: column; align-items: stretch; }
+  .js .nav__admin { order: 1; width: auto; height: auto; min-height: 44px; border-radius: var(--radius-pill); font-weight: 600; }
+  .js .nav__admin-texto { position: static; width: auto; height: auto; overflow: visible; clip: auto; }
   html:not(.js) .cabecera__fila { flex-wrap: wrap; padding-block: 0.75rem; }
   html:not(.js) .nav { flex-wrap: wrap; }
   html:not(.js) .nav__lista { flex-wrap: wrap; }
