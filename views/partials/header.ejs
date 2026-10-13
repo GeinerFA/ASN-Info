@@ -1,0 +1,35 @@
+<a class="saltar" href="#contenido">Saltar al contenido</a>
+
+<div class="topbar">
+  <div class="contenedor topbar__fila">
+    <span class="topbar__item"><%- icono('pin') %><%= site.direccion.ciudad %>, <%= site.direccion.provincia %></span>
+    <span class="topbar__item ocultar-movil"><%- icono('clock') %><%= site.horarioCorto %></span>
+    <a class="topbar__item topbar__urgencia" href="tel:<%= site.emergencias %>"><%- icono('siren') %>Emergencias: <strong><%= site.emergencias %></strong></a>
+  </div>
+</div>
+
+<header class="cabecera">
+  <div class="contenedor cabecera__fila">
+    <a class="marca" href="/" aria-label="<%= site.nombre %>, página de inicio">
+      <img src="/img/logo.svg" alt="" width="40" height="40">
+      <span class="marca__texto"><span class="marca__nombre">Área de Salud</span><span class="marca__lugar">Naranjo</span></span>
+    </a>
+
+    <button class="menu-boton" type="button" aria-expanded="false" aria-controls="menu-principal" aria-label="Abrir menú">
+      <span class="menu-boton__abrir"><%- icono('menu') %></span><span class="menu-boton__cerrar"><%- icono('x') %></span>
+    </button>
+
+    <nav id="menu-principal" class="nav" aria-label="Principal">
+      <ul class="nav__lista">
+        <% navegacion.forEach(function (item) {
+             const activo = item.href !== '/#contacto' && (rutaActual === item.href || rutaActual.startsWith(item.href + '/')); %>
+          <li><a href="<%= item.href %>"<% if (activo) { %> aria-current="page"<% } %>><%= item.texto %></a></li>
+        <% }) %>
+      </ul>
+      <div class="nav__acciones">
+        <a class="nav__tel" href="tel:<%= telHref(site.telefono) %>"><%- icono('phone') %><%= site.telefono %></a>
+        <a class="boton boton--primario" href="/directorio">Directorio</a>
+      </div>
+    </nav>
+  </div>
+</header>

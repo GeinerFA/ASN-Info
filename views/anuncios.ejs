@@ -1,0 +1,35 @@
+<%- include('partials/head') %>
+<%- include('partials/header') %>
+
+<main id="contenido">
+  <section class="encabezado-pagina">
+    <div class="contenedor">
+      <%- include('partials/migas', { migas: [{ nombre: 'Anuncios', ruta: '/anuncios' }] }) %>
+      <p class="eyebrow">Anuncios</p>
+      <h1>Anuncios y noticias</h1>
+      <p class="encabezado-pagina__lead">Campañas de salud, avisos importantes, cambios de horario y eventos del Área de Salud Naranjo.</p>
+    </div>
+  </section>
+
+  <section class="seccion seccion--compacta" aria-label="Lista de anuncios">
+    <div class="contenedor">
+      <% if (anuncios.length) { %>
+        <div class="grid grid--3">
+          <% anuncios.forEach(function (a) { %><%- include('partials/tarjeta-anuncio', { a: a }) %><% }) %>
+        </div>
+      <% } else { %>
+        <p class="vacio">No hay anuncios publicados en este momento.</p>
+      <% } %>
+
+      <% if (paginas > 1) { %>
+        <nav class="paginacion" aria-label="Paginación">
+          <% if (pagina > 1) { %><a href="/anuncios<%= pagina - 1 > 1 ? '?pagina=' + (pagina - 1) : '' %>" rel="prev">← Anteriores</a><% } %>
+          <span>Página <%= pagina %> de <%= paginas %></span>
+          <% if (pagina < paginas) { %><a href="/anuncios?pagina=<%= pagina + 1 %>" rel="next">Siguientes →</a><% } %>
+        </nav>
+      <% } %>
+    </div>
+  </section>
+</main>
+
+<%- include('partials/footer') %>

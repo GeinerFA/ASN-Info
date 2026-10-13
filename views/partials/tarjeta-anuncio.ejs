@@ -1,0 +1,16 @@
+<article class="tarjeta-anuncio">
+  <% if (a.imagen) { %>
+    <img class="tarjeta-anuncio__img" src="/uploads/<%= a.imagen %>" alt="" width="640" height="360" loading="lazy">
+  <% } else { %>
+    <div class="tarjeta-anuncio__img tarjeta-anuncio__img--vacia" aria-hidden="true"><%- icono('megaphone') %></div>
+  <% } %>
+  <div class="tarjeta-anuncio__cuerpo">
+    <p class="tarjeta-anuncio__meta">
+      <span class="chip"><%= a.categoria %></span>
+      <time datetime="<%= a.fecha_publicacion %>"><%= fechaLarga(a.fecha_publicacion) %></time>
+    </p>
+    <h3 class="tarjeta-anuncio__titulo"><a href="/anuncios/<%= a.slug %>"><%= a.titulo %></a></h3>
+    <% if (a.resumen) { %><p><%= a.resumen %></p><% } %>
+    <span class="enlace-flecha" aria-hidden="true">Leer más <%- icono('arrow') %></span>
+  </div>
+</article>

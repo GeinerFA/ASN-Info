@@ -1,0 +1,8 @@
+<nav class="migas" aria-label="Ruta de navegación">
+  <ol>
+    <li><a href="/">Inicio</a></li>
+    <% migas.forEach(function (m, i) { %>
+      <li><% if (i === migas.length - 1) { %><span aria-current="page"><%= m.nombre %></span><% } else { %><a href="<%= m.ruta %>"><%= m.nombre %></a><% } %></li>
+    <% }) %>
+  </ol>
+</nav>

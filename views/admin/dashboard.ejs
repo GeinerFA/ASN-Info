@@ -1,0 +1,46 @@
+<%- include('_inicio', { titulo: 'Anuncios' }) %>
+<div class="admin-cabecera">
+  <div>
+    <h1>Anuncios</h1>
+    <p>Publique avisos, campañas y eventos. Los anuncios vencidos o en borrador no se muestran en el sitio.</p>
+  </div>
+  <a class="btn btn--primario" href="/admin/anuncios/nuevo">+ Nuevo anuncio</a>
+</div>
+
+<% if (!anuncios.length) { %>
+  <p class="vacio">Todavía no hay anuncios. <a href="/admin/anuncios/nuevo">Cree el primero</a>.</p>
+<% } else { %>
+<div class="tabla-envoltura">
+  <table class="tabla">
+    <thead>
+      <tr><th scope="col">Título</th><th scope="col">Categoría</th><th scope="col">Publicación</th><th scope="col">Vence</th><th scope="col">Estado</th><th scope="col"><span class="sr-only">Acciones</span></th></tr>
+    </thead>
+    <tbody>
+      <% anuncios.forEach(function (a) { %>
+      <tr>
+        <td data-etiqueta="Título">
+          <strong><%= a.titulo %></strong><% if (a.destacado) { %> <span class="etiqueta etiqueta--amarillo">Destacado</span><% } %>
+          <% if (a.estado.texto === 'Publicado') { %><br><a class="enlace-sutil" href="/anuncios/<%= a.slug %>" target="_blank" rel="noopener">/anuncios/<%= a.slug %></a><% } %>
+        </td>
+        <td data-etiqueta="Categoría"><%= a.categoria %></td>
+        <td data-etiqueta="Publicación"><%= fechaLarga(a.fecha_publicacion) %></td>
+        <td data-etiqueta="Vence"><%= a.fecha_expira ? fechaLarga(a.fecha_expira) : '—' %></td>
+        <td data-etiqueta="Estado"><span class="etiqueta etiqueta--<%= a.estado.clase %>"><%= a.estado.texto %></span></td>
+        <td class="acciones">
+          <a class="btn btn--chico" href="/admin/anuncios/<%= a.id %>/editar">Editar</a>
+          <form method="post" action="/admin/anuncios/<%= a.id %>/publicar">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <button class="btn btn--chico" type="submit"><%= a.publicado ? 'Despublicar' : 'Publicar' %></button>
+          </form>
+          <form method="post" action="/admin/anuncios/<%= a.id %>/eliminar" data-confirmar="¿Eliminar el anuncio «<%= a.titulo %>»?">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <button class="btn btn--chico btn--peligro" type="submit">Eliminar</button>
+          </form>
+        </td>
+      </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>
+<% } %>
+<%- include('_fin') %>

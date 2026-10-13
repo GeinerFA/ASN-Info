@@ -1,0 +1,50 @@
+<footer class="pie">
+  <div class="contenedor pie__grid">
+    <div class="pie__col pie__col--marca">
+      <a class="marca marca--clara" href="/">
+        <img src="/img/logo.svg" alt="" width="40" height="40">
+        <span class="marca__texto"><span class="marca__nombre">Área de Salud</span><span class="marca__lugar">Naranjo</span></span>
+      </a>
+      <p>Atención primaria de salud para las personas de Naranjo, Alajuela. Somos parte de la <%= site.institucion %>.</p>
+      <a class="pie__social" href="<%= site.redes.facebook %>" rel="noopener" target="_blank"><%- icono('facebook') %><span>Facebook</span></a>
+    </div>
+
+    <div class="pie__col">
+      <h2 class="pie__titulo">Contacto</h2>
+      <address>
+        <p><%- icono('pin') %><span><%= site.direccion.calle %>, <%= site.direccion.ciudad %>, <%= site.direccion.provincia %></span></p>
+        <p><%- icono('phone') %><a href="tel:<%= telHref(site.telefono) %>"><%= site.telefono %></a></p>
+        <p><%- icono('mail') %><a href="mailto:<%= site.correo %>"><%= site.correo %></a></p>
+        <p><%- icono('siren') %><span>Emergencias: <a href="tel:<%= site.emergencias %>"><%= site.emergencias %></a></span></p>
+      </address>
+    </div>
+
+    <div class="pie__col">
+      <h2 class="pie__titulo">Horario</h2>
+      <dl class="pie__horario">
+        <% site.horarios.forEach(function (h) { %>
+          <div><dt><%= h.dia %></dt><dd><%= h.horas %></dd></div>
+        <% }) %>
+      </dl>
+    </div>
+
+    <div class="pie__col">
+      <h2 class="pie__titulo">Enlaces</h2>
+      <ul class="pie__enlaces">
+        <li><a href="/servicios">Servicios</a></li>
+        <li><a href="/nosotros">Misión y visión</a></li>
+        <li><a href="/nosotros#foda">Análisis FODA</a></li>
+        <li><a href="/directorio">Directorio telefónico</a></li>
+        <li><a href="/anuncios">Anuncios</a></li>
+        <li><a href="/#preguntas">Preguntas frecuentes</a></li>
+        <li><a href="https://www.ccss.sa.cr" rel="noopener" target="_blank">Sitio de la CCSS</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="contenedor pie__legal">
+    <p>© <%= anio %> <%= site.nombre %> · <%= site.institucion %></p>
+    <p>Ante una emergencia llame al <a href="tel:<%= site.emergencias %>"><%= site.emergencias %></a>.</p>
+  </div>
+</footer>
+</body>
+</html>

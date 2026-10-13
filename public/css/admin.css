@@ -1,0 +1,130 @@
+/* Panel de administración — Área de Salud Naranjo */
+:root {
+  --primary: #0e9f8e;
+  --primary-dark: #0b7f72;
+  --primary-darker: #08665c;
+  --ink: #0f1f24;
+  --muted: #5b6b70;
+  --line: #e3ecec;
+  --mint: #e6f6f3;
+  --surface: #f4f8f8;
+  --white: #fff;
+  --danger: #c4343a;
+  --radius: 12px;
+  --radius-lg: 16px;
+}
+*, *::before, *::after { box-sizing: border-box; }
+body.admin { margin: 0; font: 15px/1.55 'Inter', 'Segoe UI', system-ui, sans-serif; color: var(--ink); background: var(--surface); }
+h1, h2 { font-family: 'Manrope', 'Segoe UI', system-ui, sans-serif; letter-spacing: -0.02em; line-height: 1.2; margin: 0 0 0.4em; }
+h1 { font-size: 1.75rem; }
+h2 { font-size: 1.2rem; }
+a { color: var(--primary-dark); }
+img { max-width: 100%; height: auto; }
+:focus-visible { outline: 3px solid var(--primary); outline-offset: 2px; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.icono { width: 20px; height: 20px; }
+
+.admin-barra {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 2rem;
+  padding: 0.75rem clamp(1rem, 3vw, 2rem);
+  background: var(--ink); color: var(--white);
+}
+.admin-marca { display: inline-flex; align-items: center; gap: 0.6rem; color: var(--white); font-weight: 700; text-decoration: none; font-family: 'Manrope', sans-serif; }
+.admin-barra nav { display: flex; flex-wrap: wrap; gap: 0.25rem; flex: 1; }
+.admin-barra nav a { color: rgba(255, 255, 255, 0.8); text-decoration: none; padding: 0.4rem 0.8rem; border-radius: 999px; }
+.admin-barra nav a:hover { color: var(--white); background: rgba(255, 255, 255, 0.08); }
+.admin-barra nav a[aria-current="page"] { color: var(--white); background: var(--primary-dark); }
+.admin-barra form { margin: 0; }
+.admin-salir { background: none; border: 1px solid rgba(255, 255, 255, 0.3); color: var(--white); border-radius: 999px; padding: 0.4rem 0.9rem; cursor: pointer; font: inherit; }
+.admin-salir:hover { border-color: var(--white); }
+
+.admin-main { max-width: 1200px; margin: 0 auto; padding: clamp(1.25rem, 3vw, 2.5rem) clamp(1rem, 3vw, 2rem) 4rem; }
+.admin-cabecera { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 1rem; margin-bottom: 1.5rem; }
+.admin-cabecera p { color: var(--muted); margin: 0; }
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem;
+  min-height: 40px; padding: 0.5rem 1.1rem;
+  font: 600 0.92rem/1.2 inherit; font-family: inherit;
+  color: var(--ink); background: var(--white);
+  border: 1px solid var(--line); border-radius: 999px;
+  text-decoration: none; cursor: pointer; white-space: nowrap;
+}
+.btn:hover { border-color: var(--primary); color: var(--primary-dark); }
+.btn--primario { background: var(--primary-dark); border-color: var(--primary-dark); color: var(--white); }
+.btn--primario:hover { background: var(--primary-darker); color: var(--white); }
+.btn--peligro { color: var(--danger); }
+.btn--peligro:hover { border-color: var(--danger); color: var(--danger); background: #fdecec; }
+.btn--chico { min-height: 32px; padding: 0.3rem 0.8rem; font-size: 0.85rem; }
+.btn--bloque { width: 100%; }
+
+.aviso { padding: 0.8rem 1.1rem; border-radius: var(--radius); margin: 0 0 1.25rem; font-weight: 500; }
+.aviso--ok { background: var(--mint); color: var(--primary-darker); }
+.aviso--error { background: #fdecec; color: var(--danger); }
+
+.tarjeta { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius-lg); padding: clamp(1.25rem, 3vw, 2rem); margin-bottom: 1.5rem; }
+
+.formulario { display: grid; gap: 1.1rem; }
+.formulario label { display: grid; gap: 0.35rem; font-weight: 600; font-size: 0.92rem; }
+.formulario small, .ayuda { font-weight: 400; color: var(--muted); font-size: 0.84rem; margin: 0; }
+.formulario input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
+.formulario select, .formulario textarea {
+  width: 100%; padding: 0.65rem 0.85rem;
+  font: 400 0.95rem/1.5 inherit; font-family: inherit; color: var(--ink);
+  background: var(--white); border: 1.5px solid var(--line); border-radius: 10px;
+}
+.formulario input:focus, .formulario select:focus, .formulario textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(14, 159, 142, 0.15); }
+.formulario textarea { resize: vertical; }
+.formulario fieldset { border: 1px dashed var(--line); border-radius: var(--radius); padding: 1rem; margin: 0; display: grid; gap: 0.6rem; }
+.formulario legend { font-weight: 600; font-size: 0.92rem; padding: 0 0.3rem; }
+.formulario__fila { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); align-items: end; }
+.formulario__fila--2 { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+.formulario__imagen img { border-radius: 8px; border: 1px solid var(--line); }
+.formulario__checks { display: flex; flex-wrap: wrap; gap: 0.75rem 2rem; }
+.formulario__acciones { display: flex; flex-wrap: wrap; gap: 0.75rem; padding-top: 0.5rem; }
+.formulario .check { display: inline-flex; align-items: center; gap: 0.5rem; font-weight: 500; cursor: pointer; }
+.formulario .check input { width: 18px; height: 18px; accent-color: var(--primary-dark); }
+.check--en-fila { min-height: 44px; }
+.contador { display: block; color: var(--muted); font-size: 0.82rem; font-weight: 400; }
+.contador--alerta { color: #a56a00; }
+
+.selector-iconos { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.selector-iconos__op { position: relative; display: grid !important; place-items: center; width: 44px; height: 44px; border: 1.5px solid var(--line); border-radius: 10px; cursor: pointer; color: var(--muted); }
+.selector-iconos__op input { position: absolute; opacity: 0; inset: 0; cursor: pointer; }
+.selector-iconos__op:has(input:checked) { border-color: var(--primary-dark); background: var(--mint); color: var(--primary-dark); }
+.selector-iconos__op:has(input:focus-visible) { outline: 3px solid var(--primary); outline-offset: 2px; }
+
+.tabla-envoltura { overflow-x: auto; background: var(--white); border: 1px solid var(--line); border-radius: var(--radius-lg); }
+.tabla { width: 100%; border-collapse: collapse; }
+.tabla th, .tabla td { padding: 0.8rem 1rem; text-align: left; border-bottom: 1px solid var(--line); vertical-align: middle; }
+.tabla thead th { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); background: #fafcfc; }
+.tabla tbody tr:last-child td { border-bottom: 0; }
+.tabla tbody tr:hover, .fila-activa { background: #fafcfc; }
+.fila-activa { box-shadow: inset 3px 0 0 var(--primary); }
+.acciones { display: flex; flex-wrap: wrap; gap: 0.4rem; justify-content: flex-end; }
+.acciones form { margin: 0; }
+.enlace-sutil { font-size: 0.82rem; color: var(--muted); }
+.con-icono { display: inline-flex; align-items: center; gap: 0.5rem; }
+.con-icono .icono { color: var(--primary-dark); }
+
+.etiqueta { display: inline-block; padding: 0.15rem 0.6rem; border-radius: 999px; font-size: 0.78rem; font-weight: 600; white-space: nowrap; }
+.etiqueta--verde { background: var(--mint); color: var(--primary-darker); }
+.etiqueta--gris { background: #eef1f2; color: var(--muted); }
+.etiqueta--rojo { background: #fdecec; color: var(--danger); }
+.etiqueta--amarillo { background: #fdf3dc; color: #8a5800; }
+
+.vacio { padding: 3rem 1rem; text-align: center; color: var(--muted); background: var(--white); border: 1px dashed var(--line); border-radius: var(--radius-lg); }
+
+@media (max-width: 760px) {
+  .tabla thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .tabla tr { display: block; padding: 0.8rem 1rem; border-bottom: 1px solid var(--line); }
+  .tabla td { display: flex; justify-content: space-between; gap: 1rem; padding: 0.25rem 0; border: 0; }
+  .tabla td[data-etiqueta]::before { content: attr(data-etiqueta); color: var(--muted); font-size: 0.82rem; flex-shrink: 0; }
+  .acciones { justify-content: flex-start; padding-top: 0.6rem !important; }
+}
+
+.login { max-width: 400px; margin: clamp(2rem, 10vh, 6rem) auto 0; background: var(--white); border: 1px solid var(--line); border-radius: 20px; padding: 2.25rem 2rem; text-align: center; box-shadow: 0 16px 40px rgba(15, 31, 36, 0.08); }
+.login img { margin: 0 auto 1rem; }
+.login__sub { color: var(--muted); margin: 0 0 1.5rem; }
+.login .formulario { text-align: left; }
+.login__volver { display: inline-block; margin-top: 1.25rem; font-size: 0.9rem; color: var(--muted); }

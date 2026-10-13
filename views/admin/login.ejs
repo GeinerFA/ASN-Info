@@ -1,0 +1,19 @@
+<%- include('_inicio', { titulo: 'Iniciar sesión' }) %>
+<div class="login">
+  <img src="/img/logo.svg" alt="" width="56" height="56">
+  <h1>Panel de administración</h1>
+  <p class="login__sub"><%= site.nombre %></p>
+  <% if (error) { %><p class="aviso aviso--error" role="alert"><%= error %></p><% } %>
+  <form method="post" action="/admin/login" class="formulario">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <label>Usuario
+      <input name="usuario" value="<%= usuario %>" autocomplete="username" required autofocus>
+    </label>
+    <label>Contraseña
+      <input name="password" type="password" autocomplete="current-password" required>
+    </label>
+    <button class="btn btn--primario btn--bloque" type="submit">Entrar</button>
+  </form>
+  <a class="login__volver" href="/">← Volver al sitio</a>
+</div>
+<%- include('_fin') %>

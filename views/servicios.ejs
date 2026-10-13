@@ -1,0 +1,33 @@
+<%- include('partials/head') %>
+<%- include('partials/header') %>
+
+<main id="contenido">
+  <section class="encabezado-pagina">
+    <div class="contenedor">
+      <%- include('partials/migas', { migas: [{ nombre: 'Servicios', ruta: '/servicios' }] }) %>
+      <p class="eyebrow">Servicios</p>
+      <h1>Servicios de salud disponibles</h1>
+      <p class="encabezado-pagina__lead">Conozca los servicios que ofrece el Área de Salud Naranjo y sus horarios. Para la mayoría de ellos necesita una cita o una referencia de su EBAIS.</p>
+    </div>
+  </section>
+
+  <section class="seccion seccion--compacta" aria-label="Lista de servicios">
+    <div class="contenedor">
+      <div class="grid grid--3">
+        <% servicios.forEach(function (s) { %><%- include('partials/tarjeta-servicio', { s: s }) %><% }) %>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-final" aria-labelledby="cta-titulo">
+    <div class="contenedor cta-final__caja">
+      <h2 id="cta-titulo">¿Tiene dudas sobre un servicio?</h2>
+      <p>Comuníquese directamente con el servicio que necesita.</p>
+      <div class="hero__ctas">
+        <a class="boton boton--claro boton--grande" href="/directorio">Ver directorio telefónico</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<%- include('partials/footer') %>

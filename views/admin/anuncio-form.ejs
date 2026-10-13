@@ -1,0 +1,63 @@
+<% const esNuevo = !anuncio.id;
+   const accion = esNuevo ? '/admin/anuncios/nuevo' : '/admin/anuncios/' + anuncio.id + '/editar'; %>
+<%- include('_inicio', { titulo: esNuevo ? 'Nuevo anuncio' : 'Editar anuncio' }) %>
+<div class="admin-cabecera">
+  <div>
+    <a class="enlace-sutil" href="/admin">← Anuncios</a>
+    <h1><%= esNuevo ? 'Nuevo anuncio' : 'Editar anuncio' %></h1>
+  </div>
+</div>
+
+<% if (error) { %><p class="aviso aviso--error" role="alert"><%= error %></p><% } %>
+
+<form class="formulario tarjeta" method="post" action="<%= accion %>?_csrf=<%= csrfToken %>" enctype="multipart/form-data">
+  <label>Título *
+    <input name="titulo" value="<%= anuncio.titulo %>" maxlength="150" required>
+    <small>Use un título claro y descriptivo: también es el título que muestra Google.</small>
+  </label>
+
+  <label>Resumen
+    <textarea name="resumen" rows="2" maxlength="300" data-contador><%= anuncio.resumen %></textarea>
+    <small>Una o dos oraciones. Se muestra en las tarjetas y como descripción en buscadores (ideal: ≤ 160 caracteres).</small>
+  </label>
+
+  <label>Contenido *
+    <textarea name="contenido" rows="10" required><%= anuncio.contenido %></textarea>
+    <small>Deje una línea en blanco para separar párrafos.</small>
+  </label>
+
+  <div class="formulario__fila">
+    <label>Categoría
+      <select name="categoria">
+        <% categorias.forEach(function (c) { %><option<% if (c === anuncio.categoria) { %> selected<% } %>><%= c %></option><% }) %>
+      </select>
+    </label>
+    <label>Fecha de publicación
+      <input type="date" name="fecha_publicacion" value="<%= anuncio.fecha_publicacion %>">
+    </label>
+    <label>Fecha de vencimiento (opcional)
+      <input type="date" name="fecha_expira" value="<%= anuncio.fecha_expira || '' %>">
+    </label>
+  </div>
+
+  <fieldset class="formulario__imagen">
+    <legend>Imagen (opcional)</legend>
+    <% if (anuncio.imagen) { %>
+      <img src="/uploads/<%= anuncio.imagen %>" alt="Imagen actual" width="240" height="135">
+      <label class="check"><input type="checkbox" name="quitar_imagen" value="1"> Quitar la imagen actual</label>
+    <% } %>
+    <input type="file" name="imagen" accept="image/jpeg,image/png,image/webp">
+    <small>JPG, PNG o WebP de hasta 2 MB. Tamaño recomendado: 1200 × 675 px.</small>
+  </fieldset>
+
+  <div class="formulario__checks">
+    <label class="check"><input type="checkbox" name="publicado" value="1"<% if (anuncio.publicado) { %> checked<% } %>> Publicado (visible en el sitio)</label>
+    <label class="check"><input type="checkbox" name="destacado" value="1"<% if (anuncio.destacado) { %> checked<% } %>> Destacado (aparece primero)</label>
+  </div>
+
+  <div class="formulario__acciones">
+    <button class="btn btn--primario" type="submit"><%= esNuevo ? 'Crear anuncio' : 'Guardar cambios' %></button>
+    <a class="btn" href="/admin">Cancelar</a>
+  </div>
+</form>
+<%- include('_fin') %>

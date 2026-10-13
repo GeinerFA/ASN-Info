@@ -1,0 +1,199 @@
+<%- include('partials/head') %>
+<%- include('partials/header') %>
+
+<main id="contenido">
+  <!-- Hero -->
+  <section class="hero" aria-labelledby="hero-titulo">
+    <div class="contenedor hero__grid">
+      <div class="hero__texto">
+        <p class="eyebrow">Caja Costarricense de Seguro Social</p>
+        <h1 id="hero-titulo">Atención de salud cercana para todo Naranjo</h1>
+        <p class="hero__lead">En el Área de Salud Naranjo cuidamos de usted y de su familia: medicina general, urgencias las 24 horas, odontología, farmacia, laboratorio y una red de EBAIS en todo el cantón.</p>
+        <div class="hero__ctas">
+          <a class="boton boton--primario boton--grande" href="/servicios">Ver servicios <%- icono('arrow') %></a>
+          <a class="boton boton--secundario boton--grande" href="tel:<%= telHref(site.telefono) %>"><%- icono('phone') %> Llamar</a>
+        </div>
+        <ul class="hero__badges">
+          <li><%- icono('check') %>Red de EBAIS en el cantón</li>
+          <li><%- icono('check') %>Urgencias 24 horas</li>
+          <li><%- icono('check') %>Expediente digital EDUS</li>
+        </ul>
+      </div>
+
+      <aside class="hero__panel" aria-labelledby="panel-titulo">
+        <h2 id="panel-titulo" class="hero__panel-titulo">¿Qué necesita hoy?</h2>
+        <ul class="accesos">
+          <li>
+            <a class="acceso" href="tel:<%= site.emergencias %>">
+              <span class="acceso__icono acceso__icono--rojo"><%- icono('siren') %></span>
+              <span><strong>Tengo una emergencia</strong><small>Llame al <%= site.emergencias %> o acuda a urgencias (24 h)</small></span>
+            </a>
+          </li>
+          <li>
+            <a class="acceso" href="/#preguntas">
+              <span class="acceso__icono"><%- icono('app') %></span>
+              <span><strong>Sacar una cita</strong><small>App EDUS, ventanilla o teléfono</small></span>
+            </a>
+          </li>
+          <li>
+            <a class="acceso" href="/directorio">
+              <span class="acceso__icono"><%- icono('phone') %></span>
+              <span><strong>Buscar un teléfono</strong><small>Directorio de servicios y EBAIS</small></span>
+            </a>
+          </li>
+          <li>
+            <a class="acceso" href="/anuncios">
+              <span class="acceso__icono"><%- icono('megaphone') %></span>
+              <span><strong>Ver anuncios</strong><small>Campañas, avisos y eventos</small></span>
+            </a>
+          </li>
+        </ul>
+      </aside>
+    </div>
+
+    <div class="contenedor">
+      <dl class="estadisticas">
+        <% site.estadisticas.forEach(function (e) { %>
+          <div class="estadistica"><dt><%= e.etiqueta %></dt><dd><%= e.valor %></dd></div>
+        <% }) %>
+      </dl>
+    </div>
+  </section>
+
+  <!-- Servicios -->
+  <section class="seccion" aria-labelledby="servicios-titulo">
+    <div class="contenedor">
+      <header class="seccion__cabecera seccion__cabecera--fila">
+        <div>
+          <p class="eyebrow">Servicios</p>
+          <h2 id="servicios-titulo">Atención integral, cerca de usted</h2>
+        </div>
+        <a class="enlace-flecha" href="/servicios">Ver todos los servicios <%- icono('arrow') %></a>
+      </header>
+      <div class="grid grid--3">
+        <% servicios.forEach(function (s) { %><%- include('partials/tarjeta-servicio', { s: s }) %><% }) %>
+      </div>
+    </div>
+  </section>
+
+  <!-- Por qué -->
+  <section class="seccion seccion--crema" aria-labelledby="porque-titulo">
+    <div class="contenedor">
+      <header class="seccion__cabecera seccion__cabecera--centro">
+        <p class="eyebrow">Nuestro compromiso</p>
+        <h2 id="porque-titulo">Una atención que nos distingue</h2>
+      </header>
+      <div class="grid grid--4">
+        <div class="rasgo"><span class="rasgo__icono"><%- icono('heart') %></span><h3>Trato humano y cálido</h3><p>Le atendemos con respeto, empatía y paciencia en cada consulta.</p></div>
+        <div class="rasgo"><span class="rasgo__icono"><%- icono('app') %></span><h3>Salud digital</h3><p>Su expediente en EDUS y sus citas desde el celular con la App EDUS.</p></div>
+        <div class="rasgo"><span class="rasgo__icono"><%- icono('home') %></span><h3>EBAIS cerca de casa</h3><p>Una red de EBAIS y visitas de los ATAP en todo el cantón de Naranjo.</p></div>
+        <div class="rasgo"><span class="rasgo__icono"><%- icono('shield') %></span><h3>Prevención primero</h3><p>Vacunación, controles y educación para que viva más sano.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Anuncios -->
+  <% if (anuncios.length) { %>
+  <section class="seccion" aria-labelledby="anuncios-titulo">
+    <div class="contenedor">
+      <header class="seccion__cabecera seccion__cabecera--fila">
+        <div>
+          <p class="eyebrow">Anuncios</p>
+          <h2 id="anuncios-titulo">Lo más reciente del Área de Salud</h2>
+        </div>
+        <a class="enlace-flecha" href="/anuncios">Ver todos los anuncios <%- icono('arrow') %></a>
+      </header>
+      <div class="grid grid--3">
+        <% anuncios.forEach(function (a) { %><%- include('partials/tarjeta-anuncio', { a: a }) %><% }) %>
+      </div>
+    </div>
+  </section>
+  <% } %>
+
+  <!-- Pasos -->
+  <section class="seccion seccion--menta" aria-labelledby="pasos-titulo">
+    <div class="contenedor">
+      <header class="seccion__cabecera seccion__cabecera--centro">
+        <p class="eyebrow">Su primera visita</p>
+        <h2 id="pasos-titulo">Recibir atención, en tres pasos</h2>
+      </header>
+      <ol class="pasos">
+        <li class="paso">
+          <span class="paso__numero">PASO 01</span>
+          <h3>Solicite su cita</h3>
+          <p>Desde la App EDUS, en la ventanilla de su EBAIS o por teléfono.</p>
+        </li>
+        <li class="paso">
+          <span class="paso__numero">PASO 02</span>
+          <h3>Presente su cédula</h3>
+          <p>Llegue 15 minutos antes con su documento de identidad vigente.</p>
+        </li>
+        <li class="paso">
+          <span class="paso__numero">PASO 03</span>
+          <h3>Reciba su atención</h3>
+          <p>Su equipo de salud le atiende y le indica el seguimiento a seguir.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- Preguntas frecuentes -->
+  <section class="seccion" id="preguntas" aria-labelledby="faq-titulo">
+    <div class="contenedor faq">
+      <header class="seccion__cabecera">
+        <p class="eyebrow">Preguntas frecuentes</p>
+        <h2 id="faq-titulo">Respuestas a sus dudas</h2>
+        <p>¿No encuentra lo que busca? Llámenos al <a href="tel:<%= telHref(site.telefono) %>"><%= site.telefono %></a>.</p>
+      </header>
+      <div class="faq__lista">
+        <% faq.forEach(function (f, i) { %>
+          <details class="faq__item"<% if (i === 0) { %> open<% } %>>
+            <summary><h3><%= f.p %></h3><%- icono('chevron', 'icono faq__chevron') %></summary>
+            <p><%= f.r %></p>
+          </details>
+        <% }) %>
+      </div>
+    </div>
+  </section>
+
+  <!-- Visítenos -->
+  <section class="seccion seccion--crema" id="contacto" aria-labelledby="contacto-titulo">
+    <div class="contenedor visita">
+      <div>
+        <p class="eyebrow">Visítenos</p>
+        <h2 id="contacto-titulo">Estamos en el centro de Naranjo</h2>
+        <ul class="datos-contacto">
+          <li><span class="datos-contacto__icono"><%- icono('pin') %></span><span><strong>Dirección</strong><%= site.direccion.calle %>, <%= site.direccion.ciudad %>, <%= site.direccion.provincia %></span></li>
+          <li><span class="datos-contacto__icono"><%- icono('phone') %></span><span><strong>Teléfono</strong><a href="tel:<%= telHref(site.telefono) %>"><%= site.telefono %></a></span></li>
+          <li><span class="datos-contacto__icono"><%- icono('mail') %></span><span><strong>Correo</strong><a href="mailto:<%= site.correo %>"><%= site.correo %></a></span></li>
+        </ul>
+        <a class="boton boton--primario" href="<%= site.mapaUrl %>" rel="noopener" target="_blank"><%- icono('pin') %> Cómo llegar</a>
+      </div>
+      <div class="horario-tarjeta">
+        <h3><%- icono('clock') %> Horario de atención</h3>
+        <table class="tabla-horario">
+          <caption class="sr-only">Horario de atención del Área de Salud Naranjo</caption>
+          <tbody>
+            <% site.horarios.forEach(function (h) { %>
+              <tr><th scope="row"><%= h.dia %></th><td><%= h.horas %></td></tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA final -->
+  <section class="cta-final" aria-labelledby="cta-titulo">
+    <div class="contenedor cta-final__caja">
+      <h2 id="cta-titulo">Su salud, nuestra prioridad</h2>
+      <p>Consulte nuestro directorio para comunicarse directamente con el servicio que necesita.</p>
+      <div class="hero__ctas">
+        <a class="boton boton--claro boton--grande" href="/directorio">Directorio telefónico</a>
+        <a class="boton boton--contorno-claro boton--grande" href="tel:<%= telHref(site.telefono) %>"><%- icono('phone') %> <%= site.telefono %></a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<%- include('partials/footer') %>

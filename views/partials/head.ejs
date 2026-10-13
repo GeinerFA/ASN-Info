@@ -1,0 +1,47 @@
+<%
+  // Parámetros: title, description, path, ogImage?, ogType?, noindex?, jsonLdExtra?
+  const canonical = urlAbs(locals.path || '/');
+  const imagenOg = locals.ogImage || urlAbs('/img/og-image.png');
+  const ldLista = [organizacionLd].concat(locals.jsonLdExtra || []);
+%><!DOCTYPE html>
+<html lang="es-CR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title><%= title %></title>
+  <meta name="description" content="<%= description %>">
+  <% if (locals.noindex) { %><meta name="robots" content="noindex, follow"><% } else { %><meta name="robots" content="index, follow, max-image-preview:large">
+  <link rel="canonical" href="<%= canonical %>"><% } %>
+  <meta name="author" content="<%= site.nombre %>">
+  <meta name="geo.region" content="CR-A">
+  <meta name="geo.placename" content="Naranjo, Alajuela">
+  <meta name="geo.position" content="<%= site.geo.lat %>;<%= site.geo.lng %>">
+  <meta name="ICBM" content="<%= site.geo.lat %>, <%= site.geo.lng %>">
+  <meta name="theme-color" content="#0b7f72">
+
+  <!-- Open Graph / Twitter -->
+  <meta property="og:type" content="<%= locals.ogType || 'website' %>">
+  <meta property="og:site_name" content="<%= site.nombre %>">
+  <meta property="og:locale" content="es_CR">
+  <meta property="og:title" content="<%= title %>">
+  <meta property="og:description" content="<%= description %>">
+  <meta property="og:url" content="<%= canonical %>">
+  <meta property="og:image" content="<%= imagenOg %>">
+  <meta property="og:image:alt" content="<%= site.nombre %>">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="<%= title %>">
+  <meta name="twitter:description" content="<%= description %>">
+  <meta name="twitter:image" content="<%= imagenOg %>">
+
+  <link rel="icon" href="/img/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Manrope:wght@600;700;800&display=swap">
+  <link rel="stylesheet" href="/css/styles.css">
+  <script src="/js/main.js" defer></script>
+  <% ldLista.forEach(function (ld) { %>
+  <script type="application/ld+json"><%- jsonLd(ld) %></script>
+  <% }) %>
+</head>
+<body>

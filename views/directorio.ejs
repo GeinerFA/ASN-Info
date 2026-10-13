@@ -1,0 +1,48 @@
+<%- include('partials/head') %>
+<%- include('partials/header') %>
+
+<main id="contenido">
+  <section class="encabezado-pagina">
+    <div class="contenedor">
+      <%- include('partials/migas', { migas: [{ nombre: 'Directorio telefónico', ruta: '/directorio' }] }) %>
+      <p class="eyebrow">Directorio</p>
+      <h1>Directorio telefónico</h1>
+      <p class="encabezado-pagina__lead">Teléfonos y extensiones de los servicios y EBAIS del Área de Salud Naranjo. Ante una emergencia llame al <a href="tel:<%= site.emergencias %>"><strong><%= site.emergencias %></strong></a>.</p>
+    </div>
+  </section>
+
+  <section class="seccion seccion--compacta" aria-label="Contactos">
+    <div class="contenedor">
+      <div class="buscador" hidden>
+        <label for="buscar-directorio"><%- icono('search') %><span class="sr-only">Buscar en el directorio</span></label>
+        <input id="buscar-directorio" type="search" placeholder="Buscar servicio, EBAIS o número…" autocomplete="off">
+      </div>
+      <p class="buscador__vacio" id="directorio-vacio" role="status" hidden>No se encontraron contactos con ese criterio.</p>
+
+      <% grupos.forEach(function (g, gi) { %>
+        <div class="directorio__grupo" data-grupo>
+          <h2 class="directorio__titulo" id="grupo-<%= gi %>"><%= g.departamento %></h2>
+          <div class="tabla-envoltura">
+            <table class="tabla-directorio" aria-labelledby="grupo-<%= gi %>">
+              <thead>
+                <tr><th scope="col">Servicio</th><th scope="col">Teléfono</th><th scope="col">Extensión</th><th scope="col">Horario</th></tr>
+              </thead>
+              <tbody>
+                <% g.contactos.forEach(function (c) { %>
+                  <tr data-fila>
+                    <th scope="row" data-etiqueta="Servicio"><%= c.servicio %></th>
+                    <td data-etiqueta="Teléfono"><a class="tel" href="tel:<%= telHref(c.telefono) %><% if (c.extension) { %>,<%= c.extension %><% } %>"><%- icono('phone') %><%= c.telefono %></a></td>
+                    <td data-etiqueta="Extensión"><%= c.extension || '—' %></td>
+                    <td data-etiqueta="Horario"><%= c.horario || '—' %></td>
+                  </tr>
+                <% }) %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  </section>
+</main>
+
+<%- include('partials/footer') %>

@@ -1,0 +1,74 @@
+<%- include('partials/head') %>
+<%- include('partials/header') %>
+
+<main id="contenido">
+  <section class="encabezado-pagina">
+    <div class="contenedor">
+      <%- include('partials/migas', { migas: [{ nombre: 'Nosotros', ruta: '/nosotros' }] }) %>
+      <p class="eyebrow">Nosotros</p>
+      <h1>Misión, visión y análisis FODA</h1>
+      <p class="encabezado-pagina__lead">Somos el Área de Salud Naranjo, parte de la <%= site.institucion %>. Trabajamos todos los días por la salud de las personas del cantón.</p>
+    </div>
+  </section>
+
+  <section class="seccion seccion--compacta" aria-label="Misión y visión">
+    <div class="contenedor grid grid--2">
+      <article class="tarjeta-mv">
+        <span class="tarjeta-mv__icono"><%- icono('target') %></span>
+        <h2>Misión</h2>
+        <p><%= mision %></p>
+      </article>
+      <article class="tarjeta-mv tarjeta-mv--oscura">
+        <span class="tarjeta-mv__icono"><%- icono('eye') %></span>
+        <h2>Visión</h2>
+        <p><%= vision %></p>
+      </article>
+    </div>
+  </section>
+
+  <% if (valores.length) { %>
+  <section class="seccion seccion--crema" aria-labelledby="valores-titulo">
+    <div class="contenedor">
+      <header class="seccion__cabecera seccion__cabecera--centro">
+        <p class="eyebrow">Valores</p>
+        <h2 id="valores-titulo">Lo que guía nuestro trabajo</h2>
+      </header>
+      <div class="grid grid--4">
+        <% valores.forEach(function (v) { %>
+          <div class="rasgo"><span class="rasgo__icono"><%- icono('heart') %></span><h3><%= v.titulo %></h3><% if (v.texto) { %><p><%= v.texto %></p><% } %></div>
+        <% }) %>
+      </div>
+    </div>
+  </section>
+  <% } %>
+
+  <section class="seccion" id="foda" aria-labelledby="foda-titulo">
+    <div class="contenedor">
+      <header class="seccion__cabecera seccion__cabecera--centro">
+        <p class="eyebrow">Análisis estratégico</p>
+        <h2 id="foda-titulo">Análisis FODA</h2>
+        <p>Fortalezas, oportunidades, debilidades y amenazas del Área de Salud Naranjo.</p>
+      </header>
+      <div class="foda">
+        <% [
+             { clave: 'fortalezas', titulo: 'Fortalezas', letra: 'F', tipo: 'Interno' },
+             { clave: 'oportunidades', titulo: 'Oportunidades', letra: 'O', tipo: 'Externo' },
+             { clave: 'debilidades', titulo: 'Debilidades', letra: 'D', tipo: 'Interno' },
+             { clave: 'amenazas', titulo: 'Amenazas', letra: 'A', tipo: 'Externo' }
+           ].forEach(function (c) { %>
+          <article class="foda__celda foda__celda--<%= c.clave %>">
+            <header class="foda__cabecera">
+              <span class="foda__letra" aria-hidden="true"><%= c.letra %></span>
+              <div><h3><%= c.titulo %></h3><small>Factor <%= c.tipo.toLowerCase() %></small></div>
+            </header>
+            <ul>
+              <% (foda[c.clave] || []).forEach(function (item) { %><li><%= item %></li><% }) %>
+            </ul>
+          </article>
+        <% }) %>
+      </div>
+    </div>
+  </section>
+</main>
+
+<%- include('partials/footer') %>

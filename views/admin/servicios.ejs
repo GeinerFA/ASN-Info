@@ -1,0 +1,62 @@
+<%- include('_inicio', { titulo: 'Servicios' }) %>
+<% const e = editar || { nombre: '', descripcion: '', icono: 'heart', horario: '', destacado: 0, orden: servicios.length }; %>
+<div class="admin-cabecera">
+  <div>
+    <h1>Servicios</h1>
+    <p>Los servicios marcados como destacados (hasta 6) aparecen en la página de inicio.</p>
+  </div>
+</div>
+
+<form class="formulario tarjeta" method="post" action="/admin/servicios" id="formulario">
+  <h2><%= editar ? 'Editar servicio' : 'Agregar servicio' %></h2>
+  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+  <% if (editar) { %><input type="hidden" name="id" value="<%= editar.id %>"><% } %>
+  <div class="formulario__fila">
+    <label>Nombre *<input name="nombre" value="<%= e.nombre %>" required></label>
+    <label>Horario<input name="horario" value="<%= e.horario || '' %>"></label>
+  </div>
+  <label>Descripción *<textarea name="descripcion" rows="2" maxlength="300" required><%= e.descripcion %></textarea></label>
+  <fieldset>
+    <legend>Icono</legend>
+    <div class="selector-iconos">
+      <% iconos.forEach(function (n) { %>
+        <label class="selector-iconos__op" title="<%= n %>">
+          <input type="radio" name="icono" value="<%= n %>"<% if (n === e.icono) { %> checked<% } %>>
+          <%- icono(n) %><span class="sr-only"><%= n %></span>
+        </label>
+      <% }) %>
+    </div>
+  </fieldset>
+  <div class="formulario__fila">
+    <label>Orden<input name="orden" type="number" value="<%= e.orden %>"></label>
+    <label class="check check--en-fila"><input type="checkbox" name="destacado" value="1"<% if (e.destacado) { %> checked<% } %>> Destacado en inicio</label>
+  </div>
+  <div class="formulario__acciones">
+    <button class="btn btn--primario" type="submit"><%= editar ? 'Guardar cambios' : 'Agregar' %></button>
+    <% if (editar) { %><a class="btn" href="/admin/servicios">Cancelar</a><% } %>
+  </div>
+</form>
+
+<div class="tabla-envoltura">
+  <table class="tabla">
+    <thead><tr><th scope="col">Orden</th><th scope="col">Servicio</th><th scope="col">Horario</th><th scope="col">Inicio</th><th scope="col"><span class="sr-only">Acciones</span></th></tr></thead>
+    <tbody>
+      <% servicios.forEach(function (s) { %>
+      <tr<% if (editar && editar.id === s.id) { %> class="fila-activa"<% } %>>
+        <td data-etiqueta="Orden"><%= s.orden %></td>
+        <td data-etiqueta="Servicio"><span class="con-icono"><%- icono(s.icono) %><strong><%= s.nombre %></strong></span></td>
+        <td data-etiqueta="Horario"><%= s.horario || '—' %></td>
+        <td data-etiqueta="Inicio"><%= s.destacado ? 'Sí' : '—' %></td>
+        <td class="acciones">
+          <a class="btn btn--chico" href="/admin/servicios/<%= s.id %>/editar#formulario">Editar</a>
+          <form method="post" action="/admin/servicios/<%= s.id %>/eliminar" data-confirmar="¿Eliminar el servicio «<%= s.nombre %>»?">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <button class="btn btn--chico btn--peligro" type="submit">Eliminar</button>
+          </form>
+        </td>
+      </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>
+<%- include('_fin') %>

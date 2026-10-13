@@ -1,0 +1,59 @@
+<%- include('_inicio', { titulo: 'Directorio' }) %>
+<% const e = editar || { departamento: '', servicio: '', telefono: '', extension: '', horario: '', orden: contactos.length }; %>
+<div class="admin-cabecera">
+  <div>
+    <h1>Directorio telefónico</h1>
+    <p>Los contactos se agrupan por departamento en la página pública, en el orden indicado.</p>
+  </div>
+</div>
+
+<form class="formulario tarjeta" method="post" action="/admin/directorio" id="formulario">
+  <h2><%= editar ? 'Editar contacto' : 'Agregar contacto' %></h2>
+  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+  <% if (editar) { %><input type="hidden" name="id" value="<%= editar.id %>"><% } %>
+  <div class="formulario__fila">
+    <label>Departamento *
+      <input name="departamento" value="<%= e.departamento %>" list="departamentos" required>
+      <datalist id="departamentos">
+        <% [...new Set(contactos.map(function (c) { return c.departamento; }))].forEach(function (d) { %><option value="<%= d %>"><% }) %>
+      </datalist>
+    </label>
+    <label>Servicio *<input name="servicio" value="<%= e.servicio %>" required></label>
+  </div>
+  <div class="formulario__fila">
+    <label>Teléfono *<input name="telefono" value="<%= e.telefono %>" inputmode="tel" placeholder="2450-0000" required></label>
+    <label>Extensión<input name="extension" value="<%= e.extension || '' %>" inputmode="numeric"></label>
+    <label>Horario<input name="horario" value="<%= e.horario || '' %>" placeholder="Lun–Vie 7:00–16:00"></label>
+    <label>Orden<input name="orden" type="number" value="<%= e.orden %>"></label>
+  </div>
+  <div class="formulario__acciones">
+    <button class="btn btn--primario" type="submit"><%= editar ? 'Guardar cambios' : 'Agregar' %></button>
+    <% if (editar) { %><a class="btn" href="/admin/directorio">Cancelar</a><% } %>
+  </div>
+</form>
+
+<div class="tabla-envoltura">
+  <table class="tabla">
+    <thead><tr><th scope="col">Orden</th><th scope="col">Departamento</th><th scope="col">Servicio</th><th scope="col">Teléfono</th><th scope="col">Ext.</th><th scope="col">Horario</th><th scope="col"><span class="sr-only">Acciones</span></th></tr></thead>
+    <tbody>
+      <% contactos.forEach(function (c) { %>
+      <tr<% if (editar && editar.id === c.id) { %> class="fila-activa"<% } %>>
+        <td data-etiqueta="Orden"><%= c.orden %></td>
+        <td data-etiqueta="Departamento"><%= c.departamento %></td>
+        <td data-etiqueta="Servicio"><strong><%= c.servicio %></strong></td>
+        <td data-etiqueta="Teléfono"><%= c.telefono %></td>
+        <td data-etiqueta="Ext."><%= c.extension || '—' %></td>
+        <td data-etiqueta="Horario"><%= c.horario || '—' %></td>
+        <td class="acciones">
+          <a class="btn btn--chico" href="/admin/directorio/<%= c.id %>/editar#formulario">Editar</a>
+          <form method="post" action="/admin/directorio/<%= c.id %>/eliminar" data-confirmar="¿Eliminar «<%= c.servicio %>» del directorio?">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <button class="btn btn--chico btn--peligro" type="submit">Eliminar</button>
+          </form>
+        </td>
+      </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>
+<%- include('_fin') %>

@@ -1,0 +1,44 @@
+<%- include('partials/head') %>
+<%- include('partials/header') %>
+
+<main id="contenido">
+  <article class="articulo">
+    <header class="encabezado-pagina">
+      <div class="contenedor contenedor--estrecho">
+        <%- include('partials/migas', { migas: [{ nombre: 'Anuncios', ruta: '/anuncios' }, { nombre: anuncio.titulo, ruta: '/anuncios/' + anuncio.slug }] }) %>
+        <p class="tarjeta-anuncio__meta">
+          <span class="chip"><%= anuncio.categoria %></span>
+          <time datetime="<%= anuncio.fecha_publicacion %>"><%= fechaLarga(anuncio.fecha_publicacion) %></time>
+        </p>
+        <h1><%= anuncio.titulo %></h1>
+        <% if (anuncio.resumen) { %><p class="encabezado-pagina__lead"><%= anuncio.resumen %></p><% } %>
+      </div>
+    </header>
+
+    <div class="contenedor contenedor--estrecho articulo__cuerpo">
+      <% if (anuncio.imagen) { %>
+        <img class="articulo__img" src="/uploads/<%= anuncio.imagen %>" alt="<%= anuncio.titulo %>" width="1200" height="675">
+      <% } %>
+      <% anuncio.contenido.split(/\n\s*\n/).forEach(function (parrafo) { %>
+        <p><% parrafo.split('\n').forEach(function (linea, i) { %><% if (i) { %><br><% } %><%= linea %><% }) %></p>
+      <% }) %>
+      <% if (anuncio.fecha_expira) { %>
+        <p class="articulo__vigencia"><%- icono('calendar') %> Vigente hasta el <%= fechaLarga(anuncio.fecha_expira) %>.</p>
+      <% } %>
+      <a class="enlace-flecha enlace-flecha--atras" href="/anuncios"><%- icono('arrow') %> Volver a anuncios</a>
+    </div>
+  </article>
+
+  <% if (otros.length) { %>
+  <section class="seccion seccion--crema" aria-labelledby="otros-titulo">
+    <div class="contenedor">
+      <header class="seccion__cabecera"><h2 id="otros-titulo">Otros anuncios</h2></header>
+      <div class="grid grid--3">
+        <% otros.forEach(function (a) { %><%- include('partials/tarjeta-anuncio', { a: a }) %><% }) %>
+      </div>
+    </div>
+  </section>
+  <% } %>
+</main>
+
+<%- include('partials/footer') %>
