@@ -12,7 +12,9 @@
     "dev": "node --watch server.js",
     "seed": "node db/seed.js",
     "create-admin": "node scripts/create-admin.js",
-    "cargar-directorio": "node scripts/cargar-directorio.js"
+    "datos:exportar": "node scripts/datos.js exportar",
+    "datos:importar": "node scripts/datos.js importar",
+    "prepare": "node scripts/configurar-git.js"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",

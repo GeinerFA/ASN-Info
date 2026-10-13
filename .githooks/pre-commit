@@ -1,0 +1,5 @@
+#!/bin/sh
+# Exporta el contenido de la base de datos a datos/ y lo agrega al commit.
+# Si llegaron datos nuevos del repositorio sin importar, detiene el commit para no borrarlos.
+node scripts/datos.js exportar || exit 1
+git add datos public/uploads

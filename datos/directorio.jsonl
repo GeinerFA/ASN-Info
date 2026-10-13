@@ -1,0 +1,44 @@
+{"id":1,"parent_id":null,"opcion":1,"nombre":"Dirección Médica","extension":"1001","telefono":null,"horario":null,"externo":0}
+{"id":2,"parent_id":null,"opcion":2,"nombre":"Enfermería","extension":"1020","telefono":null,"horario":null,"externo":0}
+{"id":3,"parent_id":null,"opcion":3,"nombre":"Laboratorio","extension":"1071","telefono":null,"horario":null,"externo":0}
+{"id":4,"parent_id":null,"opcion":4,"nombre":"Farmacia","extension":"1064","telefono":null,"horario":null,"externo":0}
+{"id":5,"parent_id":null,"opcion":5,"nombre":"Contraloría de Servicios","extension":"1104","telefono":null,"horario":null,"externo":0}
+{"id":6,"parent_id":null,"opcion":6,"nombre":"Validación de Derechos","extension":"1101","telefono":null,"horario":null,"externo":0}
+{"id":7,"parent_id":null,"opcion":7,"nombre":"EBAIS y Registros y Estadísticas","extension":null,"telefono":null,"horario":null,"externo":0}
+{"id":8,"parent_id":7,"opcion":1,"nombre":"EBAIS Centro","extension":"1030","telefono":null,"horario":null,"externo":0}
+{"id":9,"parent_id":7,"opcion":2,"nombre":"EBAIS Barrio El Carmen","extension":"1035","telefono":null,"horario":null,"externo":0}
+{"id":10,"parent_id":7,"opcion":3,"nombre":"EBAIS Dulce Nombre","extension":"1036","telefono":null,"horario":null,"externo":0}
+{"id":11,"parent_id":7,"opcion":4,"nombre":"EBAIS San Rafael","extension":"1103","telefono":null,"horario":null,"externo":0}
+{"id":12,"parent_id":7,"opcion":5,"nombre":"Jefatura de Registros Médicos","extension":"1065","telefono":null,"horario":null,"externo":0}
+{"id":13,"parent_id":null,"opcion":8,"nombre":"Servicios Administrativos","extension":null,"telefono":null,"horario":null,"externo":0}
+{"id":14,"parent_id":13,"opcion":1,"nombre":"Secretaría Administración","extension":"1003","telefono":null,"horario":null,"externo":0}
+{"id":15,"parent_id":13,"opcion":2,"nombre":"Presupuesto","extension":"1011","telefono":null,"horario":null,"externo":0}
+{"id":16,"parent_id":13,"opcion":3,"nombre":"Transportes","extension":"1082","telefono":null,"horario":null,"externo":0}
+{"id":17,"parent_id":13,"opcion":4,"nombre":"Activos","extension":"1114","telefono":null,"horario":null,"externo":0}
+{"id":18,"parent_id":13,"opcion":5,"nombre":"Compras","extension":"1079","telefono":null,"horario":null,"externo":0}
+{"id":19,"parent_id":13,"opcion":6,"nombre":"Proveeduría","extension":"1083","telefono":null,"horario":null,"externo":0}
+{"id":20,"parent_id":13,"opcion":7,"nombre":"Mantenimiento","extension":"1095","telefono":null,"horario":null,"externo":0}
+{"id":21,"parent_id":13,"opcion":8,"nombre":"Recursos Humanos","extension":"1006","telefono":null,"horario":null,"externo":0}
+{"id":22,"parent_id":13,"opcion":9,"nombre":"Servicios Generales","extension":"1009","telefono":null,"horario":null,"externo":0}
+{"id":23,"parent_id":null,"opcion":9,"nombre":"Servicios Médicos","extension":null,"telefono":null,"horario":null,"externo":0}
+{"id":24,"parent_id":23,"opcion":1,"nombre":"Subdirección Médica","extension":"1089","telefono":null,"horario":null,"externo":0}
+{"id":25,"parent_id":23,"opcion":2,"nombre":"Medicina Familiar","extension":"1024","telefono":null,"horario":null,"externo":0}
+{"id":26,"parent_id":23,"opcion":3,"nombre":"Trabajo Social","extension":"1136","telefono":null,"horario":null,"externo":0}
+{"id":27,"parent_id":23,"opcion":4,"nombre":"Psicología Clínica","extension":"1137","telefono":null,"horario":null,"externo":0}
+{"id":28,"parent_id":23,"opcion":5,"nombre":"Obstetricia","extension":"1137","telefono":null,"horario":null,"externo":0}
+{"id":29,"parent_id":23,"opcion":6,"nombre":"Odontología","extension":"1103","telefono":null,"horario":null,"externo":0}
+{"id":30,"parent_id":23,"opcion":7,"nombre":"Clínica del Dolor y Cuidados Paliativos","extension":"1098","telefono":null,"horario":null,"externo":0}
+{"id":31,"parent_id":23,"opcion":8,"nombre":"Nutrición","extension":"1138","telefono":null,"horario":null,"externo":0}
+{"id":32,"parent_id":23,"opcion":9,"nombre":"Urgencias y Cirugía Menor","extension":"1132","telefono":null,"horario":null,"externo":0}
+{"id":35,"parent_id":null,"opcion":1,"nombre":"EBAIS externos","extension":null,"telefono":null,"horario":null,"externo":1}
+{"id":38,"parent_id":35,"opcion":0,"nombre":"EBAIS San Miguel","extension":"2451","telefono":"24503746","horario":"Lun–Vie 7:00–15:00","externo":0}
+{"id":39,"parent_id":35,"opcion":0,"nombre":"EBAIS Cirri","extension":"2450","telefono":"24503602","horario":"Lun–Vie 7:00–15:00","externo":0}
+{"id":40,"parent_id":35,"opcion":0,"nombre":"EBAIS Rosario","extension":"2450","telefono":"24503102","horario":"Lun–Vie 7:00–15:00","externo":0}
+{"id":41,"parent_id":35,"opcion":0,"nombre":"EBAIS San Jerónimo","extension":"2450","telefono":"24500416","horario":"Lun–Vie 7:00–15:00","externo":0}
+{"id":42,"parent_id":35,"opcion":0,"nombre":"EBAIS Candelaria","extension":null,"telefono":"24500554","horario":"Lun-Mie-Vie 7:00 - 15:00","externo":0}
+{"id":43,"parent_id":35,"opcion":0,"nombre":"EBAIS San Roque","extension":null,"telefono":"24511768","horario":"Mar 7:00 - 16:00","externo":0}
+{"id":44,"parent_id":35,"opcion":0,"nombre":"EBAIS San Antonio","extension":null,"telefono":"24511016","horario":"Jue 7:00 - 16:00","externo":0}
+{"id":45,"parent_id":35,"opcion":0,"nombre":"EBAIS San Juan","extension":null,"telefono":"24511158","horario":"Lun-Mie-Vie 7:00 - 15:00","externo":0}
+{"id":46,"parent_id":35,"opcion":0,"nombre":"EBAIS San Juanillo","extension":null,"telefono":"24502034","horario":"Mar-Jue 7:00 - 16:00","externo":0}
+{"id":47,"parent_id":35,"opcion":0,"nombre":"EBAIS Palmitos","extension":null,"telefono":"24503479","horario":"Lun-Mie-Jue 7:00 - 16:00","externo":0}
+{"id":48,"parent_id":35,"opcion":0,"nombre":"EBAIS Concepción","extension":null,"telefono":"24503613","horario":"Mar-Mier-Vie 7:00 - 15:00","externo":0}

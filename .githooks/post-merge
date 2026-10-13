@@ -1,0 +1,4 @@
+#!/bin/sh
+# Después de un pull (merge): carga en la base de datos lo que llegó en datos/.
+node scripts/datos.js importar || echo "[datos] Revise el mensaje anterior; la base de datos no se actualizó."
+exit 0
