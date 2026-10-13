@@ -46,7 +46,7 @@
       <tr<% if (editar && editar.id === s.id) { %> class="fila-activa"<% } %>>
         <td data-etiqueta="Orden"><%= s.orden %></td>
         <td data-etiqueta="Servicio"><span class="con-icono"><%- icono(s.icono) %><strong><%= s.nombre %></strong></span></td>
-        <td data-etiqueta="Horario"><%= horarios(s.horario).join(' · ') || '—' %></td>
+        <td data-etiqueta="Horario"><%= horariosVista(s.horario).join(' · ') || '—' %></td>
         <td data-etiqueta="Inicio"><%= s.destacado ? 'Sí' : '—' %></td>
         <td class="acciones">
           <% if (puede('servicios.editar')) { %><a class="btn btn--chico" href="/admin/servicios/<%= s.id %>/editar#formulario">Editar</a><% } %>

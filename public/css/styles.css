@@ -876,7 +876,7 @@ a.ivr__nombre:hover { text-decoration: underline; color: var(--ink); }
 /* Teléfonos pequeños (≤ 400 px) */
 @media (max-width: 400px) {
   .estadisticas { gap: 1.5rem 1rem; }
-  .estadistica dd { font-size: 1.85rem; }
+  .estadistica dd { font-size: 1.85rem; white-space: normal; }
   .pie__enlaces { gap: 0.65rem 1.5rem; }
   .pie__marca .marca__lugar { font-size: 1.4rem; }
   .ivr__nombre { overflow-wrap: anywhere; }

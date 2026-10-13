@@ -1,6 +1,6 @@
 <article class="tarjeta-servicio" data-revelar>
   <span class="tarjeta-servicio__icono"><%- icono(s.icono) %></span>
   <h3><%= s.nombre %></h3>
-  <p><%= s.descripcion %></p>
-  <% horarios(s.horario).forEach(function (h) { %><p class="tarjeta-servicio__horario"><%- icono('clock') %><%= h %></p><% }) %>
+  <p><%= hora12(s.descripcion) %></p>
+  <% horariosVista(s.horario).forEach(function (h) { %><p class="tarjeta-servicio__horario"><%- icono('clock') %><%= h %></p><% }) %>
 </article>
