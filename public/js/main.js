@@ -41,6 +41,31 @@ document.addEventListener('DOMContentLoaded', () => {
     revisar();
   }
 
+  // Botón "Volver arriba": aparece tras bajar una pantalla; el anillo marca el avance de la página.
+  const arriba = document.querySelector('.arriba');
+  if (arriba) {
+    arriba.hidden = false;
+    let pendiente = false;
+    const actualizar = () => {
+      const recorrido = document.documentElement.scrollHeight - window.innerHeight;
+      const progreso = recorrido > 0 ? Math.min(window.scrollY / recorrido, 1) : 0;
+      arriba.style.setProperty('--progreso', progreso.toFixed(3));
+      arriba.classList.toggle('visible', window.scrollY > window.innerHeight * 0.6);
+      pendiente = false;
+    };
+    window.addEventListener('scroll', () => {
+      if (!pendiente) { pendiente = true; requestAnimationFrame(actualizar); }
+    }, { passive: true });
+    window.addEventListener('resize', actualizar);
+    actualizar();
+    arriba.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: animar ? 'smooth' : 'auto' });
+      // El foco vuelve al inicio de la página para quien navega con teclado
+      const inicio = document.querySelector('.marca');
+      if (inicio) inicio.focus({ preventScroll: true });
+    });
+  }
+
   // Buscador del directorio
   const buscador = document.querySelector('.buscador');
   const entrada = document.getElementById('buscar-directorio');

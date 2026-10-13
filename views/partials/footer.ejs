@@ -38,7 +38,6 @@
 
       <div class="pie__col">
         <ul class="pie__redes">
-          <li><a class="pie__red" href="<%= site.redes.facebook %>" rel="noopener" target="_blank" aria-label="Facebook del <%= site.nombre %>"><%- icono('facebook') %></a></li>
           <li><a class="pie__red" href="tel:<%= telHref(site.telefono) %>" aria-label="Llamar a la central <%= site.telefono %>"><%- icono('phone') %></a></li>
           <li><a class="pie__red" href="<%= site.mapaUrl %>" rel="noopener" target="_blank" aria-label="Ver ubicación en el mapa"><%- icono('pin') %></a></li>
         </ul>
@@ -56,5 +55,9 @@
     </div>
   </div>
 </footer>
+<button class="arriba" type="button" aria-label="Volver arriba" title="Volver arriba" hidden>
+  <svg class="arriba__anillo" viewBox="0 0 48 48" aria-hidden="true" focusable="false"><circle cx="24" cy="24" r="21"/><circle class="arriba__progreso" cx="24" cy="24" r="21" pathLength="100"/></svg>
+  <%- icono('arriba') %>
+</button>
 </body>
 </html>
