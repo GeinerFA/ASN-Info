@@ -1,50 +1,59 @@
 <footer class="pie">
-  <div class="contenedor pie__grid">
-    <div class="pie__col pie__col--marca">
-      <a class="marca marca--clara" href="/">
-        <img class="pie__logo" src="/img/logo-ccss-negro-128.png" alt="" width="52" height="52" loading="lazy">
-        <span class="marca__texto"><span class="marca__nombre">Área de Salud</span><span class="marca__lugar">Naranjo</span></span>
-      </a>
-      <p>Atención primaria de salud para las personas de Naranjo, Alajuela. Somos parte de la <%= site.institucion %>.</p>
-      <a class="pie__social" href="<%= site.redes.facebook %>" rel="noopener" target="_blank"><%- icono('facebook') %><span>Facebook</span></a>
-    </div>
-
-    <div class="pie__col">
-      <h2 class="pie__titulo">Contacto</h2>
-      <address>
-        <p><%- icono('pin') %><span><%= site.direccion.calle %>, <%= site.direccion.ciudad %>, <%= site.direccion.provincia %></span></p>
-        <p><%- icono('phone') %><a href="tel:<%= telHref(site.telefono) %>"><%= site.telefono %></a></p>
-        <p><%- icono('siren') %><span>Emergencias: <a href="tel:<%= site.emergencias %>"><%= site.emergencias %></a></span></p>
-      </address>
-    </div>
-
-    <div class="pie__col">
-      <h2 class="pie__titulo">Horario</h2>
-      <dl class="pie__horario">
-        <% site.horarios.forEach(function (h) { %>
-          <div><dt><%= h.dia %></dt><dd><%= h.horas %></dd></div>
-        <% }) %>
-      </dl>
-    </div>
-
-    <div class="pie__col">
-      <h2 class="pie__titulo">Enlaces</h2>
-      <ul class="pie__enlaces">
-        <li><a href="/servicios">Servicios</a></li>
-        <li><a href="/nosotros">Misión y visión</a></li>
-        <li><a href="/directorio">Directorio telefónico</a></li>
-        <li><a href="/anuncios">Anuncios</a></li>
-        <li><a href="/#preguntas">Preguntas frecuentes</a></li>
-        <li><a href="https://www.ccss.sa.cr" rel="noopener" target="_blank">Sitio de la CCSS</a></li>
-      </ul>
-    </div>
+  <div class="pie__fondo">
+    <img src="/img/fotos/pasillo.webp" alt="" width="1600" height="917" loading="lazy">
   </div>
-  <div class="contenedor">
-    <p class="pie__nombre-grande" aria-hidden="true">Salud Naranjo</p>
-  </div>
-  <div class="contenedor pie__legal">
-    <p>© <%= anio %> <%= site.nombre %> · <%= site.institucion %></p>
-    <p>Ante una emergencia llame al <a href="tel:<%= site.emergencias %>"><%= site.emergencias %></a>.</p>
+
+  <div class="pie__tarjeta">
+    <div class="pie__grid">
+      <div class="pie__col pie__col--marca">
+        <a class="marca marca--clara pie__marca" href="/">
+          <img class="pie__logo" src="/img/logo-ccss-negro-128.png" alt="" width="56" height="56" loading="lazy">
+          <span class="marca__texto"><span class="marca__nombre">Área de Salud</span><span class="marca__lugar">Naranjo</span></span>
+        </a>
+        <p class="pie__lema">Atención primaria de salud para las personas de Naranjo, Alajuela. Somos parte de la <%= site.institucion %>.</p>
+
+        <div class="pie__contacto">
+          <p class="pie__etiqueta">Central telefónica</p>
+          <a class="pie__destacado" href="tel:<%= telHref(site.telefono) %>"><%= site.telefono %></a>
+          <address>
+            <p><%- icono('pin') %><span><%= site.direccion.calle %>, <%= site.direccion.ciudad %>, <%= site.direccion.provincia %></span></p>
+            <p><%- icono('siren') %><span>Emergencias: <a href="tel:<%= site.emergencias %>"><%= site.emergencias %></a></span></p>
+          </address>
+        </div>
+      </div>
+
+      <nav class="pie__col" aria-labelledby="pie-enlaces">
+        <h2 class="pie__titulo" id="pie-enlaces">Enlaces rápidos</h2>
+        <ul class="pie__enlaces">
+          <li><a href="/">Inicio</a></li>
+          <li><a href="/servicios">Servicios</a></li>
+          <li><a href="/nosotros">Misión y visión</a></li>
+          <li><a href="/directorio">Directorio</a></li>
+          <li><a href="/anuncios">Anuncios</a></li>
+          <li><a href="/#preguntas">Preguntas frecuentes</a></li>
+          <li><a href="/#contacto">Cómo llegar</a></li>
+          <li><a href="https://www.ccss.sa.cr" rel="noopener" target="_blank">Sitio de la CCSS</a></li>
+        </ul>
+      </nav>
+
+      <div class="pie__col">
+        <ul class="pie__redes">
+          <li><a class="pie__red" href="<%= site.redes.facebook %>" rel="noopener" target="_blank" aria-label="Facebook del <%= site.nombre %>"><%- icono('facebook') %></a></li>
+          <li><a class="pie__red" href="tel:<%= telHref(site.telefono) %>" aria-label="Llamar a la central <%= site.telefono %>"><%- icono('phone') %></a></li>
+          <li><a class="pie__red" href="<%= site.mapaUrl %>" rel="noopener" target="_blank" aria-label="Ver ubicación en el mapa"><%- icono('pin') %></a></li>
+        </ul>
+        <h2 class="pie__subtitulo">Horario de atención</h2>
+        <dl class="pie__horario">
+          <% site.horarios.forEach(function (h) { %>
+            <div><dt><%= h.dia %></dt><dd><%= h.horas %></dd></div>
+          <% }) %>
+        </dl>
+      </div>
+    </div>
+
+    <div class="pie__legal">
+      <p>© <%= anio %> <%= site.nombre %> · <%= site.institucion %></p>
+    </div>
   </div>
 </footer>
 </body>

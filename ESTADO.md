@@ -46,10 +46,10 @@ Comandos manuales, por si hacen falta: `npm run datos:exportar` y `npm run datos
 
 ## Pendiente
 
-- **Datos reales:** dirección, coordenadas, enlace de Facebook y estadísticas del inicio (`lib/site.js`, marcados `TODO`).
+- **Datos reales:** coordenadas, enlace de Facebook y estadísticas del inicio (`lib/site.js`, marcados `TODO`).
 - **Verificar extensiones del IVR** que se transcribieron de una imagen borrosa: Farmacia (1064), EBAIS Barrio El Carmen (1035), Jefatura de Registros (1065), Recursos Humanos (1006), Servicios Generales (1009), Obstetricia (1127) y Odontología (1100).
 - **EBAIS externos:** cargar la lista con sus teléfonos desde Panel → Directorio.
-- **Fotos reales:** el inicio tiene 3 espacios de foto con relleno provisional (hero, "Quiénes somos" y "Visítenos"). Copiarlas a `public/img/fotos/` y poner las rutas en `site.fotos` (`lib/site.js`).
+- **Fotos reales:** el hero es un carrusel de 3 fotos (`site.heroFotos` en `lib/site.js`): la entrada de Urgencias (foto propia, escalada desde 900 px), la iglesia de Naranjo (Wikimedia, CC BY-SA 4.0, el crédito se muestra en el hero) y un pasillo genérico. Conviene reemplazarlas por fotos oficiales de la sede nueva en alta resolución. "Quiénes somos" sigue con relleno provisional (`site.fotos.nosotros`). "Visítenos" muestra el mapa de Google Maps. El footer usa `public/img/fotos/pasillo.webp`.
 - **Logo anterior** (cruz verde, `public/img/logo.svg`) todavía en: la imagen para redes (`og-image.png`) y el logo del JSON-LD.
 - **Producción:** definir hosting, `SITE_URL` con el dominio real, `SESSION_SECRET` y `NODE_ENV=production` en `.env`.
 - **Calidad:** no se ha corrido Lighthouse ni se ha probado en un teléfono real.

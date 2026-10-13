@@ -5,7 +5,13 @@
   <!-- Hero -->
   <section class="hero" aria-labelledby="hero-titulo">
     <div class="hero__caja oscuro">
-      <%- include('partials/foto', { src: site.fotos.hero, alt: '', clase: 'hero__fondo', figura: 'stethoscope', ancho: 1600, alto: 1000, prioridad: true }) %>
+      <div class="hero__fondo hero__carrusel" data-carrusel>
+        <% site.heroFotos.forEach(function (f, i) { %>
+          <figure class="hero__slide<% if (i === 0) { %> activo<% } %>"<% if (f.credito) { %> data-credito="<%= f.credito %>" data-credito-url="<%= f.creditoUrl %>"<% } %>>
+            <img src="<%= f.src %>" alt="" width="<%= f.ancho %>" height="<%= f.alto %>" data-posicion="<%= f.posicion %>"<% if (i === 0) { %> fetchpriority="high"<% } else { %> loading="lazy"<% } %>>
+          </figure>
+        <% }) %>
+      </div>
       <div class="contenedor hero__grid">
         <div class="hero__texto">
           <p class="eyebrow" data-revelar>Caja Costarricense de Seguro Social</p>
@@ -51,6 +57,17 @@
             </li>
           </ul>
         </aside>
+      </div>
+
+      <!-- Controles del carrusel (solo con JS) y crédito de la foto visible -->
+      <div class="contenedor hero__pie">
+        <p class="hero__credito" data-carrusel-credito aria-live="polite"></p>
+        <div class="hero__controles" data-carrusel-controles hidden>
+          <% site.heroFotos.forEach(function (f, i) { %>
+            <button class="hero__punto" type="button" data-carrusel-punto="<%= i %>" aria-label="Foto <%= i + 1 %> de <%= site.heroFotos.length %>: <%= f.descripcion %>"<% if (i === 0) { %> aria-current="true"<% } %>></button>
+          <% }) %>
+          <button class="hero__pausa" type="button" data-carrusel-pausa aria-label="Pausar fotos"><span class="hero__pausa-pausar"><%- icono('pause') %></span><span class="hero__pausa-seguir"><%- icono('play') %></span></button>
+        </div>
       </div>
 
       <% if (servicios.length) { %>
@@ -193,7 +210,9 @@
   <section class="seccion seccion--menta" id="contacto" aria-labelledby="contacto-titulo">
     <div class="contenedor visita">
       <div class="visita__media" data-revelar="foto">
-        <%- include('partials/foto', { src: site.fotos.visita, alt: 'Sede del Área de Salud Naranjo', figura: 'pin', ancho: 1200, alto: 1260 }) %>
+        <div class="foto mapa">
+          <iframe src="<%= site.mapaEmbed %>" title="Mapa: ubicación del Área de Salud Naranjo" width="600" height="630" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+        </div>
       </div>
       <div>
         <p class="eyebrow" data-revelar>Visítenos</p>

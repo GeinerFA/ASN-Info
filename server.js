@@ -32,6 +32,7 @@ app.use(
         fontSrc: ["'self'", 'https://fonts.gstatic.com'],
         imgSrc: ["'self'", 'data:'],
         connectSrc: ["'self'"],
+        frameSrc: ['https://www.google.com', 'https://maps.google.com'], // mapa de Visítenos
         formAction: ["'self'"],
         frameAncestors: ["'none'"],
         upgradeInsecureRequests: PROD ? [] : null,
