@@ -14,7 +14,6 @@
       <address>
         <p><%- icono('pin') %><span><%= site.direccion.calle %>, <%= site.direccion.ciudad %>, <%= site.direccion.provincia %></span></p>
         <p><%- icono('phone') %><a href="tel:<%= telHref(site.telefono) %>"><%= site.telefono %></a></p>
-        <p><%- icono('mail') %><a href="mailto:<%= site.correo %>"><%= site.correo %></a></p>
         <p><%- icono('siren') %><span>Emergencias: <a href="tel:<%= site.emergencias %>"><%= site.emergencias %></a></span></p>
       </address>
     </div>

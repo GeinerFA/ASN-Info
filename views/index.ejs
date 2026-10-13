@@ -165,7 +165,6 @@
         <ul class="datos-contacto">
           <li><span class="datos-contacto__icono"><%- icono('pin') %></span><span><strong>Dirección</strong><%= site.direccion.calle %>, <%= site.direccion.ciudad %>, <%= site.direccion.provincia %></span></li>
           <li><span class="datos-contacto__icono"><%- icono('phone') %></span><span><strong>Teléfono</strong><a href="tel:<%= telHref(site.telefono) %>"><%= site.telefono %></a></span></li>
-          <li><span class="datos-contacto__icono"><%- icono('mail') %></span><span><strong>Correo</strong><a href="mailto:<%= site.correo %>"><%= site.correo %></a></span></li>
         </ul>
         <a class="boton boton--primario" href="<%= site.mapaUrl %>" rel="noopener" target="_blank"><%- icono('pin') %> Cómo llegar</a>
       </div>
