@@ -21,6 +21,7 @@ horarios → CTA final → footer completo.
 npm install
 npm run seed           # crea tablas y carga datos de ejemplo (borra los existentes)
 npm run create-admin   # crea/actualiza usuario admin: npm run create-admin -- usuario contraseña
+npm run cargar-directorio  # restablece SOLO el directorio (menú IVR de db/directorio-ivr.js)
 npm run dev            # node --watch, http://localhost:3000
 npm start              # producción
 ```

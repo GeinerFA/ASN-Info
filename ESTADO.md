@@ -13,6 +13,9 @@ npm run create-admin -- <usuario> <contraseña>
 npm run dev            # http://localhost:3000  ·  panel: /admin
 ```
 
+El directorio telefónico se carga solo la primera vez que arranca el servidor con una BD nueva.
+Para restablecerlo sin tocar anuncios ni servicios: `npm run cargar-directorio` (reemplaza el directorio actual).
+
 Stack: Node 24 + Express + EJS (render en servidor) + SQLite nativo (`node:sqlite`). Sin frameworks de CSS ni de JS.
 
 > La base de datos (`data/asn.db`) **no está en git**. Al clonar, usted tendrá los datos de ejemplo del seed,
