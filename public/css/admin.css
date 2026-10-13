@@ -14,6 +14,7 @@
   --radius-lg: 16px;
 }
 *, *::before, *::after { box-sizing: border-box; }
+[hidden] { display: none !important; }
 body.admin { margin: 0; font: 15px/1.55 'Inter', 'Segoe UI', system-ui, sans-serif; color: var(--ink); background: var(--surface); }
 h1, h2 { font-family: 'Manrope', 'Segoe UI', system-ui, sans-serif; letter-spacing: -0.02em; line-height: 1.2; margin: 0 0 0.4em; }
 h1 { font-size: 1.75rem; }
@@ -25,6 +26,7 @@ img { max-width: 100%; height: auto; }
 .icono { width: 20px; height: 20px; }
 
 .admin-barra {
+  position: sticky; top: 0; z-index: 50;
   display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 2rem;
   padding: 0.75rem clamp(1rem, 3vw, 2rem);
   background: var(--ink); color: var(--white);
@@ -35,7 +37,8 @@ img { max-width: 100%; height: auto; }
 .admin-barra nav a:hover { color: var(--white); background: rgba(255, 255, 255, 0.08); }
 .admin-barra nav a[aria-current="page"] { color: var(--white); background: var(--primary-dark); }
 .admin-barra form { margin: 0; }
-.admin-salir { background: none; border: 1px solid rgba(255, 255, 255, 0.3); color: var(--white); border-radius: 999px; padding: 0.4rem 0.9rem; cursor: pointer; font: inherit; }
+.admin-salir { display: inline-flex; align-items: center; gap: 0.45rem; background: none; border: 1px solid rgba(255, 255, 255, 0.3); color: var(--white); border-radius: 999px; padding: 0.4rem 0.9rem; cursor: pointer; font: inherit; }
+.admin-salir .icono { width: 18px; height: 18px; }
 .admin-salir:hover { border-color: var(--white); }
 
 .admin-main { max-width: 1200px; margin: 0 auto; padding: clamp(1.25rem, 3vw, 2.5rem) clamp(1rem, 3vw, 2rem) 4rem; }
@@ -77,14 +80,14 @@ img { max-width: 100%; height: auto; }
 .formulario textarea { resize: vertical; }
 .formulario fieldset { border: 1px dashed var(--line); border-radius: var(--radius); padding: 1rem; margin: 0; display: grid; gap: 0.6rem; }
 .formulario legend { font-weight: 600; font-size: 0.92rem; padding: 0 0.3rem; }
-.formulario__fila { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); align-items: end; }
+.formulario__fila { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); align-items: start; }
 .formulario__fila--2 { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
 .formulario__imagen img { border-radius: 8px; border: 1px solid var(--line); }
 .formulario__checks { display: flex; flex-wrap: wrap; gap: 0.75rem 2rem; }
 .formulario__acciones { display: flex; flex-wrap: wrap; gap: 0.75rem; padding-top: 0.5rem; }
 .formulario .check { display: inline-flex; align-items: center; gap: 0.5rem; font-weight: 500; cursor: pointer; }
 .formulario .check input { width: 18px; height: 18px; accent-color: var(--primary-dark); }
-.check--en-fila { min-height: 44px; }
+.check--en-fila { min-height: 43px; align-self: end; }
 .contador { display: block; color: var(--muted); font-size: 0.82rem; font-weight: 400; }
 .contador--alerta { color: #a56a00; }
 
@@ -150,3 +153,55 @@ img { max-width: 100%; height: auto; }
 /* Logo CCSS (negro) sobre la barra oscura: sello sobre círculo blanco */
 .admin-marca__logo { width: 40px; height: 40px; padding: 2px; background: var(--white); border-radius: 50%; }
 .arbol__grupo--menta { --acento: var(--primary-dark); --tinte: var(--mint); }
+
+/* Filas de 3 columnas alineadas (Ubicación · Opción · Nombre, etc.) */
+@media (min-width: 760px) {
+  .formulario__fila--3 { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 2fr); }
+  .formulario__fila--3 .abarca-2 { grid-column: span 2; }
+  .formulario__fila--iguales { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+.opcional { font-weight: 400; color: var(--muted); }
+
+/* Horarios múltiples */
+.horarios { gap: 0.6rem; }
+.horarios__lista { display: grid; gap: 0.5rem; max-width: 560px; }
+.horarios__fila { display: flex; align-items: center; gap: 0.5rem; }
+.horarios__fila input { flex: 1; min-width: 0; }
+.btn-icono {
+  display: grid; place-items: center; flex-shrink: 0;
+  width: 42px; height: 42px; padding: 0;
+  background: var(--white); color: var(--muted);
+  border: 1.5px solid var(--line); border-radius: 10px; cursor: pointer;
+}
+.btn-icono:hover { color: var(--danger); border-color: var(--danger); background: #fdecec; }
+.btn-icono .icono { width: 18px; height: 18px; }
+.horarios__agregar { justify-self: start; }
+.horarios__agregar .icono { width: 16px; height: 16px; }
+.horarios__agregar:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* Mi cuenta (barra) */
+.admin-cuenta { display: inline-flex; align-items: center; gap: 0.4rem; color: rgba(255, 255, 255, 0.85); text-decoration: none; padding: 0.4rem 0.8rem; border-radius: 999px; }
+.admin-cuenta:hover { color: var(--white); background: rgba(255, 255, 255, 0.08); }
+.admin-cuenta[aria-current="page"] { color: var(--white); background: var(--primary-dark); }
+.admin-cuenta .icono { width: 18px; height: 18px; }
+
+.aviso--info { background: #e8f0fc; color: #1f4e9c; }
+.formulario fieldset.sin-borde { border: 0; padding: 0; display: grid; gap: 1.1rem; min-width: 0; }
+.formulario fieldset:disabled textarea { background: #f4f6f6; color: var(--muted); }
+.tarjeta--estrecha { max-width: 560px; }
+.seccion-permisos { margin-top: 2.5rem; scroll-margin-top: 5rem; }
+
+/* Matriz de permisos */
+.tabla-envoltura--plana { border: 0; border-radius: 0; }
+.matriz { width: 100%; border-collapse: collapse; }
+.matriz th, .matriz td { padding: 0.65rem 1rem; border-bottom: 1px solid var(--line); text-align: left; }
+.matriz thead th { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); background: #fafcfc; vertical-align: bottom; }
+.matriz__rol { text-align: center !important; width: 160px; color: var(--ink) !important; }
+.matriz__rol small { display: block; text-transform: none; letter-spacing: 0; font-weight: 400; color: var(--muted); }
+.matriz__modulo th { background: var(--mint); color: var(--primary-darker); font-size: 0.85rem; font-weight: 700; }
+.matriz tbody th[scope="row"] { font-weight: 500; padding-left: 1.5rem; }
+.matriz__celda { text-align: center !important; }
+.matriz__celda input { width: 20px; height: 20px; accent-color: var(--primary-dark); cursor: pointer; }
+.matriz__celda input:disabled { cursor: not-allowed; opacity: 0.6; }
+.matriz tbody tr:not(.matriz__modulo):hover { background: #fafcfc; }
+.matriz-form .formulario__acciones { margin-top: 1rem; }

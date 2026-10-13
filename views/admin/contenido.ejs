@@ -6,7 +6,10 @@
   </div>
 </div>
 
+<% const soloLectura = !puede('contenido.editar'); %>
+<% if (soloLectura) { %><p class="aviso aviso--info">Puede ver este contenido, pero no tiene permiso para editarlo.</p><% } %>
 <form class="formulario tarjeta" method="post" action="/admin/contenido">
+  <fieldset class="sin-borde"<% if (soloLectura) { %> disabled<% } %>>
   <input type="hidden" name="_csrf" value="<%= csrfToken %>">
   <label>Misión<textarea name="mision" rows="4"><%= mision %></textarea></label>
   <label>Visión<textarea name="vision" rows="4"><%= vision %></textarea></label>
@@ -15,8 +18,11 @@
     <small>Un valor por línea, con el formato <code>Título: descripción</code>.</small>
   </label>
 
+  <% if (!soloLectura) { %>
   <div class="formulario__acciones">
     <button class="btn btn--primario" type="submit">Guardar</button>
   </div>
+  <% } %>
+  </fieldset>
 </form>
 <%- include('_fin') %>

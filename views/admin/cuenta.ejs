@@ -1,0 +1,21 @@
+<%- include('_inicio', { titulo: 'Mi cuenta' }) %>
+<div class="admin-cabecera">
+  <div>
+    <h1>Mi cuenta</h1>
+    <p><strong><%= usuarioActual.usuario %></strong> · Rol: <strong><%= usuarioActual.rol_nombre %></strong></p>
+  </div>
+</div>
+
+<form class="formulario tarjeta tarjeta--estrecha" method="post" action="/admin/cuenta/password">
+  <h2>Cambiar contraseña</h2>
+  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+  <input type="text" name="usuario" value="<%= usuarioActual.usuario %>" autocomplete="username" hidden>
+  <label>Contraseña actual<input name="actual" type="password" required autocomplete="current-password"></label>
+  <label>Nueva contraseña<input name="password" type="password" required minlength="10" maxlength="72" autocomplete="new-password"></label>
+  <label>Confirmar nueva contraseña<input name="confirmar" type="password" required minlength="10" maxlength="72" autocomplete="new-password"></label>
+  <small class="ayuda">Mínimo 10 caracteres. Se cerrarán sus sesiones en otros dispositivos.</small>
+  <div class="formulario__acciones">
+    <button class="btn btn--primario" type="submit">Cambiar contraseña</button>
+  </div>
+</form>
+<%- include('_fin') %>

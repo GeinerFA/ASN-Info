@@ -1,5 +1,6 @@
 <%- include('_inicio', { titulo: 'Directorio' }) %>
-<% const e = editar || { opcion: '', nombre: '', extension: '', telefono: '', horario: '' }; %>
+<% const e = editar || { opcion: '', nombre: '', extension: '', telefono: '', horario: '' };
+   const conFormulario = editar ? puede('directorio.editar') : puede('directorio.crear'); %>
 <div class="admin-cabecera">
   <div>
     <h1>Directorio telefónico</h1>
@@ -8,11 +9,12 @@
   <a class="btn" href="/directorio" target="_blank" rel="noopener">Ver página ↗</a>
 </div>
 
+<% if (conFormulario) { %>
 <form class="formulario tarjeta" method="post" action="/admin/directorio" id="formulario">
   <h2><%= editar ? 'Editar opción' : 'Agregar opción' %></h2>
   <input type="hidden" name="_csrf" value="<%= csrfToken %>">
   <% if (editar) { %><input type="hidden" name="id" value="<%= editar.id %>"><% } %>
-  <div class="formulario__fila">
+  <div class="formulario__fila formulario__fila--3">
     <label>Ubicación
       <select name="parent_id">
         <option value="">Menú principal</option>
@@ -24,11 +26,11 @@
     <label>Opción (tecla) *<input name="opcion" type="number" min="0" max="99" value="<%= e.opcion %>" required><small>En ubicaciones externas indica solo el orden.</small></label>
     <label>Nombre *<input name="nombre" value="<%= e.nombre %>" required></label>
   </div>
-  <div class="formulario__fila">
+  <div class="formulario__fila formulario__fila--3">
     <label>Extensión<input name="extension" value="<%= e.extension || '' %>" inputmode="numeric" placeholder="1001"></label>
-    <label>Teléfono directo (opcional)<input name="telefono" value="<%= e.telefono || '' %>" inputmode="tel" placeholder="Solo si no usa la central"></label>
-    <label>Horario (opcional)<input name="horario" value="<%= e.horario || '' %>" placeholder="Lun–Vie 7:00–16:00"></label>
+    <label class="abarca-2"><span>Teléfono directo <span class="opcional">(opcional)</span></span><input name="telefono" value="<%= e.telefono || '' %>" inputmode="tel" placeholder="Solo si no usa la central"></label>
   </div>
+  <%- include('_horarios', { valor: e.horario }) %>
   <label class="check"><input type="checkbox" name="externo" value="1"<% if (e.externo) { %> checked<% } %>> Ubicación externa (no está en el menú telefónico; solo para el menú principal)</label>
   <small class="ayuda">En los EBAIS externos escriba el <strong>teléfono directo</strong>; si lo deja vacío se usa la central <%= site.telefono %> con la extensión.</small>
   <small class="ayuda">Para crear un submenú: agregue una opción en el menú principal sin extensión y luego agregue opciones con «Ubicación: Submenú de …».</small>
@@ -37,6 +39,7 @@
     <% if (editar) { %><a class="btn" href="/admin/directorio">Cancelar</a><% } %>
   </div>
 </form>
+<% } %>
 
 <div class="arbol">
   <% menu.forEach(function (m) { %>
@@ -46,12 +49,14 @@
         <strong class="arbol__nombre"><%= m.nombre %><% if (m.externo) { %> <span class="etiqueta etiqueta--gris">Externo</span><% } %></strong>
         <span class="arbol__ext"><%= m.hijos.length ? m.hijos.length + ' opciones' : (m.externo ? 'Sin EBAIS (no se muestra en el sitio)' : (m.extension ? 'Ext. ' + m.extension : '—')) %></span>
         <span class="acciones">
-          <a class="btn btn--chico" href="/admin/directorio?menu=<%= m.id %>#formulario"><%= m.externo ? '+ Agregar EBAIS' : '+ Subopción' %></a>
-          <a class="btn btn--chico" href="/admin/directorio/<%= m.id %>/editar#formulario">Editar</a>
+          <% if (puede('directorio.crear')) { %><a class="btn btn--chico" href="/admin/directorio?menu=<%= m.id %>#formulario"><%= m.externo ? '+ Agregar EBAIS' : '+ Subopción' %></a><% } %>
+          <% if (puede('directorio.editar')) { %><a class="btn btn--chico" href="/admin/directorio/<%= m.id %>/editar#formulario">Editar</a><% } %>
+          <% if (puede('directorio.eliminar')) { %>
           <form method="post" action="/admin/directorio/<%= m.id %>/eliminar" data-confirmar="¿Eliminar la opción <%= m.opcion %> «<%= m.nombre %>»<%= m.hijos.length ? ' y sus ' + m.hijos.length + ' subopciones' : '' %>?">
             <input type="hidden" name="_csrf" value="<%= csrfToken %>">
             <button class="btn btn--chico btn--peligro" type="submit">Eliminar</button>
           </form>
+          <% } %>
         </span>
       </div>
       <% m.hijos.forEach(function (h) { %>
@@ -60,11 +65,13 @@
           <span class="arbol__nombre"><%= h.nombre %> <small><%= m.externo ? 'teléfono directo' : m.opcion + ' → ' + h.opcion %></small></span>
           <span class="arbol__ext"><%= [h.telefono, h.extension ? 'Ext. ' + h.extension : ''].filter(Boolean).join(' · ') || '—' %></span>
           <span class="acciones">
-            <a class="btn btn--chico" href="/admin/directorio/<%= h.id %>/editar#formulario">Editar</a>
+            <% if (puede('directorio.editar')) { %><a class="btn btn--chico" href="/admin/directorio/<%= h.id %>/editar#formulario">Editar</a><% } %>
+            <% if (puede('directorio.eliminar')) { %>
             <form method="post" action="/admin/directorio/<%= h.id %>/eliminar" data-confirmar="¿Eliminar «<%= h.nombre %>»?">
               <input type="hidden" name="_csrf" value="<%= csrfToken %>">
               <button class="btn btn--chico btn--peligro" type="submit">Eliminar</button>
             </form>
+            <% } %>
           </span>
         </div>
       <% }) %>

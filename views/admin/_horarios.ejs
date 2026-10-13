@@ -1,0 +1,15 @@
+<%# Campo de horarios múltiples. Parámetro: valor (texto con un horario por línea). %>
+<% const lista = horarios(valor); %>
+<fieldset class="horarios" data-horarios>
+  <legend>Horario <span class="opcional">(opcional)</span></legend>
+  <div class="horarios__lista">
+    <% (lista.length ? lista : ['']).forEach(function (h, i) { %>
+      <div class="horarios__fila">
+        <input name="horario" value="<%= h %>" maxlength="80" placeholder="<%= i === 0 ? 'Lun–Jue 7:00–16:00' : 'Vie 7:00–15:00' %>" aria-label="Horario <%= i + 1 %>">
+        <button class="btn-icono" type="button" data-quitar-horario hidden title="Quitar este horario"><%- icono('x') %><span class="sr-only">Quitar este horario</span></button>
+      </div>
+    <% }) %>
+  </div>
+  <button class="btn btn--chico horarios__agregar" type="button" data-agregar-horario hidden><%- icono('mas') %>Agregar horario</button>
+  <small>Use un campo por cada horario. Ejemplo: «Lun–Jue 7:00–16:00» y en otro «Vie 7:00–15:00».</small>
+</fieldset>

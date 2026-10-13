@@ -4,11 +4,11 @@
     <h1>Anuncios</h1>
     <p>Publique avisos, campañas y eventos. Los anuncios vencidos o en borrador no se muestran en el sitio.</p>
   </div>
-  <a class="btn btn--primario" href="/admin/anuncios/nuevo">+ Nuevo anuncio</a>
+  <% if (puede('anuncios.crear')) { %><a class="btn btn--primario" href="/admin/anuncios/nuevo">+ Nuevo anuncio</a><% } %>
 </div>
 
 <% if (!anuncios.length) { %>
-  <p class="vacio">Todavía no hay anuncios. <a href="/admin/anuncios/nuevo">Cree el primero</a>.</p>
+  <p class="vacio">Todavía no hay anuncios.<% if (puede('anuncios.crear')) { %> <a href="/admin/anuncios/nuevo">Cree el primero</a>.<% } %></p>
 <% } else { %>
 <div class="tabla-envoltura">
   <table class="tabla">
@@ -27,15 +27,19 @@
         <td data-etiqueta="Vence"><%= a.fecha_expira ? fechaLarga(a.fecha_expira) : '—' %></td>
         <td data-etiqueta="Estado"><span class="etiqueta etiqueta--<%= a.estado.clase %>"><%= a.estado.texto %></span></td>
         <td class="acciones">
-          <a class="btn btn--chico" href="/admin/anuncios/<%= a.id %>/editar">Editar</a>
+          <% if (puede('anuncios.editar')) { %><a class="btn btn--chico" href="/admin/anuncios/<%= a.id %>/editar">Editar</a><% } %>
+          <% if (puede('anuncios.publicar')) { %>
           <form method="post" action="/admin/anuncios/<%= a.id %>/publicar">
             <input type="hidden" name="_csrf" value="<%= csrfToken %>">
             <button class="btn btn--chico" type="submit"><%= a.publicado ? 'Despublicar' : 'Publicar' %></button>
           </form>
+          <% } %>
+          <% if (puede('anuncios.eliminar')) { %>
           <form method="post" action="/admin/anuncios/<%= a.id %>/eliminar" data-confirmar="¿Eliminar el anuncio «<%= a.titulo %>»?">
             <input type="hidden" name="_csrf" value="<%= csrfToken %>">
             <button class="btn btn--chico btn--peligro" type="submit">Eliminar</button>
           </form>
+          <% } %>
         </td>
       </tr>
       <% }) %>
