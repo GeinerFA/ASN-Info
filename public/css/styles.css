@@ -419,10 +419,10 @@ table { border-collapse: collapse; width: 100%; }
 .seccion__cabecera--fila h2 { margin-bottom: 0; max-width: 40rem; }
 
 /* Nosotros + estadísticas (inicio) */
-.sobre { display: grid; gap: clamp(2.5rem, 5vw, 5rem); align-items: center; }
-@media (min-width: 960px) { .sobre { grid-template-columns: 1fr 1.1fr; } }
+.sobre { display: grid; gap: clamp(2rem, 4vw, 3.5rem); align-items: center; }
+@media (min-width: 960px) { .sobre { grid-template-columns: 1.35fr 1fr; } }
 .sobre__media { position: relative; }
-.sobre__media .foto { aspect-ratio: 4 / 4.4; }
+.sobre__media .foto { aspect-ratio: 3 / 2; }
 .sobre__sello {
   position: absolute; left: clamp(0.75rem, 3vw, 1.5rem); bottom: clamp(0.75rem, 3vw, 1.5rem);
   display: flex; align-items: center; gap: 0.85rem;
