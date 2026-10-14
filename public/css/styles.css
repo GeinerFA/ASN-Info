@@ -439,7 +439,7 @@ table { border-collapse: collapse; width: 100%; }
 
 .estadisticas { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.75rem 1.5rem; margin: 2.25rem 0 2.5rem; padding-top: 2rem; border-top: 1px solid var(--line); }
 .estadistica { display: flex; flex-direction: column-reverse; justify-content: flex-end; }
-.estadistica dd { margin: 0; font: 500 clamp(2.25rem, 4.5vw, 3.25rem)/1.1 var(--font-body); letter-spacing: -0.04em; color: var(--primary); white-space: nowrap; }
+.estadistica dd { margin: 0; font: 500 clamp(2.25rem, 4.5vw, 3.25rem)/1.1 var(--font-body); letter-spacing: -0.04em; color: var(--primary); }
 .estadistica dt { color: var(--muted); font-size: 0.95rem; margin-top: 0.35rem; }
 
 /* Contador tipo tragamonedas (lo arma main.js) */
@@ -664,6 +664,11 @@ table { border-collapse: collapse; width: 100%; }
 .ivr-central__icono .icono { width: 28px; height: 28px; }
 .ivr-central__pasos { margin: 0; padding-left: 1.25rem; color: var(--muted); font-size: 0.96rem; display: grid; gap: 0.2rem; }
 .ivr-central__pasos strong { color: var(--ink); }
+.ivr-central__correo { display: flex; align-items: center; gap: 0.75rem; margin: 0; min-width: 0; }
+.ivr-central__correo > .icono { flex-shrink: 0; width: 22px; height: 22px; color: var(--primary); }
+.ivr-central__correo small { display: block; color: var(--muted); font-size: 0.86rem; }
+.ivr-central__correo a { font-weight: 600; overflow-wrap: anywhere; }
+.pie__correo { overflow-wrap: anywhere; }
 
 .ivr { display: grid; gap: 1.5rem; align-items: start; }
 @media (min-width: 960px) { .ivr { grid-template-columns: repeat(2, 1fr); } }
@@ -904,7 +909,7 @@ a.ivr__nombre:hover { text-decoration: underline; color: var(--ink); }
 /* Teléfonos pequeños (≤ 400 px) */
 @media (max-width: 400px) {
   .estadisticas { gap: 1.5rem 1rem; }
-  .estadistica dd { font-size: 1.85rem; white-space: normal; }
+  .estadistica dd { font-size: 1.85rem; }
   .pie__enlaces { gap: 0.65rem 1.5rem; }
   .pie__marca .marca__lugar { font-size: 1.4rem; }
   .ivr__nombre { overflow-wrap: anywhere; }

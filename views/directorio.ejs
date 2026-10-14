@@ -28,6 +28,10 @@
           <li><strong>Escuche</strong> el directorio interno.</li>
           <li><strong>Marque</strong> la opción del servicio. Si conoce la extensión, puede digitarla.</li>
         </ol>
+        <p class="ivr-central__correo">
+          <%- icono('mail') %>
+          <span><small><%= site.contraloria.nombre %> · quejas y sugerencias</small><a href="mailto:<%= site.contraloria.correo %>"><%= site.contraloria.correo %></a></span>
+        </p>
       </div>
 
       <div class="buscador" hidden>

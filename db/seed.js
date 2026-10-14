@@ -67,7 +67,7 @@ const contenido = {
     },
     {
       p: '¿Dónde presento una queja o sugerencia?',
-      r: 'En la Contraloría de Servicios del Área de Salud, de forma presencial o por teléfono. Su opinión nos ayuda a mejorar.',
+      r: 'En la Contraloría de Servicios del Área de Salud: de forma presencial, por teléfono al 2103-1700 (opción 5, ext. 1104) o al correo cs_asn@ccss.sa.cr. Su opinión nos ayuda a mejorar.',
     },
   ],
 };

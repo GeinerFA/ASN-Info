@@ -18,6 +18,7 @@
           <address>
             <p><%- icono('pin') %><span><%= site.direccion.calle %>, <%= site.direccion.ciudad %>, <%= site.direccion.provincia %></span></p>
             <p><%- icono('siren') %><span>Emergencias: <a href="tel:<%= site.emergencias %>"><%= site.emergencias %></a></span></p>
+            <p><%- icono('mail') %><span><%= site.contraloria.nombre %>: <a class="pie__correo" href="mailto:<%= site.contraloria.correo %>"><%= site.contraloria.correo %></a></span></p>
           </address>
         </div>
       </div>

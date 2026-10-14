@@ -9,3 +9,4 @@
 {"id":22,"nombre":"Nutrición","descripcion":"Orientación alimentaria para el control del peso, la diabetes, la hipertensión y otras condiciones.","icono":"apple","horario":"Lun–Jue7:00–16:00\nVie 07:00-15:00","destacado":1,"orden":9}
 {"id":23,"nombre":"Trabajo Social","descripcion":"Apoyo a personas y familias en situación de vulnerabilidad, y coordinación con otras instituciones.","icono":"users","horario":"Lun–Jue 7:00–16:00\nVie 07:00-15:00","destacado":1,"orden":10}
 {"id":24,"nombre":"Atención domiciliar","descripcion":"Visitas de los ATAP y del equipo de salud a hogares, adultos mayores y personas encamadas.","icono":"home","horario":"Según programación del EBAIS","destacado":1,"orden":11}
+{"id":25,"nombre":"Medicina familiar","descripcion":"Medicina familiar","icono":"idcard","horario":"Lun–Jue 7:00–16:00\nVie 07:00-15:00","destacado":1,"orden":12}
