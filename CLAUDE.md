@@ -102,6 +102,8 @@ Toda foto con licencia CC lleva `credito` y `creditoUrl`; no usar fotos de medio
 - `alt` en todas las imágenes; `width`/`height` y `loading="lazy"` (excepto la imagen principal).
 - Mobile-first, contraste WCAG AA, `:focus-visible` visible, skip link, `prefers-reduced-motion`.
 - Teléfonos siempre como `<a href="tel:+506XXXXXXXX">`.
+- Horas visibles en formato de 12 horas (`7:00 a.m. – 4:00 p.m.`). Los horarios del panel se guardan tal como se
+  escriben y se muestran con `horariosVista()` / `hora12()` (lib/util.js). En JSON-LD (`opens`/`closes`) van en 24 h.
 - Comentarios y nombres en el código pueden estar en español, consistentes con el archivo.
 
 ## SEO — obligatorio para toda página pública nueva

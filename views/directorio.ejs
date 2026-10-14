@@ -100,7 +100,7 @@
               <% m.hijos.forEach(function (h) { %>
                 <li class="ivr__opcion ivr__opcion--externa" data-fila>
                   <span class="ivr__tecla" aria-hidden="true"><%- icono('home') %></span>
-                  <span class="ivr__nombre"><%= h.nombre %><% horarios(h.horario).forEach(function (linea) { %><small class="ivr__ruta"><%= linea %></small><% }) %></span>
+                  <span class="ivr__nombre"><%= h.nombre %><% horariosVista(h.horario).forEach(function (linea) { %><small class="ivr__ruta"><%= linea %></small><% }) %></span>
                   <span class="ivr__ext"><%= h.telefono || site.telefono %><% if (h.extension) { %> · Ext. <%= h.extension %><% } %></span>
                   <a class="ivr__llamar" href="tel:<%= marcar(h, [], true) %>"><%- icono('phone') %><span class="sr-only">Llamar a <%= h.nombre %></span></a>
                 </li>
