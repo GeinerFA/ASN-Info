@@ -56,15 +56,19 @@ function csrfToken(req, res, next) {
   next();
 }
 
-// Valida el token en POST. En formularios multipart viene en la query (?_csrf=).
-function verificarCsrf(req, res, next) {
-  const enviado = (req.body && req.body._csrf) || req.query._csrf || '';
-  const esperado = req.session.csrf || '';
-  const ok =
+// ¿El token del POST coincide con el de la sesión? En formularios multipart viene en la query (?_csrf=).
+function csrfValido(req) {
+  const enviado = String((req.body && req.body._csrf) || req.query._csrf || '');
+  const esperado = (req.session && req.session.csrf) || '';
+  return (
     enviado.length === esperado.length &&
     esperado.length > 0 &&
-    crypto.timingSafeEqual(Buffer.from(enviado), Buffer.from(esperado));
-  if (!ok) return res.status(403).send('Token de seguridad inválido. Recargue la página e intente de nuevo.');
+    crypto.timingSafeEqual(Buffer.from(enviado), Buffer.from(esperado))
+  );
+}
+
+function verificarCsrf(req, res, next) {
+  if (!csrfValido(req)) return res.status(403).send('Token de seguridad inválido. Recargue la página e intente de nuevo.');
   next();
 }
 
@@ -98,5 +102,6 @@ function limpiarFallos(ip) {
 }
 
 module.exports = {
+  csrfValido,
   requireAuth, permiso, soloSuper, inicioPermitido, csrfToken, verificarCsrf, limiteLogin, registrarFallo, limpiarFallos,
 };

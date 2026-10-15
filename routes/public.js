@@ -5,6 +5,8 @@ const { site, urlAbs, migasLd } = require('../lib/site');
 const { listarVisibles, contarVisibles, buscarVisible } = require('../lib/anuncios');
 const { arbol, marcar } = require('../lib/directorio');
 const { telHref } = require('../lib/util');
+const { csrfToken, csrfValido } = require('../middleware/auth');
+const contraloria = require('../lib/contraloria');
 
 const router = express.Router();
 const POR_PAGINA = 9;
@@ -164,6 +166,65 @@ router.get('/anuncios/:slug', (req, res, next) => {
       },
     ],
   });
+});
+
+// ---------- Contraloría de Servicios: datos de contacto + formulario que llega al correo institucional ----------
+function vistaContraloria(res, extra = {}) {
+  res.render('contraloria', {
+    title: `Contraloría de Servicios | ${site.nombre}`,
+    description:
+      `Quejas, sugerencias y felicitaciones para la Contraloría de Servicios del Área de Salud Naranjo: teléfono ${site.telefono}, correo o formulario en línea.`,
+    path: '/contraloria',
+    tipos: contraloria.TIPOS,
+    valores: {},
+    errores: {},
+    jsonLdExtra: [
+      migasLd([{ nombre: 'Contraloría de Servicios', ruta: '/contraloria' }]),
+      {
+        '@context': 'https://schema.org',
+        '@type': 'ContactPage',
+        name: `Contraloría de Servicios — ${site.nombre}`,
+        url: urlAbs('/contraloria'),
+        inLanguage: 'es-CR',
+        mainEntity: {
+          '@type': 'ContactPoint',
+          contactType: site.contraloria.nombre,
+          email: site.contraloria.correo,
+          telephone: telHref(site.telefono),
+          availableLanguage: 'es',
+          areaServed: 'CR',
+        },
+      },
+    ],
+    ...extra,
+  });
+}
+
+router.get('/contraloria', csrfToken, (req, res) => {
+  vistaContraloria(res, { enviado: req.query.enviado === '1' });
+});
+
+router.post('/contraloria', csrfToken, async (req, res, next) => {
+  try {
+    const { datos, errores } = contraloria.validar(req.body);
+    // Trampa para robots: campo oculto que una persona nunca llena. Se responde como si se hubiera enviado.
+    if (req.body.sitio_web) return res.redirect(303, '/contraloria?enviado=1#formulario');
+    if (!csrfValido(req)) errores.general = 'La página estuvo abierta mucho tiempo. Revise sus datos y envíe de nuevo.';
+    else if (!contraloria.puedeEnviar(req.ip)) errores.general = `Ya envió varios mensajes en la última hora. Intente más tarde o escriba a ${site.contraloria.correo}.`;
+    if (Object.keys(errores).length) {
+      return vistaContraloria(res.status(422), { valores: datos, errores });
+    }
+    const ok = await contraloria.enviar(datos, req.ip);
+    if (!ok) {
+      return vistaContraloria(res.status(503), {
+        valores: datos,
+        errores: { general: `No pudimos enviar su mensaje en este momento. Intente de nuevo más tarde o escriba directamente a ${site.contraloria.correo}.` },
+      });
+    }
+    res.redirect(303, '/contraloria?enviado=1#formulario');
+  } catch (err) {
+    next(err);
+  }
 });
 
 module.exports = router;

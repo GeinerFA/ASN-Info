@@ -1,0 +1,130 @@
+<%- include('partials/head') %>
+<%- include('partials/header') %>
+<%
+  const v = valores || {};
+  const err = errores || {};
+  const descrito = (campo) => err[campo] ? ` aria-invalid="true" aria-describedby="error-${campo}"` : '';
+%>
+
+<main id="contenido">
+  <section class="encabezado-pagina">
+    <div class="encabezado-pagina__caja oscuro">
+      <div class="contenedor">
+        <%- include('partials/migas', { migas: [{ nombre: 'Contraloría de Servicios', ruta: '/contraloria' }] }) %>
+        <p class="eyebrow" data-revelar>Contraloría de Servicios</p>
+        <h1 data-palabras>Su opinión nos ayuda a <span class="cursiva">mejorar</span></h1>
+        <p class="encabezado-pagina__lead" data-revelar data-retardo="300">Presente una queja, una sugerencia, una consulta o una felicitación sobre la atención que recibió en el <%= site.nombre %>. La Contraloría de Servicios la revisa y le responde.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion seccion--compacta" aria-labelledby="titulo-contacto">
+    <div class="contenedor contraloria">
+      <div class="contraloria__info">
+        <h2 id="titulo-contacto" class="contraloria__titulo">Contáctenos</h2>
+        <ul class="contraloria__canales" data-revelar-grupo>
+          <li class="contraloria__canal" data-revelar>
+            <span class="contraloria__icono"><%- icono('phone') %></span>
+            <span>
+              <small>Teléfono</small>
+              <a class="contraloria__dato" href="tel:<%= telHref(site.telefono) %>,5"><%= site.telefono %></a>
+              <span class="contraloria__nota">Marque la opción 5 · ext. <%= site.contraloria.extension %></span>
+            </span>
+          </li>
+          <li class="contraloria__canal" data-revelar>
+            <span class="contraloria__icono"><%- icono('mail') %></span>
+            <span>
+              <small>Correo electrónico</small>
+              <a class="contraloria__dato contraloria__dato--correo" href="mailto:<%= site.contraloria.correo %>"><%= site.contraloria.correo %></a>
+            </span>
+          </li>
+          <li class="contraloria__canal" data-revelar>
+            <span class="contraloria__icono"><%- icono('pin') %></span>
+            <span>
+              <small>De forma presencial</small>
+              <span class="contraloria__dato contraloria__dato--texto"><%= site.direccion.calle %>, <%= site.direccion.ciudad %></span>
+              <a class="contraloria__nota" href="<%= site.mapaUrl %>" rel="noopener" target="_blank">Cómo llegar</a>
+            </span>
+          </li>
+        </ul>
+        <p class="contraloria__aviso"><%- icono('siren') %><span>Este formulario no atiende emergencias. Ante una emergencia llame al <a href="tel:<%= site.emergencias %>"><%= site.emergencias %></a>.</span></p>
+      </div>
+
+      <div class="contraloria__formulario" id="formulario">
+        <% if (locals.enviado) { %>
+          <div class="formulario-aviso formulario-aviso--exito" role="status">
+            <%- icono('check') %>
+            <div>
+              <strong>¡Gracias! Recibimos su mensaje.</strong>
+              <p>La Contraloría de Servicios lo revisará y le responderá al correo que indicó.</p>
+            </div>
+          </div>
+        <% } %>
+
+        <form class="formulario-publico" method="post" action="/contraloria#formulario" novalidate>
+          <h2 class="contraloria__titulo">Envíenos un mensaje</h2>
+          <p class="formulario-publico__intro">Los campos con <span aria-hidden="true">*</span><span class="sr-only">asterisco</span> son obligatorios.</p>
+
+          <% if (Object.keys(err).length) { %>
+            <div class="formulario-aviso formulario-aviso--error" role="alert">
+              <%- icono('siren') %>
+              <div>
+                <strong><%= err.general || 'Revise los campos marcados.' %></strong>
+              </div>
+            </div>
+          <% } %>
+
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+          <%# Trampa para robots: oculto para las personas %>
+          <div class="campo-trampa" aria-hidden="true">
+            <label>Sitio web <input name="sitio_web" tabindex="-1" autocomplete="off"></label>
+          </div>
+
+          <fieldset class="campo">
+            <legend class="campo__etiqueta">Tipo de mensaje *</legend>
+            <div class="opciones-tipo"<%- err.tipo ? ' aria-describedby="error-tipo"' : '' %>>
+              <% tipos.forEach(function (t) { %>
+                <label class="opcion-tipo"><input type="radio" name="tipo" value="<%= t %>" required<% if (v.tipo === t) { %> checked<% } %>><span><%= t %></span></label>
+              <% }) %>
+            </div>
+            <% if (err.tipo) { %><p class="campo__error" id="error-tipo"><%= err.tipo %></p><% } %>
+          </fieldset>
+
+          <div class="formulario-publico__fila">
+            <div class="campo">
+              <label class="campo__etiqueta" for="c-nombre">Nombre completo *</label>
+              <input id="c-nombre" name="nombre" value="<%= v.nombre || '' %>" required minlength="3" maxlength="100" autocomplete="name"<%- descrito('nombre') %>>
+              <% if (err.nombre) { %><p class="campo__error" id="error-nombre"><%= err.nombre %></p><% } %>
+            </div>
+            <div class="campo">
+              <label class="campo__etiqueta" for="c-correo">Correo electrónico *</label>
+              <input id="c-correo" name="correo" type="email" value="<%= v.correo || '' %>" required maxlength="120" autocomplete="email" inputmode="email"<%- descrito('correo') %>>
+              <% if (err.correo) { %><p class="campo__error" id="error-correo"><%= err.correo %></p><% } %>
+            </div>
+          </div>
+
+          <div class="campo">
+            <label class="campo__etiqueta" for="c-telefono">Teléfono <span class="campo__opcional">(opcional)</span></label>
+            <input id="c-telefono" name="telefono" type="tel" value="<%= v.telefono || '' %>" maxlength="20" autocomplete="tel" inputmode="tel" placeholder="8888-8888"<%- descrito('telefono') %>>
+            <% if (err.telefono) { %><p class="campo__error" id="error-telefono"><%= err.telefono %></p><% } %>
+          </div>
+
+          <div class="campo">
+            <label class="campo__etiqueta" for="c-mensaje">Mensaje *</label>
+            <textarea id="c-mensaje" name="mensaje" rows="6" required minlength="15" maxlength="3000" placeholder="Cuéntenos qué sucedió, en qué servicio y, si lo recuerda, la fecha."<%- descrito('mensaje') %>><%= v.mensaje || '' %></textarea>
+            <% if (err.mensaje) { %><p class="campo__error" id="error-mensaje"><%= err.mensaje %></p><% } %>
+          </div>
+
+          <div class="campo">
+            <label class="campo__check"><input type="checkbox" name="acepto" value="1" required<% if (v.acepto) { %> checked<% } %><%- descrito('acepto') %>><span>Acepto que el <%= site.nombre %> use mis datos únicamente para atender este mensaje (Ley 8968 de Protección de la Persona frente al Tratamiento de sus Datos Personales).</span></label>
+            <% if (err.acepto) { %><p class="campo__error" id="error-acepto"><%= err.acepto %></p><% } %>
+          </div>
+
+          <button class="boton boton--primario" type="submit"><%- textoBoton('Enviar mensaje') %><span class="boton__icono"><%- icono('arrow') %></span></button>
+        </form>
+      </div>
+    </div>
+  </section>
+</main>
+
+<%- include('partials/footer') %>

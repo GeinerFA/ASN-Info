@@ -33,7 +33,7 @@ El contenido del panel se versiona en `datos/*.jsonl` (una fila por línea). `li
 `lib/datos-formato.js` combina fila por fila (base = `data/sync/`, la última sincronización) y
 `scripts/merge-datos.js` es el driver de merge de git (`.gitattributes`: `merge=datos`).
 Hooks en `.githooks/`: `pre-commit` (exporta y hace `git add datos public/uploads`), `post-merge` y `post-rewrite` (importan).
-No se sincronizan `usuarios` ni `sesiones`. Si se agrega una tabla de contenido, sumarla a `TABLAS` en `lib/datos.js`.
+No se sincronizan `usuarios`, `sesiones` ni `contraloria_mensajes` (datos personales). Si se agrega una tabla de contenido, sumarla a `TABLAS` en `lib/datos.js`.
 
 > **Red corporativa:** si `npm install` falla con `SELF_SIGNED_CERT_IN_CHAIN`, usar
 > `NODE_OPTIONS=--use-system-ca npm install` (confía en el almacén de certificados de Windows).
@@ -48,9 +48,10 @@ db/directorio-ivr.js   Datos del directorio según el diagrama del IVR (central 
 db/session-store.js    Store de express-session sobre SQLite
 lib/directorio.js      Árbol del menú IVR (parent_id/opcion, 2 niveles) y enlaces tel: con la ruta de opciones
 lib/site.js            Datos globales del sitio (nombre, dirección, teléfonos, horarios) + JSON-LD
-lib/util.js            slugify, formateo de fechas es-CR
+lib/util.js            slugify, formateo de fechas es-CR, horas en 12 h (hora12/horariosVista)
+lib/contraloria.js     Formulario de la Contraloría: validación, límite por IP, copia en BD y envío SMTP (nodemailer)
 middleware/auth.js     requireAuth, CSRF, rate limit de login
-routes/public.js       /, /servicios, /nosotros, /directorio, /anuncios, /anuncios/:slug
+routes/public.js       /, /servicios, /nosotros, /directorio, /contraloria (GET/POST), /anuncios, /anuncios/:slug
 routes/admin.js        /admin: login, CRUD de anuncios, directorio y servicios
 routes/seo.js          /sitemap.xml, /robots.txt
 views/partials/        head.ejs (TODAS las meta SEO), header.ejs, footer.ejs, iconos
@@ -129,6 +130,9 @@ Toda foto con licencia CC lleva `credito` y `creditoUrl`; no usar fotos de medio
 - SQL siempre con parámetros (`?`), nunca concatenando strings.
 - Subidas: solo jpg/png/webp ≤ 2 MB, nombre aleatorio.
 - CSP (`server.js`): `frame-src` solo permite Google Maps (mapa de Visítenos). No agregar otros orígenes sin necesidad.
+- Formulario público `/contraloria`: CSRF, campo trampa `sitio_web`, máx. 3 mensajes por IP/hora, salida escapada.
+  El correo sale por SMTP (`SMTP_*` en `.env`, ver `.env.example`); sin `SMTP_HOST` en desarrollo se imprime en la
+  consola y en producción no se envía (queda en `contraloria_mensajes` con el error). Nunca poner credenciales SMTP en el código.
 - `.env` y `data/` fuera del control de versiones.
 
 ## Datos

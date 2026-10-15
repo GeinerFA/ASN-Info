@@ -11,6 +11,7 @@ const PAGINAS = [
   { ruta: '/servicios', freq: 'monthly', prioridad: '0.9' },
   { ruta: '/directorio', freq: 'monthly', prioridad: '0.9' },
   { ruta: '/nosotros', freq: 'yearly', prioridad: '0.7' },
+  { ruta: '/contraloria', freq: 'yearly', prioridad: '0.6' },
   { ruta: '/anuncios', freq: 'daily', prioridad: '0.8' },
 ];
 
