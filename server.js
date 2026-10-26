@@ -11,7 +11,7 @@ const session = require('express-session');
 
 const SqliteStore = require('./db/session-store');
 const { site, navegacion, urlAbs, organizacionLd, jsonLd } = require('./lib/site');
-const { fechaLarga, telHref, textoBoton, horarios, horariosVista, hora12 } = require('./lib/util');
+const { fechaLarga, fechaCorta, telHref, textoBoton, cifraHora, tituloCursiva, horarios, horariosVista, hora12 } = require('./lib/util');
 const { icono } = require('./lib/iconos');
 
 const app = express();
@@ -70,7 +70,7 @@ if (PROD && !process.env.SESSION_SECRET) {
 // Variables disponibles en todas las vistas.
 app.use((req, res, next) => {
   Object.assign(res.locals, {
-    site, navegacion, urlAbs, jsonLd, fechaLarga, telHref, icono, textoBoton, horarios, horariosVista, hora12,
+    site, navegacion, urlAbs, jsonLd, fechaLarga, fechaCorta, telHref, icono, textoBoton, cifraHora, tituloCursiva, horarios, horariosVista, hora12,
     organizacionLd: organizacionLd(),
     rutaActual: req.path,
     anio: new Date().getFullYear(),

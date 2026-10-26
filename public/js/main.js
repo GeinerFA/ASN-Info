@@ -27,6 +27,14 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // Alto real de la top bar (puede ocupar dos líneas): el hero lo descuenta para caber en la ventana
+  const topbar = document.querySelector('.topbar');
+  if (topbar) {
+    const medir = () => html.style.setProperty('--alto-topbar', topbar.offsetHeight + 'px');
+    medir();
+    window.addEventListener('resize', medir, { passive: true });
+  }
+
   // Cabecera: sombra y altura compacta al hacer scroll
   const cabecera = document.querySelector('.cabecera');
   if (cabecera) {
@@ -106,7 +114,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const controles = document.querySelector('[data-carrusel-controles]');
     const puntos = [...document.querySelectorAll('[data-carrusel-punto]')];
     const pausa = document.querySelector('[data-carrusel-pausa]');
-    const credito = document.querySelector('[data-carrusel-credito]');
     const INTERVALO = 6500;
     let actual = 0;
     let temporizador = null;
@@ -117,23 +124,11 @@ document.addEventListener('DOMContentLoaded', () => {
       if (img && img.dataset.posicion) img.style.objectPosition = img.dataset.posicion;
     });
 
-    const mostrarCredito = () => {
-      const f = fotos[actual];
-      credito.textContent = '';
-      if (!f.dataset.credito) return;
-      const a = document.createElement('a');
-      a.href = f.dataset.creditoUrl;
-      a.rel = 'noopener';
-      a.target = '_blank';
-      a.textContent = f.dataset.credito;
-      credito.append(a);
-    };
     const mostrar = (n) => {
       fotos[actual].classList.remove('activo');
       actual = (n + fotos.length) % fotos.length;
       fotos[actual].classList.add('activo');
       puntos.forEach((p, i) => p.setAttribute('aria-current', String(i === actual)));
-      mostrarCredito();
     };
     const programar = () => {
       clearInterval(temporizador);
@@ -160,7 +155,6 @@ document.addEventListener('DOMContentLoaded', () => {
       });
       programar();
     }
-    mostrarCredito();
   }
 
   // Todo lo que sigue es movimiento: se omite con prefers-reduced-motion.
@@ -195,9 +189,16 @@ document.addEventListener('DOMContentLoaded', () => {
   // Contadores tipo tragamonedas: cada dígito es una columna 0–9 que se desliza.
   document.querySelectorAll('[data-contador]').forEach((el) => {
     const texto = el.textContent.trim();
+    const original = el.innerHTML;
+    // Los nodos con marcado (sufijo "a.m."/"p.m.") se conservan tal cual; solo ruedan los dígitos del texto.
+    const partes = [...el.childNodes].flatMap((nodo) => (nodo.nodeType === 3 ? [...nodo.textContent] : [nodo]));
     el.setAttribute('aria-label', texto);
     el.textContent = '';
-    [...texto].forEach((c, n) => {
+    partes.forEach((c, n) => {
+      if (typeof c !== 'string') {
+        c.setAttribute('aria-hidden', 'true');
+        return el.append(c);
+      }
       if (!/\d/.test(c)) {
         const fijo = document.createElement('span');
         fijo.textContent = c;
@@ -219,7 +220,7 @@ document.addEventListener('DOMContentLoaded', () => {
     el.dataset.revelarContador = '';
     // Al terminar de rodar se devuelve el texto original (las columnas tienen ancho fijo y dejan huecos).
     el.restaurar = () => setTimeout(() => {
-      el.textContent = texto;
+      el.innerHTML = original;
       el.removeAttribute('aria-label');
     }, 2300 + texto.length * 90);
   });

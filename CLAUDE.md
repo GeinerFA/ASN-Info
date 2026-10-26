@@ -33,7 +33,7 @@ El contenido del panel se versiona en `datos/*.jsonl` (una fila por línea). `li
 `lib/datos-formato.js` combina fila por fila (base = `data/sync/`, la última sincronización) y
 `scripts/merge-datos.js` es el driver de merge de git (`.gitattributes`: `merge=datos`).
 Hooks en `.githooks/`: `pre-commit` (exporta y hace `git add datos public/uploads`), `post-merge` y `post-rewrite` (importan).
-No se sincronizan `usuarios`, `sesiones` ni `contraloria_mensajes` (datos personales). Si se agrega una tabla de contenido, sumarla a `TABLAS` en `lib/datos.js`.
+No se sincronizan `usuarios` ni `sesiones` (datos personales). Si se agrega una tabla de contenido, sumarla a `TABLAS` en `lib/datos.js`.
 
 > **Red corporativa:** si `npm install` falla con `SELF_SIGNED_CERT_IN_CHAIN`, usar
 > `NODE_OPTIONS=--use-system-ca npm install` (confía en el almacén de certificados de Windows).
@@ -47,11 +47,11 @@ db/seed.js             Datos de ejemplo (marcados con // TODO: dato real)
 db/directorio-ivr.js   Datos del directorio según el diagrama del IVR (central 2103-1700, U.P. 2235)
 db/session-store.js    Store de express-session sobre SQLite
 lib/directorio.js      Árbol del menú IVR (parent_id/opcion, 2 niveles) y enlaces tel: con la ruta de opciones
+lib/sobre.js           "Quiénes somos" del inicio (contenido clave `sobre`, editable en /admin/contenido) y sus valores por defecto
 lib/site.js            Datos globales del sitio (nombre, dirección, teléfonos, horarios) + JSON-LD
 lib/util.js            slugify, formateo de fechas es-CR, horas en 12 h (hora12/horariosVista)
-lib/contraloria.js     Formulario de la Contraloría: validación, límite por IP, copia en BD y envío SMTP (nodemailer)
 middleware/auth.js     requireAuth, CSRF, rate limit de login
-routes/public.js       /, /servicios, /nosotros, /directorio, /contraloria (GET/POST), /anuncios, /anuncios/:slug
+routes/public.js       /, /servicios, /nosotros, /directorio, /anuncios, /anuncios/:slug
 routes/admin.js        /admin: login, CRUD de anuncios, directorio y servicios
 routes/seo.js          /sitemap.xml, /robots.txt
 views/partials/        head.ejs (TODAS las meta SEO), header.ejs, footer.ejs, iconos
@@ -85,7 +85,7 @@ Botones: `<a class="boton boton--primario" href="…"><%- textoBoton('Texto') %>
 Fotos: `partials/foto.ejs` (`src`, `alt`, `clase`, `figura`, `ancho`, `alto`, `prioridad`). Sin `src` muestra un
 relleno con degradado. Las rutas están en `site.fotos` (lib/site.js).
 Hero: carrusel de fondo con `site.heroFotos` (fundido cada 6,5 s, botón de pausa, no avanza solo con movimiento reducido).
-Toda foto con licencia CC lleva `credito` y `creditoUrl`; no usar fotos de medios de prensa sin permiso.
+Toda foto con licencia CC lleva `credito` y `creditoUrl` (los del hero se muestran en el footer, no sobre la foto); no usar fotos de medios de prensa sin permiso.
 
 ## Animaciones (public/js/main.js + public/js/temprano.js, sin librerías)
 - `temprano.js` (sin defer, en `<head>`) pone `.js` y `.animar` en `<html>`; `.animar` solo si no hay
@@ -130,12 +130,11 @@ Toda foto con licencia CC lleva `credito` y `creditoUrl`; no usar fotos de medio
 - SQL siempre con parámetros (`?`), nunca concatenando strings.
 - Subidas: solo jpg/png/webp ≤ 2 MB, nombre aleatorio.
 - CSP (`server.js`): `frame-src` solo permite Google Maps (mapa de Visítenos). No agregar otros orígenes sin necesidad.
-- Formulario público `/contraloria`: CSRF, campo trampa `sitio_web`, máx. 3 mensajes por IP/hora, salida escapada.
-  El correo sale por SMTP (`SMTP_*` en `.env`, ver `.env.example`); sin `SMTP_HOST` en desarrollo se imprime en la
-  consola y en producción no se envía (queda en `contraloria_mensajes` con el error). Nunca poner credenciales SMTP en el código.
 - `.env` y `data/` fuera del control de versiones.
 
 ## Datos
 Los datos de ejemplo (teléfonos, misión, visión, valores, servicios, horarios, estadísticas) están en
-`db/seed.js` y `lib/site.js`, marcados con `// TODO: dato real`. Reemplazarlos por la información oficial.
-Anuncios, directorio (menú IVR: opciones y submenús) y servicios se administran desde `/admin`.
+`db/seed.js`, `lib/site.js` y `lib/sobre.js`, marcados con `// TODO: dato real`. Reemplazarlos por la información oficial.
+Anuncios, directorio (menú IVR: opciones y submenús), servicios y la sección "Nosotros" (Quiénes somos del inicio:
+título, texto, foto, recuadro y cifras; misión, visión y valores) se administran desde `/admin`.
+En títulos editables, la palabra entre asteriscos va en cursiva (`tituloCursiva()` en lib/util.js).

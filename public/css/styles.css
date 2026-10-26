@@ -290,15 +290,19 @@ table { border-collapse: collapse; width: 100%; }
 }
 
 /* ---------- Hero ---------- */
-.hero { padding: var(--borde-caja); padding-top: 0; }
+/* Hero a todo el ancho y alto de la ventana: top bar + cabecera (81 px) + hero caben sin hacer scroll.
+   --alto-topbar lo mide main.js; el valor de aquí es el de respaldo. */
 .hero__caja {
   position: relative; isolation: isolate;
   overflow: hidden;
-  border-radius: var(--radius-lg);
+  display: flex; flex-direction: column;
+  min-height: calc(100vh - 81px - var(--alto-topbar, 37px));
+  min-height: calc(100svh - 81px - var(--alto-topbar, 37px));
   background: var(--night);
   color: var(--white);
   padding-block: clamp(3.5rem, 9vw, 7rem) 0;
 }
+.hero__grid { flex: 1; }
 .hero__fondo { position: absolute; inset: 0; z-index: -1; overflow: hidden; }
 .hero__fondo::after {
   content: ''; position: absolute; inset: 0;
@@ -323,9 +327,6 @@ table { border-collapse: collapse; width: 100%; }
   margin-top: clamp(2rem, 5vw, 3.5rem);
   min-height: 36px;
 }
-.hero__credito { margin: 0; font-size: 0.78rem; color: rgba(255, 255, 255, 0.65); }
-.hero__credito a { color: inherit; }
-.hero__credito a:hover { color: var(--white); }
 .hero__controles { display: flex; align-items: center; gap: 0.35rem; margin-left: auto; }
 .hero__controles[hidden] { display: none; }
 .hero__punto { position: relative; width: 44px; height: 32px; padding: 0; border: 0; background: none; cursor: pointer; }
@@ -355,9 +356,6 @@ table { border-collapse: collapse; width: 100%; }
 .hero__lead { font-size: clamp(1.05rem, 1.6vw, 1.2rem); color: rgba(255, 255, 255, 0.8); max-width: 38rem; }
 .hero__ctas { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 2rem; }
 .hero__ctas--centro { justify-content: center; }
-.hero__badges { list-style: none; display: flex; flex-wrap: wrap; gap: 0.6rem 1.5rem; margin-top: 2.25rem; color: rgba(255, 255, 255, 0.82); font-size: 0.93rem; }
-.hero__badges li { display: inline-flex; align-items: center; gap: 0.45rem; }
-.hero__badges .icono { color: var(--night); background: var(--primary-claro); border-radius: 50%; padding: 3px; width: 1.25rem; height: 1.25rem; stroke-width: 3; }
 
 /* Tarjeta de vidrio "¿Qué necesita hoy?" */
 .hero__panel {
@@ -406,6 +404,21 @@ table { border-collapse: collapse; width: 100%; }
 .marquesina__lista .icono { color: var(--primary-claro); width: 1.4em; height: 1.4em; }
 @keyframes marquesina { to { transform: translateX(-50%); } }
 
+/* En escritorio los tamaños también dependen del alto de la ventana para que todo quepa */
+@media (min-width: 1024px) {
+  .hero__caja { padding-top: clamp(1.25rem, 4svh, 4rem); }
+  .hero h1 { font-size: min(5rem, 6.4vw, 7svh); }
+  .hero .eyebrow { margin-bottom: clamp(0.5rem, 1.6svh, 1.25rem); }
+  .hero__lead { font-size: clamp(1rem, 2.1svh, 1.2rem); }
+  .hero__ctas { margin-top: clamp(1rem, 2.5svh, 2rem); }
+  .hero__panel { padding: clamp(1rem, 3svh, 1.9rem); }
+  .hero__panel-titulo { margin-bottom: clamp(0.6rem, 1.6svh, 1.1rem); }
+  .hero .accesos { gap: clamp(0.4rem, 1svh, 0.6rem); }
+  .hero .acceso { padding-block: clamp(0.5rem, 1.3svh, 0.8rem); }
+  .hero__pie { margin-top: clamp(0.75rem, 2svh, 3.5rem); }
+  .hero .marquesina { margin-top: clamp(0.5rem, 1.2svh, 1.25rem); padding-block: clamp(0.75rem, 1.8svh, 1.5rem); }
+}
+
 /* ---------- Secciones ---------- */
 .seccion { padding-block: var(--seccion-y); }
 .seccion--compacta { padding-block: clamp(2.5rem, 5vw, 4rem) var(--seccion-y); }
@@ -441,6 +454,8 @@ table { border-collapse: collapse; width: 100%; }
 .estadistica { display: flex; flex-direction: column-reverse; justify-content: flex-end; }
 .estadistica dd { margin: 0; font: 500 clamp(2.25rem, 4.5vw, 3.25rem)/1.1 var(--font-body); letter-spacing: -0.04em; color: var(--primary); }
 .estadistica dt { color: var(--muted); font-size: 0.95rem; margin-top: 0.35rem; }
+/* "a.m."/"p.m." pequeño y pegado a la hora para que la cifra quepa en una línea */
+.sufijo-hora { margin-left: 0.08em; font-size: 0.42em; letter-spacing: 0; white-space: nowrap; }
 
 /* Contador tipo tragamonedas (lo arma main.js) */
 .contador__col { display: inline-block; height: 1.1em; overflow: hidden; vertical-align: top; }
@@ -816,6 +831,8 @@ a.ivr__nombre:hover { text-decoration: underline; color: var(--ink); }
 .pie__legal { margin-top: 1.75rem; padding-block: 1rem; border-top: 1px solid rgba(255, 255, 255, 0.14); text-align: center; font-size: 0.9rem; }
 @media (min-width: 960px) { .pie__legal { margin-top: 0; } }
 .pie__legal p { margin: 0; }
+.pie__legal .pie__credito { margin-top: 0.3rem; font-size: 0.78rem; color: rgba(255, 255, 255, 0.6); }
+.pie__credito a { text-decoration: underline; text-underline-offset: 2px; }
 
 
 /* =========================================================
@@ -855,80 +872,6 @@ a.ivr__nombre:hover { text-decoration: underline; color: var(--ink); }
 .animar [data-palabras].visible .palabra > span { transform: none; }
 
 /* ---------- Movimiento reducido ---------- */
-/* ---------- Contraloría de Servicios: canales de contacto + formulario ---------- */
-.contraloria { display: grid; gap: clamp(2rem, 5vw, 4rem); align-items: start; }
-.contraloria > * { min-width: 0; }
-@media (min-width: 960px) { .contraloria { grid-template-columns: 0.85fr 1.15fr; } .contraloria__info { position: sticky; top: 8rem; } }
-.contraloria__titulo { font-size: clamp(1.5rem, 2.6vw, 1.9rem); font-weight: 500; letter-spacing: -0.03em; margin-bottom: 1.25rem; }
-.contraloria__canales { list-style: none; display: grid; gap: 0.85rem; margin: 0 0 1.25rem; padding: 0; }
-.contraloria__canal {
-  display: flex; gap: 1rem; align-items: flex-start;
-  padding: 1.1rem 1.2rem; background: var(--mint); border: 1px solid #d5ebe0; border-radius: var(--radius);
-}
-.contraloria__canal small { display: block; color: var(--muted); font-size: 0.86rem; }
-.contraloria__icono { display: grid; place-items: center; flex-shrink: 0; width: 46px; height: 46px; border-radius: var(--radius-sm); background: var(--primary); color: var(--white); }
-.contraloria__icono .icono { width: 22px; height: 22px; }
-.contraloria__dato { display: block; color: var(--ink); text-decoration: none; font: 500 1.45rem/1.25 var(--font-body); letter-spacing: -0.02em; }
-a.contraloria__dato:hover { color: var(--primary); }
-.contraloria__dato--correo { font-size: 1.15rem; overflow-wrap: anywhere; text-decoration: underline; text-decoration-thickness: 1px; }
-.contraloria__dato--texto { font-size: 1.05rem; }
-.contraloria__nota { display: inline-block; margin-top: 0.15rem; font-size: 0.92rem; color: var(--muted); }
-a.contraloria__nota { color: var(--primary); font-weight: 600; }
-.contraloria__aviso { display: flex; gap: 0.6rem; align-items: flex-start; margin: 0; font-size: 0.94rem; color: var(--muted); }
-.contraloria__aviso .icono { flex-shrink: 0; width: 20px; height: 20px; color: #b4232a; margin-top: 0.1em; }
-
-.formulario-publico {
-  display: grid; gap: 1.2rem;
-  padding: clamp(1.5rem, 4vw, 2.5rem);
-  background: var(--white); border: 1px solid var(--line); border-radius: var(--radius-lg); box-shadow: var(--shadow);
-}
-.formulario-publico .contraloria__titulo { margin-bottom: 0; }
-.formulario-publico__intro { margin: -0.6rem 0 0; color: var(--muted); font-size: 0.94rem; }
-.formulario-publico__fila { display: grid; gap: 1.2rem; }
-@media (min-width: 640px) { .formulario-publico__fila { grid-template-columns: 1fr 1fr; } }
-.formulario-publico .boton { justify-self: start; border: 0; cursor: pointer; font: inherit; }
-
-.campo { display: grid; gap: 0.4rem; min-width: 0; margin: 0; padding: 0; border: 0; }
-.campo__etiqueta { padding: 0; font-weight: 600; font-size: 0.96rem; color: var(--ink); }
-.campo__opcional { font-weight: 400; color: var(--muted); }
-.campo input:not([type="radio"]):not([type="checkbox"]), .campo textarea {
-  width: 100%; padding: 0.8rem 0.95rem;
-  font: inherit; font-size: 1rem; color: var(--ink);
-  background: var(--gris); border: 1px solid var(--line); border-radius: var(--radius-sm);
-  transition: border-color var(--t) var(--ease), background-color var(--t) var(--ease), box-shadow var(--t) var(--ease);
-}
-.campo textarea { resize: vertical; min-height: 9rem; line-height: 1.55; }
-.campo input:focus, .campo textarea:focus { outline: none; background: var(--white); border-color: var(--primary); box-shadow: 0 0 0 3px rgba(9, 115, 92, 0.18); }
-.campo [aria-invalid="true"] { border-color: #b4232a; background: #fff6f6; }
-.campo__error { margin: 0; font-size: 0.88rem; font-weight: 500; color: #b4232a; }
-.campo__check { display: flex; gap: 0.65rem; align-items: flex-start; font-size: 0.92rem; color: var(--muted); line-height: 1.5; cursor: pointer; }
-.campo__check input { flex-shrink: 0; width: 18px; height: 18px; margin-top: 0.15em; accent-color: var(--primary); }
-
-/* Tipo de mensaje: radios con forma de pastilla */
-.opciones-tipo { display: flex; flex-wrap: wrap; gap: 0.5rem; }
-.opcion-tipo { position: relative; cursor: pointer; }
-.opcion-tipo input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
-.opcion-tipo span {
-  display: inline-block; padding: 0.55rem 1.05rem;
-  border: 1px solid var(--line); border-radius: 999px; background: var(--white);
-  font-weight: 500; font-size: 0.95rem; color: var(--ink);
-  transition: background-color var(--t) var(--ease), border-color var(--t) var(--ease), color var(--t) var(--ease);
-}
-.opcion-tipo:hover span { border-color: var(--primary); }
-.opcion-tipo input:checked + span { background: var(--primary); border-color: var(--primary); color: var(--white); }
-.opcion-tipo input:focus-visible + span { outline: 3px solid var(--primary); outline-offset: 2px; }
-
-.formulario-aviso { display: flex; gap: 0.85rem; align-items: flex-start; padding: 1rem 1.15rem; border-radius: var(--radius); margin-bottom: 1.25rem; }
-.formulario-publico .formulario-aviso { margin-bottom: 0; }
-.formulario-aviso .icono { flex-shrink: 0; width: 22px; height: 22px; margin-top: 0.1em; }
-.formulario-aviso p { margin: 0.2rem 0 0; }
-.formulario-aviso--exito { background: var(--mint); border: 1px solid #b9dfcd; color: var(--ink); }
-.formulario-aviso--exito .icono { color: var(--primary); }
-.formulario-aviso--error { background: #fff3f3; border: 1px solid #f3c3c5; color: #8c1c22; }
-
-/* Campo trampa para robots: fuera de la vista y del lector de pantalla */
-.campo-trampa { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
-
 /* ---------- Botón "Volver arriba": aparece al bajar; el anillo muestra cuánto se ha recorrido ---------- */
 .arriba {
   position: fixed; z-index: 40;

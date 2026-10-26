@@ -18,7 +18,7 @@
           <address>
             <p><%- icono('pin') %><span><%= site.direccion.calle %>, <%= site.direccion.ciudad %>, <%= site.direccion.provincia %></span></p>
             <p><%- icono('siren') %><span>Emergencias: <a href="tel:<%= site.emergencias %>"><%= site.emergencias %></a></span></p>
-            <p><%- icono('mail') %><span><a href="/contraloria"><%= site.contraloria.nombre %></a>: <a class="pie__correo" href="mailto:<%= site.contraloria.correo %>"><%= site.contraloria.correo %></a></span></p>
+            <p><%- icono('mail') %><span><%= site.contraloria.nombre %>: <a class="pie__correo" href="mailto:<%= site.contraloria.correo %>"><%= site.contraloria.correo %></a></span></p>
           </address>
         </div>
       </div>
@@ -31,7 +31,6 @@
           <li><a href="/nosotros">Misión y visión</a></li>
           <li><a href="/directorio">Directorio</a></li>
           <li><a href="/anuncios">Anuncios</a></li>
-          <li><a href="/contraloria">Contraloría</a></li>
           <li><a href="/#preguntas">Preguntas frecuentes</a></li>
           <li><a href="/#contacto">Cómo llegar</a></li>
           <li><a href="https://www.ccss.sa.cr" rel="noopener" target="_blank">Sitio de la CCSS</a></li>
@@ -54,6 +53,9 @@
 
     <div class="pie__legal">
       <p>© <%= anio %> <%= site.nombre %> · <%= site.institucion %></p>
+      <% site.heroFotos.filter(function (f) { return f.credito; }).forEach(function (f) { %>
+        <p class="pie__credito">Foto «<%= f.descripcion %>»: <a href="<%= f.creditoUrl %>" rel="noopener" target="_blank"><%= f.credito %></a></p>
+      <% }) %>
     </div>
   </div>
 </footer>

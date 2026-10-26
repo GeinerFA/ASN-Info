@@ -1,43 +1,74 @@
 <%- include('_inicio', { titulo: 'Anuncios' }) %>
+<%
+  // Resumen por estado para la cabecera (Publicado, Programado, Borrador, Vencido)
+  const resumen = {};
+  anuncios.forEach(function (a) { resumen[a.estado.texto] = (resumen[a.estado.texto] || 0) + 1; });
+  const iconoCategoria = { Eventos: 'calendar', Campañas: 'target', Avisos: 'megaphone' };
+%>
 <div class="admin-cabecera">
   <div>
     <h1>Anuncios</h1>
     <p>Publique avisos, campañas y eventos. Los anuncios vencidos o en borrador no se muestran en el sitio.</p>
   </div>
-  <% if (puede('anuncios.crear')) { %><a class="btn btn--primario" href="/admin/anuncios/nuevo">+ Nuevo anuncio</a><% } %>
+  <% if (puede('anuncios.crear')) { %><a class="btn btn--primario" href="/admin/anuncios/nuevo"><%- icono('mas') %>Nuevo anuncio</a><% } %>
 </div>
 
 <% if (!anuncios.length) { %>
   <p class="vacio">Todavía no hay anuncios.<% if (puede('anuncios.crear')) { %> <a href="/admin/anuncios/nuevo">Cree el primero</a>.<% } %></p>
 <% } else { %>
+<ul class="resumen" aria-label="Resumen de anuncios">
+  <li class="resumen__item"><strong><%= anuncios.length %></strong> en total</li>
+  <% [['Publicado', 'verde', 'publicados'], ['Programado', 'amarillo', 'programados'], ['Borrador', 'gris', 'en borrador'], ['Vencido', 'rojo', 'vencidos']].forEach(function (r) { if (!resumen[r[0]]) return; %>
+    <li class="resumen__item"><span class="punto punto--<%= r[1] %>" aria-hidden="true"></span><strong><%= resumen[r[0]] %></strong> <%= resumen[r[0]] === 1 ? r[0].toLowerCase() : r[2] %></li>
+  <% }) %>
+</ul>
+
 <div class="tabla-envoltura">
-  <table class="tabla">
+  <table class="tabla tabla--anuncios">
     <thead>
-      <tr><th scope="col">Título</th><th scope="col">Categoría</th><th scope="col">Publicación</th><th scope="col">Vence</th><th scope="col">Estado</th><th scope="col"><span class="sr-only">Acciones</span></th></tr>
+      <tr><th scope="col">Anuncio</th><th scope="col">Vigencia</th><th scope="col">Estado</th><th scope="col"><span class="sr-only">Acciones</span></th></tr>
     </thead>
     <tbody>
       <% anuncios.forEach(function (a) { %>
       <tr>
-        <td data-etiqueta="Título">
-          <strong><%= a.titulo %></strong><% if (a.destacado) { %> <span class="etiqueta etiqueta--amarillo">Destacado</span><% } %>
-          <% if (a.estado.texto === 'Publicado') { %><br><a class="enlace-sutil" href="/anuncios/<%= a.slug %>" target="_blank" rel="noopener">/anuncios/<%= a.slug %></a><% } %>
+        <td>
+          <div class="anuncio-celda">
+            <% if (a.imagen) { %>
+              <img class="anuncio-celda__img" src="/uploads/<%= a.imagen %>" alt="" width="64" height="64" loading="lazy">
+            <% } else { %>
+              <span class="anuncio-celda__img anuncio-celda__img--vacia" aria-hidden="true"><%- icono(iconoCategoria[a.categoria] || 'megaphone') %></span>
+            <% } %>
+            <div class="anuncio-celda__texto">
+              <strong class="anuncio-celda__titulo"><%= a.titulo %></strong>
+              <div class="anuncio-celda__meta">
+                <span class="etiqueta etiqueta--suave"><%= a.categoria %></span>
+                <% if (a.destacado) { %><span class="etiqueta etiqueta--amarillo">★ Destacado</span><% } %>
+                <% if (a.estado.texto === 'Publicado') { %><a class="anuncio-celda__ver" href="/anuncios/<%= a.slug %>" target="_blank" rel="noopener">Ver en el sitio<%- icono('externo') %><span class="sr-only"> (abre en otra pestaña)</span></a><% } %>
+              </div>
+            </div>
+          </div>
         </td>
-        <td data-etiqueta="Categoría"><%= a.categoria %></td>
-        <td data-etiqueta="Publicación"><%= fechaLarga(a.fecha_publicacion) %></td>
-        <td data-etiqueta="Vence"><%= a.fecha_expira ? fechaLarga(a.fecha_expira) : '—' %></td>
-        <td data-etiqueta="Estado"><span class="etiqueta etiqueta--<%= a.estado.clase %>"><%= a.estado.texto %></span></td>
+        <td class="vigencia" data-etiqueta="Vigencia">
+          <span class="vigencia__fecha"><%- icono('calendar') %><time datetime="<%= a.fecha_publicacion %>"><%= fechaCorta(a.fecha_publicacion) %></time></span>
+          <% if (a.fecha_expira) { %>
+            <span class="vigencia__fin">Vence <time datetime="<%= a.fecha_expira %>"><%= fechaCorta(a.fecha_expira) %></time></span>
+          <% } else { %>
+            <span class="vigencia__fin">Sin vencimiento</span>
+          <% } %>
+        </td>
+        <td data-etiqueta="Estado"><span class="estado estado--<%= a.estado.clase %>"><span class="punto punto--<%= a.estado.clase %>" aria-hidden="true"></span><%= a.estado.texto %></span></td>
         <td class="acciones">
-          <% if (puede('anuncios.editar')) { %><a class="btn btn--chico" href="/admin/anuncios/<%= a.id %>/editar">Editar</a><% } %>
+          <% if (puede('anuncios.editar')) { %><a class="btn btn--chico" href="/admin/anuncios/<%= a.id %>/editar"><%- icono('lapiz') %>Editar</a><% } %>
           <% if (puede('anuncios.publicar')) { %>
           <form method="post" action="/admin/anuncios/<%= a.id %>/publicar">
             <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-            <button class="btn btn--chico" type="submit"><%= a.publicado ? 'Despublicar' : 'Publicar' %></button>
+            <button class="btn btn--chico" type="submit"><%- icono(a.publicado ? 'ojo-tachado' : 'eye') %><%= a.publicado ? 'Despublicar' : 'Publicar' %></button>
           </form>
           <% } %>
           <% if (puede('anuncios.eliminar')) { %>
           <form method="post" action="/admin/anuncios/<%= a.id %>/eliminar" data-confirmar="¿Eliminar el anuncio «<%= a.titulo %>»?">
             <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-            <button class="btn btn--chico btn--peligro" type="submit">Eliminar</button>
+            <button class="btn-icono btn-icono--chico" type="submit" title="Eliminar"><%- icono('papelera') %><span class="sr-only">Eliminar «<%= a.titulo %>»</span></button>
           </form>
           <% } %>
         </td>

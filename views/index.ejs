@@ -7,7 +7,7 @@
     <div class="hero__caja oscuro">
       <div class="hero__fondo hero__carrusel" data-carrusel>
         <% site.heroFotos.forEach(function (f, i) { %>
-          <figure class="hero__slide<% if (i === 0) { %> activo<% } %>"<% if (f.credito) { %> data-credito="<%= f.credito %>" data-credito-url="<%= f.creditoUrl %>"<% } %>>
+          <figure class="hero__slide<% if (i === 0) { %> activo<% } %>">
             <img src="<%= f.src %>" alt="" width="<%= f.ancho %>" height="<%= f.alto %>" data-posicion="<%= f.posicion %>"<% if (i === 0) { %> fetchpriority="high"<% } else { %> loading="lazy"<% } %>>
           </figure>
         <% }) %>
@@ -16,16 +16,11 @@
         <div class="hero__texto">
           <p class="eyebrow" data-revelar>Caja Costarricense de Seguro Social</p>
           <h1 id="hero-titulo" data-palabras>Atención de salud <span class="cursiva">cercana</span> para todo Naranjo</h1>
-          <p class="hero__lead" data-revelar data-retardo="350">En el Área de Salud Naranjo cuidamos de usted y de su familia: medicina general, urgencias de lunes a viernes de 7:00&nbsp;a.m. a 10:00&nbsp;p.m., odontología, farmacia, laboratorio y una red de EBAIS en todo el cantón.</p>
+          <p class="hero__lead" data-revelar data-retardo="350">Medicina general, urgencias, odontología, farmacia y laboratorio, con una red de EBAIS en todo el cantón.</p>
           <div class="hero__ctas" data-revelar data-retardo="500">
             <a class="boton boton--primario boton--grande" href="/servicios"><%- textoBoton('Ver servicios') %><span class="boton__icono"><%- icono('arrow') %></span></a>
             <a class="boton boton--contorno-claro boton--grande" href="tel:<%= telHref(site.telefono) %>"><%- icono('phone') %><%- textoBoton('Llamar ' + site.telefono) %></a>
           </div>
-          <ul class="hero__badges" data-revelar data-retardo="650">
-            <li><%- icono('check') %>Red de EBAIS en el cantón</li>
-            <li><%- icono('check') %>Urgencias L–V 7:00&nbsp;a.m. – 10:00&nbsp;p.m.</li>
-            <li><%- icono('check') %>Expediente digital EDUS</li>
-          </ul>
         </div>
 
         <aside class="hero__panel" aria-labelledby="panel-titulo" data-revelar="derecha" data-retardo="400">
@@ -49,19 +44,12 @@
                 <span><strong>Buscar un teléfono</strong><small>Directorio de servicios y EBAIS</small></span>
               </a>
             </li>
-            <li>
-              <a class="acceso" href="/anuncios">
-                <span class="acceso__icono"><%- icono('megaphone') %></span>
-                <span><strong>Ver anuncios</strong><small>Campañas, avisos y eventos</small></span>
-              </a>
-            </li>
           </ul>
         </aside>
       </div>
 
-      <!-- Controles del carrusel (solo con JS) y crédito de la foto visible -->
+      <!-- Controles del carrusel (solo con JS). Los créditos de las fotos van en el footer. -->
       <div class="contenedor hero__pie">
-        <p class="hero__credito" data-carrusel-credito aria-live="polite"></p>
         <div class="hero__controles" data-carrusel-controles hidden>
           <% site.heroFotos.forEach(function (f, i) { %>
             <button class="hero__punto" type="button" data-carrusel-punto="<%= i %>" aria-label="Foto <%= i + 1 %> de <%= site.heroFotos.length %>: <%= f.descripcion %>"<% if (i === 0) { %> aria-current="true"<% } %>></button>
@@ -89,22 +77,26 @@
     <div class="contenedor sobre">
       <div class="sobre__media">
         <div data-revelar="foto">
-          <%- include('partials/foto', { src: site.fotos.nosotros, alt: 'Edificio de la sede del Área de Salud Naranjo', figura: 'users', ancho: 1200, alto: 800 }) %>
+          <%- include('partials/foto', { src: sobre.fotoUrl, alt: sobre.fotoAlt, figura: 'users', ancho: 1200, alto: 800 }) %>
         </div>
+        <% if (sobre.selloTitulo || sobre.selloTexto) { %>
         <div class="sobre__sello" data-revelar data-retardo="500">
           <img src="/img/logo-ccss-negro-128.png" alt="" width="44" height="44" loading="lazy">
-          <span><strong>Parte de la CCSS</strong><small>Unidad programática <%= site.unidadProgramatica %></small></span>
+          <span><% if (sobre.selloTitulo) { %><strong><%= sobre.selloTitulo %></strong><% } %><% if (sobre.selloTexto) { %><small><%= sobre.selloTexto %></small><% } %></span>
         </div>
+        <% } %>
       </div>
       <div class="sobre__texto">
         <p class="eyebrow" data-revelar>Quiénes somos</p>
-        <h2 id="sobre-titulo" data-palabras>Comprometidos con la salud de <span class="cursiva">Naranjo</span></h2>
-        <p data-revelar>Somos el primer nivel de atención de la <%= site.institucion %> en el cantón. Desde la sede central y nuestra red de EBAIS acompañamos a cada familia con prevención, consulta y seguimiento.</p>
+        <h2 id="sobre-titulo" data-palabras><%- tituloCursiva(sobre.titulo) %></h2>
+        <% if (sobre.texto) { %><p data-revelar><%= sobre.texto %></p><% } %>
+        <% if (sobre.estadisticas.length) { %>
         <dl class="estadisticas" data-revelar-grupo>
-          <% site.estadisticas.forEach(function (e) { %>
-            <div class="estadistica" data-revelar><dt><%= e.etiqueta %></dt><dd data-contador><%= e.valor %></dd></div>
+          <% sobre.estadisticas.forEach(function (e) { %>
+            <div class="estadistica" data-revelar><dt><%= e.etiqueta %></dt><dd data-contador><%- cifraHora(e.valor) %></dd></div>
           <% }) %>
         </dl>
+        <% } %>
         <a class="boton boton--primario" href="/nosotros" data-revelar><%- textoBoton('Misión, visión y valores') %><span class="boton__icono"><%- icono('arrow') %></span></a>
       </div>
     </div>

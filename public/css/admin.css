@@ -205,3 +205,91 @@ img { max-width: 100%; height: auto; }
 .matriz__celda input:disabled { cursor: not-allowed; opacity: 0.6; }
 .matriz tbody tr:not(.matriz__modulo):hover { background: #fafcfc; }
 .matriz-form .formulario__acciones { margin-top: 1rem; }
+
+/* ---------- Lista de anuncios ---------- */
+.btn .icono { width: 18px; height: 18px; flex-shrink: 0; }
+.btn--chico .icono { width: 15px; height: 15px; }
+.btn-icono--chico { width: 32px; height: 32px; border-width: 1px; border-radius: 999px; }
+.btn-icono--chico .icono { width: 15px; height: 15px; }
+
+.resumen { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0 0 1rem; padding: 0; }
+.resumen__item {
+  display: inline-flex; align-items: center; gap: 0.45rem;
+  padding: 0.35rem 0.85rem; font-size: 0.88rem; color: var(--muted);
+  background: var(--white); border: 1px solid var(--line); border-radius: 999px;
+}
+.resumen__item strong { color: var(--ink); font-weight: 600; }
+
+.punto { display: inline-block; width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; background: currentColor; }
+.punto--verde { background: var(--primary); }
+.punto--amarillo { background: #d99a00; }
+.punto--gris { background: #9aa8ab; }
+.punto--rojo { background: var(--danger); }
+
+.estado { display: inline-flex; align-items: center; gap: 0.45rem; padding: 0.25rem 0.7rem; border-radius: 999px; font-size: 0.82rem; font-weight: 600; white-space: nowrap; }
+.estado--verde { background: var(--mint); color: var(--primary-darker); }
+.estado--amarillo { background: #fdf3dc; color: #8a5800; }
+.estado--gris { background: #eef1f2; color: var(--muted); }
+.estado--rojo { background: #fdecec; color: var(--danger); }
+
+.etiqueta--suave { background: var(--surface); color: var(--muted); border: 1px solid var(--line); font-weight: 500; }
+
+.tabla--anuncios th, .tabla--anuncios td { padding: 1rem 1.25rem; }
+.tabla--anuncios thead th { padding-block: 0.75rem; }
+.tabla--anuncios th:nth-child(2), .tabla--anuncios td:nth-child(2) { width: 11rem; }
+.tabla--anuncios th:nth-child(3), .tabla--anuncios td:nth-child(3) { width: 9rem; }
+.tabla--anuncios .acciones { display: table-cell; white-space: nowrap; text-align: right; width: 1%; }
+.tabla--anuncios .acciones > * { display: inline-flex; vertical-align: middle; margin-left: 0.35rem; }
+
+.anuncio-celda { display: flex; align-items: center; gap: 1rem; min-width: 0; }
+.anuncio-celda__img {
+  flex-shrink: 0; width: 64px; height: 64px; border-radius: 10px; object-fit: cover;
+  border: 1px solid var(--line); background: var(--surface);
+}
+.anuncio-celda__img--vacia { display: grid; place-items: center; color: var(--primary-dark); background: var(--mint); border-color: transparent; }
+.anuncio-celda__img--vacia .icono { width: 24px; height: 24px; }
+.anuncio-celda__texto { min-width: 0; display: grid; gap: 0.35rem; }
+.anuncio-celda__titulo { font-weight: 600; line-height: 1.35; }
+.anuncio-celda__meta { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem 0.6rem; }
+.anuncio-celda__ver { display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.82rem; color: var(--muted); text-decoration: none; }
+.anuncio-celda__ver:hover { color: var(--primary-dark); text-decoration: underline; }
+.anuncio-celda__ver .icono { width: 13px; height: 13px; }
+
+.vigencia { white-space: nowrap; }
+.vigencia__fecha { display: flex; align-items: center; gap: 0.4rem; font-weight: 500; }
+.vigencia__fecha .icono { width: 15px; height: 15px; color: var(--muted); }
+.vigencia__fin { display: block; margin-top: 0.15rem; padding-left: calc(15px + 0.4rem); font-size: 0.82rem; color: var(--muted); }
+
+/* Tableta: las acciones bajan debajo de cada anuncio */
+@media (max-width: 1000px) and (min-width: 761px) {
+  .tabla--anuncios thead th:last-child { display: none; }
+  .tabla--anuncios tbody tr { display: grid; grid-template-columns: 1fr 11rem 9rem; }
+  .tabla--anuncios thead tr { display: grid; grid-template-columns: 1fr 11rem 9rem; }
+  .tabla--anuncios th, .tabla--anuncios td { width: auto !important; border-bottom: 0; }
+  .tabla--anuncios .acciones { grid-column: 1 / -1; display: flex; justify-content: flex-start; gap: 0.4rem; padding-top: 0; padding-left: calc(1.25rem + 64px + 1rem); border-bottom: 1px solid var(--line); width: auto; }
+  .tabla--anuncios .acciones > * { margin: 0; }
+  .tabla--anuncios tbody tr:last-child .acciones { border-bottom: 0; }
+}
+
+/* Celular: cada anuncio es una tarjeta */
+@media (max-width: 760px) {
+  .tabla--anuncios tbody tr { display: grid; grid-template-columns: 1fr auto; gap: 0.85rem 1rem; padding: 1rem; }
+  .tabla--anuncios td { padding: 0 !important; display: block; }
+  .tabla--anuncios td[data-etiqueta]::before { content: none; }
+  .tabla--anuncios td:first-child { grid-column: 1 / -1; }
+  .tabla--anuncios .anuncio-celda { align-items: flex-start; }
+  .tabla--anuncios .anuncio-celda__img { width: 56px; height: 56px; }
+  .tabla--anuncios .vigencia, .tabla--anuncios td:nth-child(3) { width: auto; align-self: center; }
+  .tabla--anuncios .acciones { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 0.4rem; width: auto; padding-top: 0.85rem !important; border-top: 1px dashed var(--line); text-align: left; }
+  .tabla--anuncios .acciones > * { margin: 0; }
+  .tabla--anuncios .acciones form:last-child { margin-left: auto; }
+}
+
+/* Nosotros: foto actual junto al selector de archivo */
+.formulario fieldset { min-width: 0; }
+.foto-actual input[type="file"] { max-width: 100%; }
+.foto-actual { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 1rem; }
+.foto-actual img { width: 240px; aspect-ratio: 3 / 2; object-fit: cover; }
+.foto-actual__datos { display: grid; gap: 0.5rem; flex: 1; min-width: 220px; }
+.cifra-fila { grid-template-columns: minmax(120px, 1fr) minmax(180px, 2fr); }
+@media (max-width: 520px) { .cifra-fila { grid-template-columns: 1fr; padding-bottom: 0.6rem; border-bottom: 1px dashed var(--line); } }

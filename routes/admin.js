@@ -10,6 +10,7 @@ const { db, getContenido, setContenido } = require('../db/database');
 const { slugify, hoyISO, leerHorarios } = require('../lib/util');
 const { ICONOS } = require('../lib/iconos');
 const { arbol } = require('../lib/directorio');
+const { SOBRE_DEFECTO, MAX_ESTADISTICAS, leerSobre } = require('../lib/sobre');
 const { MODULOS, listarRoles, permisosDeRol, buscarUsuario, guardarMatriz } = require('../lib/permisos');
 const {
   requireAuth, permiso, soloSuper, inicioPermitido, csrfToken, verificarCsrf, limiteLogin, registrarFallo, limpiarFallos,
@@ -328,7 +329,7 @@ router.post('/servicios/:id/eliminar', permiso('servicios.eliminar'), (req, res)
   res.redirect('/admin/servicios');
 });
 
-// ---------- Misión, visión y valores ----------
+// ---------- Nosotros: "Quiénes somos" (inicio) + misión, visión y valores ----------
 const lineas = (txt) => String(txt || '').split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
 
 router.get('/contenido', permiso('contenido.ver'), (req, res) => {
@@ -336,6 +337,8 @@ router.get('/contenido', permiso('contenido.ver'), (req, res) => {
     mision: getContenido('mision', ''),
     vision: getContenido('vision', ''),
     valores: getContenido('valores', []),
+    sobre: leerSobre(),
+    maxEstadisticas: MAX_ESTADISTICAS,
     seccion: 'contenido',
   });
 });
@@ -353,6 +356,46 @@ router.post('/contenido', permiso('contenido.editar'), (req, res) => {
     })
   );
   flash(req, 'Contenido institucional guardado.');
+  res.redirect('/admin/contenido');
+});
+
+// "Quiénes somos" de la página de inicio. Formulario multipart: el CSRF va en la query.
+router.post('/contenido/sobre', permiso('contenido.editar'), upload.single('foto'), (req, res) => {
+  const b = req.body;
+  const texto = (v, max) => String(v || '').trim().slice(0, max);
+  const actual = leerSobre();
+  const titulo = texto(b.titulo, 120);
+  if (!titulo) {
+    if (req.file) borrarImagen(req.file.filename);
+    flash(req, 'El título de "Quiénes somos" es obligatorio.', 'error');
+    return res.redirect('/admin/contenido');
+  }
+  // Estadísticas: filas con valor y etiqueta; las vacías se ignoran.
+  const valores = [].concat(b.est_valor || []);
+  const etiquetas = [].concat(b.est_etiqueta || []);
+  const estadisticas = valores
+    .map((v, i) => ({ valor: texto(v, 24), etiqueta: texto(etiquetas[i], 40) }))
+    .filter((e) => e.valor && e.etiqueta)
+    .slice(0, MAX_ESTADISTICAS);
+
+  let foto = actual.foto;
+  if (req.file) {
+    borrarImagen(actual.foto);
+    foto = req.file.filename;
+  } else if (b.quitar_foto) {
+    borrarImagen(actual.foto);
+    foto = null;
+  }
+  setContenido('sobre', {
+    titulo,
+    texto: texto(b.texto, 500),
+    foto,
+    fotoAlt: texto(b.fotoAlt, 150) || SOBRE_DEFECTO.fotoAlt,
+    selloTitulo: texto(b.selloTitulo, 60),
+    selloTexto: texto(b.selloTexto, 80),
+    estadisticas,
+  });
+  flash(req, 'Sección "Quiénes somos" guardada.');
   res.redirect('/admin/contenido');
 });
 

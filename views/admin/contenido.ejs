@@ -1,16 +1,74 @@
-<%- include('_inicio', { titulo: 'Misión, visión y valores' }) %>
+<%- include('_inicio', { titulo: 'Nosotros' }) %>
 <div class="admin-cabecera">
   <div>
-    <h1>Misión, visión y valores</h1>
-    <p>Este contenido se muestra en la página <a href="/nosotros" target="_blank" rel="noopener">Nosotros</a>.</p>
+    <h1>Nosotros</h1>
+    <p>Textos institucionales del sitio: la sección «Quiénes somos» de la <a href="/#sobre-titulo" target="_blank" rel="noopener">página de inicio</a> y la página <a href="/nosotros" target="_blank" rel="noopener">Nosotros</a>.</p>
   </div>
 </div>
 
 <% const soloLectura = !puede('contenido.editar'); %>
 <% if (soloLectura) { %><p class="aviso aviso--info">Puede ver este contenido, pero no tiene permiso para editarlo.</p><% } %>
+
+<form class="formulario tarjeta" method="post" action="/admin/contenido/sobre?_csrf=<%= csrfToken %>" enctype="multipart/form-data">
+  <fieldset class="sin-borde"<% if (soloLectura) { %> disabled<% } %>>
+  <h2>Quiénes somos <small class="ayuda">· página de inicio</small></h2>
+
+  <label>Título *
+    <input name="titulo" value="<%= sobre.titulo %>" maxlength="120" required>
+    <small>Encierre entre asteriscos la palabra que va en cursiva: <code>Comprometidos con la salud de *Naranjo*</code>.</small>
+  </label>
+  <label>Texto
+    <textarea name="texto" rows="4" maxlength="500"><%= sobre.texto %></textarea>
+  </label>
+
+  <fieldset class="formulario__imagen">
+    <legend>Foto</legend>
+    <div class="foto-actual">
+      <img src="<%= sobre.fotoUrl %>" alt="Foto actual" width="240" height="160">
+      <div class="foto-actual__datos">
+        <input type="file" name="foto" accept="image/jpeg,image/png,image/webp">
+        <small>JPG, PNG o WebP de hasta 2 MB. Se recorta en proporción 3 : 2 (recomendado: 1200 × 800 px).</small>
+        <% if (sobre.foto) { %><label class="check"><input type="checkbox" name="quitar_foto" value="1"> Volver a la foto original</label><% } %>
+      </div>
+    </div>
+    <label>Descripción de la foto
+      <input name="fotoAlt" value="<%= sobre.fotoAlt %>" maxlength="150">
+      <small>Para lectores de pantalla y buscadores: describa qué se ve en la foto.</small>
+    </label>
+  </fieldset>
+
+  <fieldset>
+    <legend>Recuadro sobre la foto</legend>
+    <div class="formulario__fila formulario__fila--2">
+      <label>Título<input name="selloTitulo" value="<%= sobre.selloTitulo %>" maxlength="60"></label>
+      <label>Texto<input name="selloTexto" value="<%= sobre.selloTexto %>" maxlength="80"></label>
+    </div>
+    <small class="ayuda">Deje ambos campos vacíos para ocultar el recuadro.</small>
+  </fieldset>
+
+  <fieldset>
+    <legend>Cifras (hasta <%= maxEstadisticas %>)</legend>
+    <% for (let i = 0; i < maxEstadisticas; i++) { const e = sobre.estadisticas[i] || { valor: '', etiqueta: '' }; %>
+    <div class="formulario__fila cifra-fila">
+      <label>Cifra <%= i + 1 %><input name="est_valor" value="<%= e.valor %>" maxlength="24" placeholder="Ej.: 45+"></label>
+      <label>Descripción<input name="est_etiqueta" value="<%= e.etiqueta %>" maxlength="40" placeholder="Ej.: Años de servicio"></label>
+    </div>
+    <% } %>
+    <small class="ayuda">Una fila con algún campo vacío no se muestra. Las horas con «a.m.» o «p.m.» se muestran con el sufijo en pequeño.</small>
+  </fieldset>
+
+  <% if (!soloLectura) { %>
+  <div class="formulario__acciones">
+    <button class="btn btn--primario" type="submit">Guardar «Quiénes somos»</button>
+  </div>
+  <% } %>
+  </fieldset>
+</form>
+
 <form class="formulario tarjeta" method="post" action="/admin/contenido">
   <fieldset class="sin-borde"<% if (soloLectura) { %> disabled<% } %>>
   <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+  <h2>Misión, visión y valores <small class="ayuda">· página Nosotros</small></h2>
   <label>Misión<textarea name="mision" rows="4"><%= mision %></textarea></label>
   <label>Visión<textarea name="vision" rows="4"><%= vision %></textarea></label>
   <label>Valores
@@ -20,7 +78,7 @@
 
   <% if (!soloLectura) { %>
   <div class="formulario__acciones">
-    <button class="btn btn--primario" type="submit">Guardar</button>
+    <button class="btn btn--primario" type="submit">Guardar misión, visión y valores</button>
   </div>
   <% } %>
   </fieldset>
