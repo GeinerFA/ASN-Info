@@ -50,13 +50,6 @@
         </dl>
       </div>
     </div>
-
-    <div class="pie__legal">
-      <p>© <%= anio %> <%= site.nombre %> · <%= site.institucion %></p>
-      <% site.heroFotos.filter(function (f) { return f.credito; }).forEach(function (f) { %>
-        <p class="pie__credito">Foto «<%= f.descripcion %>»: <a href="<%= f.creditoUrl %>" rel="noopener" target="_blank"><%= f.credito %></a></p>
-      <% }) %>
-    </div>
   </div>
 </footer>
 <button class="arriba" type="button" aria-label="Volver arriba" title="Volver arriba" hidden>

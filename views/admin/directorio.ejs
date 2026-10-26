@@ -6,7 +6,7 @@
     <h1>Directorio telefónico</h1>
     <p>Menú del IVR de la central <strong><%= site.telefono %></strong>. Cada opción puede tener un submenú (por ejemplo, 8 → Servicios Administrativos).</p>
   </div>
-  <a class="btn" href="/directorio" target="_blank" rel="noopener">Ver página ↗</a>
+  <a class="btn" href="/directorio" target="_blank" rel="noopener">Ver página<%- icono('externo') %></a>
 </div>
 
 <% if (conFormulario) { %>
@@ -41,41 +41,87 @@
 </form>
 <% } %>
 
-<div class="arbol">
-  <% menu.forEach(function (m) { %>
-    <div class="arbol__grupo<% if (m.color) { %> arbol__grupo--<%= m.color %><% } %>">
-      <div class="arbol__fila arbol__fila--principal<% if (editar && editar.id === m.id) { %> fila-activa<% } %>">
-        <span class="tecla"><%= m.externo ? '•' : m.opcion %></span>
-        <strong class="arbol__nombre"><%= m.nombre %><% if (m.externo) { %> <span class="etiqueta etiqueta--gris">Externo</span><% } %></strong>
-        <span class="arbol__ext"><%= m.hijos.length ? m.hijos.length + ' opciones' : (m.externo ? 'Sin EBAIS (no se muestra en el sitio)' : (m.extension ? 'Ext. ' + m.extension : '—')) %></span>
-        <span class="acciones">
-          <% if (puede('directorio.crear')) { %><a class="btn btn--chico" href="/admin/directorio?menu=<%= m.id %>#formulario"><%= m.externo ? '+ Agregar EBAIS' : '+ Subopción' %></a><% } %>
-          <% if (puede('directorio.editar')) { %><a class="btn btn--chico" href="/admin/directorio/<%= m.id %>/editar#formulario">Editar</a><% } %>
-          <% if (puede('directorio.eliminar')) { %>
-          <form method="post" action="/admin/directorio/<%= m.id %>/eliminar" data-confirmar="¿Eliminar la opción <%= m.opcion %> «<%= m.nombre %>»<%= m.hijos.length ? ' y sus ' + m.hijos.length + ' subopciones' : '' %>?">
-            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-            <button class="btn btn--chico btn--peligro" type="submit">Eliminar</button>
-          </form>
-          <% } %>
-        </span>
+<%
+  // Acciones de una fila (editar / eliminar), iguales en todas las tarjetas
+  function acciones(item, confirmar) { %>
+    <% if (puede('directorio.editar')) { %><a class="btn btn--chico" href="/admin/directorio/<%= item.id %>/editar#formulario"><%- icono('lapiz') %>Editar</a><% } %>
+    <% if (puede('directorio.eliminar')) { %>
+    <form method="post" action="/admin/directorio/<%= item.id %>/eliminar" data-confirmar="<%= confirmar %>">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <button class="btn-icono btn-icono--chico" type="submit" title="Eliminar"><%- icono('papelera') %><span class="sr-only">Eliminar «<%= item.nombre %>»</span></button>
+    </form>
+    <% } %>
+<% }
+  const principales = menu.filter(function (m) { return !m.externo; });
+  const conSubmenu = principales.filter(function (m) { return m.hijos.length; });
+  const externos = menu.filter(function (m) { return m.externo; });
+  const confirmarPadre = function (m) { return '¿Eliminar la opción ' + m.opcion + ' «' + m.nombre + '»' + (m.hijos.length ? ' y sus ' + m.hijos.length + ' subopciones' : '') + '?'; };
+%>
+
+<div class="directorio-admin">
+  <!-- Menú principal -->
+  <section class="dir-tarjeta dir-tarjeta--principal" aria-labelledby="dir-principal">
+    <header class="dir-tarjeta__cabecera">
+      <span class="tecla tecla--grande tecla--noche" aria-hidden="true"><%- icono('phone') %></span>
+      <div>
+        <small>Menú principal · <%= site.telefono %></small>
+        <h2 id="dir-principal">Directorio interno</h2>
       </div>
-      <% m.hijos.forEach(function (h) { %>
-        <div class="arbol__fila arbol__fila--hija<% if (editar && editar.id === h.id) { %> fila-activa<% } %>">
-          <span class="tecla"><%= h.opcion %></span>
-          <span class="arbol__nombre"><%= h.nombre %> <small><%= m.externo ? 'teléfono directo' : m.opcion + ' → ' + h.opcion %></small></span>
-          <span class="arbol__ext"><%= [h.telefono, h.extension ? 'Ext. ' + h.extension : ''].filter(Boolean).join(' · ') || '—' %></span>
+    </header>
+    <ul class="dir-lista">
+      <% principales.forEach(function (m) { %>
+        <li class="dir-fila<% if (m.hijos.length) { %> dir-fila--submenu<% } %><% if (editar && editar.id === m.id) { %> fila-activa<% } %>">
+          <span class="tecla"><%= m.opcion %></span>
+          <span class="dir-fila__nombre"><%= m.nombre %><% if (m.hijos.length) { %><a class="dir-fila__ruta" href="#submenu-<%= m.id %>"><%= m.hijos.length %> opciones ↓</a><% } %></span>
+          <span class="dir-fila__dato"><% if (!m.hijos.length) { %><% if (m.extension) { %><span class="ext">Ext. <b><%= m.extension %></b></span><% } else { %><span class="ext ext--vacia">Sin extensión</span><% } %><% } %></span>
           <span class="acciones">
-            <% if (puede('directorio.editar')) { %><a class="btn btn--chico" href="/admin/directorio/<%= h.id %>/editar#formulario">Editar</a><% } %>
-            <% if (puede('directorio.eliminar')) { %>
-            <form method="post" action="/admin/directorio/<%= h.id %>/eliminar" data-confirmar="¿Eliminar «<%= h.nombre %>»?">
-              <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-              <button class="btn btn--chico btn--peligro" type="submit">Eliminar</button>
-            </form>
-            <% } %>
+            <% if (puede('directorio.crear')) { %><a class="btn btn--chico btn--suave" href="/admin/directorio?menu=<%= m.id %>#formulario"><%- icono('mas') %>Subopción</a><% } %>
+            <% acciones(m, confirmarPadre(m)) %>
           </span>
-        </div>
+        </li>
       <% }) %>
-    </div>
-  <% }) %>
+    </ul>
+  </section>
+
+  <!-- Submenús y ubicaciones externas -->
+  <div class="dir-rejilla">
+    <% conSubmenu.concat(externos).forEach(function (m) { %>
+      <section class="dir-tarjeta<% if (m.externo) { %> dir-tarjeta--externa<% } %>" id="submenu-<%= m.id %>" aria-labelledby="dir-sub-<%= m.id %>">
+        <header class="dir-tarjeta__cabecera">
+          <span class="tecla tecla--grande" aria-hidden="true"><% if (m.externo) { %><%- icono('pin') %><% } else { %><%= m.opcion %><% } %></span>
+          <div>
+            <small><%= m.externo ? 'Ubicación externa' : 'Submenú · marque ' + m.opcion %></small>
+            <h2 id="dir-sub-<%= m.id %>"><%= m.nombre %></h2>
+          </div>
+          <% if (m.externo) { %>
+          <span class="acciones dir-tarjeta__acciones">
+            <% if (puede('directorio.crear')) { %><a class="btn btn--chico btn--suave" href="/admin/directorio?menu=<%= m.id %>#formulario"><%- icono('mas') %>EBAIS</a><% } %>
+            <% acciones(m, confirmarPadre(m)) %>
+          </span>
+          <% } else if (puede('directorio.crear')) { %>
+          <span class="acciones dir-tarjeta__acciones"><a class="btn btn--chico btn--suave" href="/admin/directorio?menu=<%= m.id %>#formulario"><%- icono('mas') %>Opción</a></span>
+          <% } %>
+        </header>
+        <% if (m.hijos.length) { %>
+        <ul class="dir-lista">
+          <% m.hijos.forEach(function (h) { %>
+            <li class="dir-fila<% if (editar && editar.id === h.id) { %> fila-activa<% } %>">
+              <span class="tecla"><% if (m.externo) { %><%- icono('home') %><% } else { %><%= h.opcion %><% } %></span>
+              <span class="dir-fila__nombre"><%= h.nombre %><small class="dir-fila__ruta"><%= m.externo ? 'Teléfono directo' : 'Marque ' + m.opcion + ' y luego ' + h.opcion %></small></span>
+              <span class="dir-fila__dato">
+                <% if (h.telefono) { %><span class="ext"><b><%= h.telefono %></b></span><% } %>
+                <% if (h.extension) { %><span class="ext">Ext. <b><%= h.extension %></b></span><% } %>
+                <% if (!h.telefono && !h.extension) { %><span class="ext ext--vacia">Sin datos</span><% } %>
+              </span>
+              <span class="acciones"><% acciones(h, '¿Eliminar «' + h.nombre + '»?') %></span>
+            </li>
+          <% }) %>
+        </ul>
+        <% } else { %>
+          <p class="dir-vacio">Sin opciones todavía<%= m.externo ? ': no se muestra en el sitio' : '' %>.</p>
+        <% } %>
+      </section>
+    <% }) %>
+  </div>
 </div>
 <%- include('_fin') %>
