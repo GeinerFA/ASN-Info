@@ -100,5 +100,6 @@ app.use((err, req, res, next) => {
 // Carga en la BD los datos que llegaron por git (datos/), si cambiaron. Ver lib/datos.js.
 console.log('[datos] ' + require('./lib/datos').importar().mensaje);
 
-const PORT = Number(process.env.PORT) || 3000;
+// En IIS (iisnode) PORT es una named pipe (\\.\pipe\...), no un número.
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Área de Salud Naranjo en http://localhost:${PORT}`));
