@@ -74,10 +74,10 @@ app.use(
         frameSrc: ["https://www.google.com", "https://maps.google.com"],
         formAction: ["'self'"],
         frameAncestors: ["'none'"],
-        upgradeInsecureRequests: PROD ? [] : null,
+        upgradeInsecureRequests: null,
       },
     },
-    hsts: PROD,
+    hsts: false,
   }),
 );
 
